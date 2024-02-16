@@ -4,14 +4,35 @@
   box-sizing: border-box;
 }
 
+#aboutus-cont {
+  text-align: center;
+  font-weight: bold;
+  font-size: 2rem;
+  margin-top: 2rem;
+}
+
 .members-div {
   display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.member-cont {
+  width: 20rem;
+  height: 20rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .member-cont img {
+  border-radius: 8px;
   width: 15rem;
 }
 
 .member-cont h1 {
+  text-align: center;
   font-weight: bold;
 }
