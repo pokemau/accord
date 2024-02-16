@@ -8,6 +8,10 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  border: 1px black solid;
+}
+#registerForm > form > * {
+  margin: 10px;
 }
 #bdate_inputs {
   display: flex;

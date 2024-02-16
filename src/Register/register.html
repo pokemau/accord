@@ -19,7 +19,7 @@
       </h1>
       <div id="nav-links">
         <div>
-          <a href="../Register/register.html">Register</a>
+          <a href="register.html">Register</a>
         </div>
         <div>
           <a href="../Login/login.html">Login</a>
@@ -70,13 +70,30 @@
           required />
         <label for="birthdate">Date of birth</label>
         <div id="bdate_inputs">
-          <input
+          <!-- <input
             id="bdate_month"
             name="bdate_month"
             class="form-control txtInput"
             type="number"
             placeholder="Month"
-            required />
+            required /> -->
+            <div class="btn-group" id="bdate_month">
+              <button type="button" class="btn btn-danger">Month</button>
+              <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="sr-only">Toggle Dropdown</span>
+              </button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="#">January</a>
+                <a class="dropdown-item" href="#">February</a>
+                <a class="dropdown-item" href="#">March</a>
+                <a class="dropdown-item" href="#">January</a>
+                <a class="dropdown-item" href="#">January</a>
+                <a class="dropdown-item" href="#">January</a>
+                <a class="dropdown-item" href="#">January</a>
+                <a class="dropdown-item" href="#">January</a>
+                <a class="dropdown-item" href="#">January</a>
+              </div>
+            </div>
           <input
             id="bdate_day"
             name="bdate_day"

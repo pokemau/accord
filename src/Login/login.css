@@ -1,5 +1,5 @@
-#loginForm{
-position: absolute;
+#loginForm {
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -8,4 +8,8 @@ position: absolute;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  border: 1px black solid;
+}
+#loginForm > form > * {
+  margin: 10px;
 }
