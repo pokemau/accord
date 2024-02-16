@@ -77,21 +77,24 @@
             type="number"
             placeholder="Month"
             required /> -->
-            <div class="btn-group" id="bdate_month">
-              <button type="button" class="btn btn-danger">Month</button>
-              <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="sr-only">Toggle Dropdown</span>
+            <div class="btn-group drpdown">
+              <button type="button" class="btn btn-danger dropdown-toggle" id="drpdownMonth" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Month
               </button>
-              <div class="dropdown-menu">
+              <div class="dropdown-menu" aria-labelledby="drpdownMonth">
                 <a class="dropdown-item" href="#">January</a>
                 <a class="dropdown-item" href="#">February</a>
                 <a class="dropdown-item" href="#">March</a>
-                <a class="dropdown-item" href="#">January</a>
-                <a class="dropdown-item" href="#">January</a>
-                <a class="dropdown-item" href="#">January</a>
-                <a class="dropdown-item" href="#">January</a>
-                <a class="dropdown-item" href="#">January</a>
-                <a class="dropdown-item" href="#">January</a>
+                <a class="dropdown-item" href="#">April</a>
+                <a class="dropdown-item" href="#">May</a>
+                <a class="dropdown-item" href="#">June</a>
+                <a class="dropdown-item" href="#">July</a>
+                <a class="dropdown-item" href="#">August</a>
+                <a class="dropdown-item" href="#">September</a>
+                <a class="dropdown-item" href="#">October</a>
+                <a class="dropdown-item" href="#">November</a>
+                <a class="dropdown-item" href="#">December</a>
+
               </div>
             </div>
           <input
@@ -112,6 +115,7 @@
         <button type="submit" class="btn btn-primary button" id="registerBtn">
           Register
         </button>
+        <br>
         <a href="../Login/login.html">Already have an account?</a>
       </form>
     </div>

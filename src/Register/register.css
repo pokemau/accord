@@ -1,5 +1,7 @@
 #registerForm {
   position: absolute;
+  height: 600px;
+  width: 400px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -11,11 +13,16 @@
   border: 1px black solid;
 }
 #registerForm > form > * {
-  margin: 10px;
+  margin-bottom: 3%;
+  margin-top: 3%;
 }
 #bdate_inputs {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+}
+#loginBtn{
+  height: 13%;
+  width: 30%;
 }
