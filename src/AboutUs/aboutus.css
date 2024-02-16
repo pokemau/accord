@@ -1,0 +1,17 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.members-div {
+  display: flex;
+}
+
+.member-cont img {
+  width: 15rem;
+}
+
+.member-cont h1 {
+  font-weight: bold;
+}

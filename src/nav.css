@@ -1,0 +1,31 @@
+#logo {
+  font-size: 3rem;
+  font-weight: bold;
+}
+#logo a {
+  text-decoration: none;
+  cursor: pointer;
+  color: black;
+}
+
+nav {
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 4rem;
+  border-bottom: 1px solid rgb(190, 190, 190);
+  /* background-color: orange; */
+}
+
+#nav-links {
+  display: flex;
+}
+
+#nav-links div a {
+  color: black;
+  padding: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: bold;
+}
