@@ -1,7 +1,7 @@
-#registerForm {
+#loginForm {
   position: absolute;
-  height: 600px;
-  width: 400px;
+  height: 350px;
+  width: 300px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -11,18 +11,20 @@
   justify-content: center;
   align-items: center;
   border: 1px black solid;
+  overflow-y: hidden;
 }
-#registerForm > form > * {
+
+#loginForm > form > * {
   margin-bottom: 3%;
   margin-top: 3%;
 }
-#bdate_inputs {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+.txtInput,
+label,
+p {
+  height: 10%;
+  width: 100%;
 }
-#loginBtn{
-  height: 13%;
+#btnLogin {
+  height: 10%;
   width: 30%;
 }
