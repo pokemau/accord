@@ -1,7 +1,17 @@
+@import url("https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap");
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Jost", sans-serif;
+}
+
 #logo {
   font-size: 3rem;
   font-weight: bold;
 }
+
 #logo a {
   text-decoration: none;
   cursor: pointer;
@@ -15,7 +25,6 @@ nav {
   align-items: center;
   height: 4rem;
   border-bottom: 1px solid rgb(190, 190, 190);
-  /* background-color: orange; */
 }
 
 #nav-links {

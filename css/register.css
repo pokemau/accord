@@ -1,6 +1,5 @@
 #registerForm {
-  /* background-color: orange; */
-  height: 30rem;
+  height: 85vh;
   width: 25rem;
   display: flex;
   justify-content: center;
@@ -9,19 +8,18 @@
   padding: 40px;
   border: 1px black solid;
 
-  margin: auto;
-  /* position: absolute;
-  height: 600px;
-  width: 400px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  */
+  margin: 1rem auto 0 auto;
+  background-color: rgb(243, 243, 243);
+  /* margin: auto; */
+}
+
+input {
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 0.2rem;
+}
+input:focus {
+  outline: none;
 }
 
 #registerForm > form > * {

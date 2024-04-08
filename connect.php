@@ -1,8 +1,6 @@
 <?php
-    $connection = new mysqli('localhost', 'root', '', 'dbrobillosf2');
+$connection = new mysqli('localhost', 'root', '', 'dbaccord');
 
-    if(!$connection){
-        die (mysqli_error($mysqli));
-    }
-
-?>
+if (!$connection) {
+  die(mysqli_error($mysqli));
+}
