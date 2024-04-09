@@ -1,6 +1,7 @@
 <?php
 include 'connect.php';
 require_once 'includes/header.php';
+require_once 'includes/messageBox.php';
 ?>
 
 <!DOCTYPE html>
@@ -91,26 +92,6 @@ if (isset($_POST['btnRegister'])) {
   } else {
     showMessage("Account Already Exists");
   }
-}
-
-function showMessage($message) {
-
-  echo "
-      <div id='message-box'>
-        <p>$message</p>
-      </div>
-    ";
-
-  echo "
-      <script>
-        setTimeout(function() {
-          var messageBox = document.getElementById('message-box');
-          if (messageBox) {
-            messageBox.parentNode.removeChild(messageBox);
-          }
-        }, 3000);
-      </script>
-    ";
 }
 
 ?>

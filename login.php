@@ -1,6 +1,7 @@
 <?php
 include 'connect.php';
 require_once 'includes/header.php';
+require_once 'includes/messageBox.php';
 ?>
 
 
@@ -67,31 +68,11 @@ if (isset($_POST['btnLogin'])) {
   if ($count == 0) {
     showMessage("Username does not exist.");
   } else if (password_verify($pwd, $row[3])) {
+    $_SESSION['userid'] = $row[0];
     $_SESSION['username'] = $row[2];
     header("location: index.php");
   } else {
     showMessage("Incorrect Password");
   }
 }
-
-function showMessage($message) {
-  echo "
-    <div id='message-box'>
-      <p>$message</p>
-    </div>
-    ";
-
-  echo "
-    <script>
-      setTimeout(function() {
-        var messageBox = document.getElementById('message-box');
-        if (messageBox) {
-          messageBox.parentNode.removeChild(messageBox);
-        }
-      }, 3000);
-    </script>
-    ";
-}
-
-
 ?>
