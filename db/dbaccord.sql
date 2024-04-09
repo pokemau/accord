@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 09, 2024 at 05:46 AM
+-- Generation Time: Apr 09, 2024 at 04:39 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -40,7 +40,46 @@ CREATE TABLE `tblaccount` (
 --
 
 INSERT INTO `tblaccount` (`accountID`, `emailadd`, `username`, `password`, `usertype`) VALUES
-(4, 'rentillosa90@gmail.com', 'pokemau', '$2y$10$dkVQoRdVl9uuDB47Ig.13.BQHf0nNw8Tzb5jo3yNK3Q7kFBG.Dm.q', 'user');
+(4, 'rentillosa90@gmail.com', 'pokemau', '$2y$10$dkVQoRdVl9uuDB47Ig.13.BQHf0nNw8Tzb5jo3yNK3Q7kFBG.Dm.q', 'user'),
+(5, 'jorash@gmail.com', 'Jorash', '$2y$10$pUfnxESxTQJv4QkI.Fg73evCtBvJztn4s5o4dDZwYAekljfo1fbp6', 'user');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblchannel`
+--
+
+CREATE TABLE `tblchannel` (
+  `channelid` int(10) NOT NULL,
+  `serverid` int(10) NOT NULL,
+  `channelname` varchar(60) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tblchannel`
+--
+
+INSERT INTO `tblchannel` (`channelid`, `serverid`, `channelname`) VALUES
+(1, 1, 'general');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblserver`
+--
+
+CREATE TABLE `tblserver` (
+  `serverid` int(10) NOT NULL,
+  `ownerid` int(10) NOT NULL,
+  `servername` varchar(60) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tblserver`
+--
+
+INSERT INTO `tblserver` (`serverid`, `ownerid`, `servername`) VALUES
+(1, 5, 'Yahallo');
 
 -- --------------------------------------------------------
 
@@ -61,7 +100,8 @@ CREATE TABLE `tbluser` (
 --
 
 INSERT INTO `tbluser` (`userID`, `accountID`, `displayname`, `gender`, `birthdate`) VALUES
-(2, 4, 'pokemau', 'none', '2003-11-08');
+(2, 4, 'pokemau', 'none', '2003-11-08'),
+(3, 5, 'Jorash', 'none', '2024-04-01');
 
 --
 -- Indexes for dumped tables
@@ -72,6 +112,18 @@ INSERT INTO `tbluser` (`userID`, `accountID`, `displayname`, `gender`, `birthdat
 --
 ALTER TABLE `tblaccount`
   ADD PRIMARY KEY (`accountID`);
+
+--
+-- Indexes for table `tblchannel`
+--
+ALTER TABLE `tblchannel`
+  ADD PRIMARY KEY (`channelid`);
+
+--
+-- Indexes for table `tblserver`
+--
+ALTER TABLE `tblserver`
+  ADD PRIMARY KEY (`serverid`);
 
 --
 -- Indexes for table `tbluser`
@@ -88,13 +140,25 @@ ALTER TABLE `tbluser`
 -- AUTO_INCREMENT for table `tblaccount`
 --
 ALTER TABLE `tblaccount`
-  MODIFY `accountID` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `accountID` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `tblchannel`
+--
+ALTER TABLE `tblchannel`
+  MODIFY `channelid` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `tblserver`
+--
+ALTER TABLE `tblserver`
+  MODIFY `serverid` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tbluser`
 --
 ALTER TABLE `tbluser`
-  MODIFY `userID` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `userID` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
