@@ -1,16 +1,13 @@
 #registerForm {
-  height: 85vh;
+  height: 30rem;
   width: 25rem;
   display: flex;
-  justify-content: center;
   align-items: center;
-
+  justify-content: center;
   padding: 40px;
   border: 1px black solid;
-
-  margin: 1rem auto 0 auto;
-  background-color: rgb(243, 243, 243);
-  /* margin: auto; */
+  margin: 5rem auto;
+  background-color: rgb(247, 247, 247);
 }
 
 input {

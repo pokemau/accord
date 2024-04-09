@@ -23,8 +23,12 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 4rem;
+  width: 100vw;
+  height: 3rem;
+  background-color: rgb(247, 247, 247);
   border-bottom: 1px solid rgb(190, 190, 190);
+  position: fixed;
+  top: 0px;
 }
 
 #nav-links {
