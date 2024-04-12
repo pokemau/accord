@@ -12,9 +12,9 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-$ownerid;
+$ownerID;
 if(isset($_SESSION["userid"])){
-    $ownerid = $_SESSION["userid"];
+    $ownerID = $_SESSION["userid"];
 }else{
     $response = array(
         'status' => false,
@@ -38,7 +38,7 @@ if(isset($_POST["servername"])){
     return;
 }
 
-$sqlExistingServer = "Select * from tblserver where ownerid='".$ownerid."' AND servername='".$servername."'";
+$sqlExistingServer = "SELECT * FROM tblserver WHERE ownerID='".$ownerID."' AND servername='".$servername."'";
 $resultExistingServer = mysqli_query($connection, $sqlExistingServer);
 $rowExistingServer = mysqli_num_rows($resultExistingServer);
 
@@ -52,9 +52,9 @@ if($rowExistingServer > 0){
     return;
 }
 
-$sqlInsertServer = "Insert into tblserver(ownerid, servername) values('".$ownerid."','".$servername."')";
+$sqlInsertServer = "INSERT INTO tblserver(ownerID, servername) VALUES('".$ownerID."','".$servername."')";
 
-$sqlGetLatestServer = "SELECT * FROM tblserver ORDER BY serverid DESC LIMIT 1";
+$sqlGetLatestServer = "SELECT * FROM tblserver ORDER BY serverID DESC LIMIT 1";
 $resultLatestServer = mysqli_query($connection, $sqlGetLatestServer);
 $countLatestServer = mysqli_num_rows($resultLatestServer);
 $serverID;
@@ -65,10 +65,13 @@ if($countLatestServer == 0){
     $serverID = (int)$rowLatestServer[0] + 1;
 }
 
-$sqlInsertChannel = "Insert into tblchannel(serverid, channelname) values('".$serverID."', 'general')";
+$sqlInsertChannel = "INSERT INTO tblchannel(serverID, channelname) VALUES('".$serverID."', 'general')";
+
+$sqlInsertUserServer = "INSERT INTO tbluserserver(userID, serverID) VALUES('".$ownerID."', '".$serverID."')";
 
 mysqli_query($connection, $sqlInsertServer);
 mysqli_query($connection, $sqlInsertChannel);
+mysqli_query($connection, $sqlInsertUserServer);
 
 // to add tblUserServer
 // to add general channel to tblChannel

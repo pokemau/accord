@@ -15,60 +15,103 @@ $(document).ready(function(){
     function refresh(){
         $(".popUpForm").hide();
         unBlurEverything();
+        getServerList();
+    }
+    function showMessage(message){
+        $("body").append("<div id='message-box'> <p>"+message+"</p> </div>");
+        setTimeout(function() {
+            var messageBox = document.getElementById('message-box');
+            if (messageBox) {
+              messageBox.parentNode.removeChild(messageBox);
+            }
+          }, 3000);
     }
 
     async function createServer(serverName){
-        let response = await $.post("api/createServer.php",
-        {
-            servername: serverName
-        },
-        function(responseInner, status){
-            return responseInner   
-        });
-        if(response['status'] == false){
-            if(response['errorType'] != "serverAlreadyExist"){
-                location.reload();
-            }else{
-                await $.post("includes/messageBox.php",
-                {
-                    message: "Server with this name has already been created by you!"
-                },
-                )
+        try{
+            let response = await $.post("api/createServer.php",
+            {
+                servername: serverName
+            },
+            function(responseInner, status){
+                return responseInner   
+            });
+            if(response['status'] == false){
+                if(response['errorType'] != "serverAlreadyExist"){
+                    location.reload();
+                }else{
+                    showMessage("Server with this name has already been created by you!");
+                }
+                throw new Error(response['message']);
             }
-            throw response['message'];
+            return response['message'];
+        }catch(error){
+            throw error;
         }
     }
 
+    async function getServerList(){
+        let response = await $.get("api/getServerList.php",
+        function(responseInner, status){
+            return responseInner;
+        });
+        if(response['status'] == false){
+            console.log("Something was wrong (getServerList)");
+            return;
+        }
+        printServers(response['serverList']);
+    }
+
+    function printServers(serverList){
+        $("#servers-wrapper").html("");
+        for(let i=0; i<serverList.length; i++){
+            let serverInfo = serverList[i];
+            let string = "<div data-serverID='" + Number(serverInfo.serverID) + "' class='server-div'>"
+                + "<h2>" + String(serverInfo.servername) + "</h2>"
+                + "</div>";
+            $(string).appendTo("#servers-wrapper");
+        }
+    }
+
+    $("#servers-wrapper").on('click', '.server-div', function(){
+        $(".clicked").removeClass("clicked");
+        $(this).addClass("clicked");
+    });
+
     $("#btnCreateServerSection").on('click', function(){
         backgroundBlur();
-        $("#divCreateServerSection").show();
+        $("#create-server-section").show();
     });
-    $("#createEventAreaClose").on('click', function(){
-        $("#divCreateServerSection").hide();
+    $("#btnCreateEventAreaClose").on('click', function(){
+        $("#create-server-section").hide();
         unBlurEverything();
     });
     $("#btnCreateEvent").on('click', function(){
         let serverName = $("#txtServerName").val();    
         if(serverName == "") return;
         $("#lblServerName").text(serverName);
-        $("#divCreateServerSection").addClass("blur");
-        $("#divCreateServerConfirm").show();
+        $("#create-server-section").addClass("blur");
+        $("#create-server-confirm").show();
     });
     $("#btnYESCreateServerConfirm").on('click', function(){
         let serverName = $("#txtServerName").val();
-        try{
-            createServer(serverName);
-            $("#divCreateServerConfirm").addClass("blur");
-            $("#divCreateServerSuccess").show();
-        }catch(err){
-            $("#divCreateServerConfirm").hide();
-            $("#divCreateServerSection").removeClass("blur");
-        }
+
+        createServer(serverName)
+            .then(response => {
+                console.log(response);
+                $("#create-server-confirm").addClass("blur");
+                $("#create-server-success").show();
+            })
+            .catch(error => {
+                $("#create-server-confirm").hide();
+                $("#create-server-section").removeClass("blur");
+                console.error("Error:", error);
+            });
     
     });
     $("#btnNOCreateServerConfirm").on('click', function(){
-        $("#divCreateServerConfirm").hide();
-        $("#divCreateServerSection").removeClass("blur");
+        $("#create-server-confirm").hide();
+        $("#create-server-section").removeClass("blur");
     });
     $("#btnOKCreateServerSuccess").on('click', function(){
         refresh();

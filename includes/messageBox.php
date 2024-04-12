@@ -19,7 +19,7 @@ function showMessage($message) {
       ";
 }
 
-if(isset($_POST['message'])){
-  showMessage($_POST['message']);
+if(isset($_POST["message"])){
+  showMessage($_POST["message"]);
 }
 ?>

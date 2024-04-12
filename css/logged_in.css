@@ -1,11 +1,11 @@
-#main-cont {
+/*#main-cont {
   margin-top: 3rem;
   display: flex;
   height: 100vh;
   overflow: hidden;
 }
 
-/* #left-sidebar {
+#left-sidebar {
   background-color: rgb(247, 247, 247);
   border-right: 1px solid rgb(170, 170, 170);
   width: 72px;
@@ -22,7 +22,7 @@
   margin: 0;
   padding: 0;
 }
-#divMainPageContent{
+#main-cont {
   margin-top: 3rem;
   margin-right: 0;
   height: 100%;
@@ -31,14 +31,15 @@
   display: flex;
   flex-direction: row;
 }
-.blur{  
+.blur {  
   filter: blur(5px);
   pointer-events: none;
   user-select: none;
 }
-#divServerList{
+#servers-sidebar {
   height: 100%;
   width: 20rem;
+  left: 0;
   margin-right: auto;
 
   background-color: beige;
@@ -47,8 +48,9 @@
   align-items: center;
   justify-content: center;
   position: fixed;
+  border: 2px solid black;
 }
-#divServerListHeader{
+#servers-header {
   height: 10%;
   margin-bottom: auto;
   padding: 20px;
@@ -61,35 +63,76 @@
   align-items: center;
   justify-content: space-between;
 }
-#divCreateServerStart{
+#server-create-start {
   background-color: beige;
   display: flex;
   flex-direction: row;
 }
-#divCreateServerStart > *{
+#server-create-start > * {
   margin: auto;
 }
-#divServersWrapper{
-  height: 90%;
-  width: 100%;
-  background-color: lightcoral;
-  display: flex;
-  flex-direction: column;
-}
-#btnCreateServerSection{
+#btnCreateServerSection {
   margin-left: 10px;
   width: 30px;
   height: 30px;
 }
 
-.longTxt{
+#servers-wrapper {
+  height: 90%;
+  width: 100%;
+  background-color: lightcoral;
+  display: flex;
+  flex-direction: column;
+  overflow-y:scroll;
+  padding: 10px;
+}
+.server-div {
+  margin: 10px;
+  width: 90%;
+  height: 5rem;
+  border: 1px solid black;
+  align-items: center;
+  box-sizing: border-box;
+}
+.server-div.clicked {
+  border: 3px solid black;
+}
+
+#right-page {
+  height: 100%;
+  width: 76rem;
+  right: 0;
+
+  background-color: beige;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  overflow-y: scroll;
+}
+
+#tblservers {
+  width: 70%;
+  padding: 30px;
+}
+#tblusersservers{
+  width: 50%;
+  padding: 30px;
+}
+td, th{
+  border: 1px solid black;
+}
+
+
+.longTxt {
   width: 100%;
   height:fit-content; 
   word-wrap: break-word;
   text-align: center;
 }
 
-.popUpForm{
+.popUpForm {
   padding: 10px;
   position: fixed;
   top: 50%;
@@ -103,25 +146,25 @@
   align-items: center;
   z-index: 2;
 }
-.closeBtn{
+.closeBtn {
   position: absolute;
   top: 5%;
   right: 5%;
 }
-.popUpForm > *{
+.popUpForm > * {
   margin: 10px;
 }
 
 
-#divCreateServerSection{
+#create-server-section {
   width: 30rem;
   height: 30rem;
 }
-.divCloseBtn{
+.divCloseBtn {
   display: flex;
   margin: 0;
 }
-#divCreateServerConfirm{
+#create-server-confirm {
   width: 20rem;
   height: 20rem;
 }
