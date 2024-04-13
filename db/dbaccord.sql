@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 12, 2024 at 11:26 AM
+-- Generation Time: Apr 13, 2024 at 06:30 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -61,9 +61,8 @@ CREATE TABLE `tblchannel` (
 --
 
 INSERT INTO `tblchannel` (`channelID`, `serverID`, `channelname`) VALUES
-(1, 1, 'general'),
-(2, 2, 'general'),
-(3, 3, 'general');
+(14, 5, 'general'),
+(16, 7, 'general');
 
 -- --------------------------------------------------------
 
@@ -82,9 +81,8 @@ CREATE TABLE `tblserver` (
 --
 
 INSERT INTO `tblserver` (`serverID`, `ownerID`, `servername`) VALUES
-(1, 5, 'Yahallo'),
-(2, 5, 'GameServer'),
-(3, 6, 'Jorash2Server');
+(5, 5, 'Yahallo'),
+(7, 5, 'GameServer');
 
 -- --------------------------------------------------------
 
@@ -126,9 +124,8 @@ CREATE TABLE `tbluserserver` (
 --
 
 INSERT INTO `tbluserserver` (`userServerID`, `userID`, `serverID`) VALUES
-(9, 5, 1),
-(10, 5, 2),
-(11, 6, 3);
+(16, 5, 5),
+(18, 5, 7);
 
 --
 -- Indexes for dumped tables
@@ -183,13 +180,13 @@ ALTER TABLE `tblaccount`
 -- AUTO_INCREMENT for table `tblchannel`
 --
 ALTER TABLE `tblchannel`
-  MODIFY `channelID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `channelID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `tblserver`
 --
 ALTER TABLE `tblserver`
-  MODIFY `serverID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `serverID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `tbluser`
@@ -201,7 +198,7 @@ ALTER TABLE `tbluser`
 -- AUTO_INCREMENT for table `tbluserserver`
 --
 ALTER TABLE `tbluserserver`
-  MODIFY `userServerID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `userServerID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- Constraints for dumped tables
@@ -211,7 +208,13 @@ ALTER TABLE `tbluserserver`
 -- Constraints for table `tblchannel`
 --
 ALTER TABLE `tblchannel`
-  ADD CONSTRAINT `server-channel` FOREIGN KEY (`serverID`) REFERENCES `tblserver` (`serverid`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `server-channel` FOREIGN KEY (`serverID`) REFERENCES `tblserver` (`serverID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `tblserver`
+--
+ALTER TABLE `tblserver`
+  ADD CONSTRAINT `server-owner` FOREIGN KEY (`ownerID`) REFERENCES `tblaccount` (`accountID`);
 
 --
 -- Constraints for table `tbluser`
@@ -223,7 +226,7 @@ ALTER TABLE `tbluser`
 -- Constraints for table `tbluserserver`
 --
 ALTER TABLE `tbluserserver`
-  ADD CONSTRAINT `userserver-server` FOREIGN KEY (`serverID`) REFERENCES `tblserver` (`serverid`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `userserver-server` FOREIGN KEY (`serverID`) REFERENCES `tblserver` (`serverID`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `userserver-user` FOREIGN KEY (`userID`) REFERENCES `tblaccount` (`accountID`);
 COMMIT;
 

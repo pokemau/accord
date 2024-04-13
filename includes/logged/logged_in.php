@@ -55,7 +55,6 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
         echo "<h2>Username: " . $_SESSION['username'] . "</h2>";?>
 
         <br>
-        <br>
         
         <h2>Servers Table</h2>
         <table id="tblservers">
@@ -85,7 +84,6 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
           </tbody>
         </table>
         
-        <br>
         <br>
 
         <h2>User-Server Table</h2>
