@@ -1,0 +1,13 @@
+#server-main-cont {
+  margin-top: 3rem;
+}
+
+#server-roles-table {
+  border: 1px solid black;
+}
+
+#server-roles-table th,
+td {
+  padding: 1rem;
+  border: 1px solid black;
+}
