@@ -28,7 +28,7 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
 </head>
 
 <body>
-    <!-- <div id="main-cont">
+  <!-- <div id="main-cont">
         <div id="left-sidebar">
           SERVERS
 
@@ -38,73 +38,73 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
         </div>
       </div> -->
 
-    <div id="main-cont">
-      <div id="servers-sidebar">
-        <div id="servers-header">
-          <h2>SERVERS</h2>
-          <div id="server-create-start">
-            <h3>Create: </h3>
-            <button id="btnCreateServerSection">+</button>
-          </div>
+  <div id="main-cont">
+    <div id="servers-sidebar">
+      <div id="servers-header">
+        <h2>SERVERS</h2>
+        <div id="server-create-start">
+          <h3>Create: </h3>
+          <button id="btnCreateServerSection">+</button>
         </div>
-        <div id="servers-wrapper">
+      </div>
+      <div id="servers-wrapper">
       </div>
 
       <div id="right-page">
         <?php echo "<h2>UserID: " . $_SESSION['userid'] . "</h2>";
-        echo "<h2>Username: " . $_SESSION['username'] . "</h2>";?>
+        echo "<h2>Username: " . $_SESSION['username'] . "</h2>"; ?>
 
         <br>
-        
+
         <h2>Servers Table</h2>
         <table id="tblservers">
           <thead>
-              <tr>
-                <th>Server ID</th>
-                <th>Owner ID</th>
-                <th>Server Name</th>
-                <th>ACTION</th>
-              </tr>
+            <tr>
+              <th>Server ID</th>
+              <th>Owner ID</th>
+              <th>Server Name</th>
+              <th>ACTION</th>
+            </tr>
           </thead>
           <tbody>
-        <?php
-        while($row = mysqli_fetch_array($resultAllServer)){
-          echo "<tr>";
-            echo "<td>" . $row['serverID'] . "</td>";
-            echo "<td>" . $row['ownerID'] . "</td>";
-            echo "<td>" . $row['servername'] . "</td>";
-            echo "<td>";
-              echo "<a href=''>VIEW</a>";
-              echo "<a href='api/deleteServer.php?id=".$row['serverID']."'>DELETE</a>";
-            echo "</td>";
-          echo "</tr>";
-        }
-        ?>
+            <?php
+            while ($row = mysqli_fetch_array($resultAllServer)) {
+              echo "<tr>";
+              echo "<td>" . $row['serverID'] . "</td>";
+              echo "<td>" . $row['ownerID'] . "</td>";
+              echo "<td>" . $row['servername'] . "</td>";
+              echo "<td>";
+              echo "<a href='server.php?id=" . $row['serverID'] . "'>VIEW</a>";
+              echo "<a href='api/deleteServer.php?id=" . $row['serverID'] . "'>DELETE</a>";
+              echo "</td>";
+              echo "</tr>";
+            }
+            ?>
 
           </tbody>
         </table>
-        
+
         <br>
 
         <h2>User-Server Table</h2>
         <table id="tblusersservers">
           <thead>
-              <tr>
-                <th>User-Server ID</th>
-                <th>User ID</th>
-                <th>Server ID</th>
-              </tr>
+            <tr>
+              <th>User-Server ID</th>
+              <th>User ID</th>
+              <th>Server ID</th>
+            </tr>
           </thead>
           <tbody>
-        <?php
-        while($row = mysqli_fetch_array($resultAllUserServer)){
-          echo "<tr>";
-            echo "<td>" . $row['userServerID'] . "</td>";
-            echo "<td>" . $row['userID'] . "</td>";
-            echo "<td>" . $row['serverID'] . "</td>";
-          echo "</tr>";
-        }
-        ?>
+            <?php
+            while ($row = mysqli_fetch_array($resultAllUserServer)) {
+              echo "<tr>";
+              echo "<td>" . $row['userServerID'] . "</td>";
+              echo "<td>" . $row['userID'] . "</td>";
+              echo "<td>" . $row['serverID'] . "</td>";
+              echo "</tr>";
+            }
+            ?>
           </tbody>
         </table>
       </div>
@@ -121,20 +121,21 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
     </div>
 
     <div id="create-server-confirm" class="popUpForm">
-        <h4 class="longTxt">Are you sure you want to create a server named:</h4>
-        <h3 id="lblServerName"></h3>
-        <div>
-            <button id="btnYESCreateServerConfirm">Yes</button>
-            <button id="btnNOCreateServerConfirm">No</button>
-        </div>
+      <h4 class="longTxt">Are you sure you want to create a server named:</h4>
+      <h3 id="lblServerName"></h3>
+      <div>
+        <button id="btnYESCreateServerConfirm">Yes</button>
+        <button id="btnNOCreateServerConfirm">No</button>
+      </div>
     </div>
 
     <div id="create-server-success" class="popUpForm">
-        <h4 class="longTxt">Successfully created!</h4>
-        <div>
-            <button id="btnOKCreateServerSuccess">Ok</button>
-        </div>
+      <h4 class="longTxt">Successfully created!</h4>
+      <div>
+        <button id="btnOKCreateServerSuccess">Ok</button>
+      </div>
     </div>
 
 </body>
+
 </html>

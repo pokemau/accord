@@ -31,7 +31,7 @@ $(document).ready(() => {
 async function createServerRole(roleName, canEditServer, canDeleteServer) {
     try {
         const response = await $.post(
-            "api/createServerRole.php",
+            "api/serverRole/createServerRole.php",
             {
                 roleName: roleName,
                 canEditServer: canEditServer,
