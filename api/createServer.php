@@ -1,7 +1,7 @@
 <?php
 
 //post
-//errorTypes: noOwnerID, noServerName, serverAlreadyExist
+//errorTypes: noOwnerID, noServerName, servernameInvalid, serverAlreadyExist
 //parameters: 'servername'
 
 include_once('../connect.php');
@@ -46,7 +46,7 @@ if($rowExistingServer > 0){
     $response = array(
         'status' => false,
         'errorType' => 'serverAlreadyExist',
-        'message' => "A server already exist with the same server name and owner (createServer.php)"
+        'message' => "A server already exist with the same server name and owner"
     );
     echo json_encode($response);
     return;
@@ -54,22 +54,17 @@ if($rowExistingServer > 0){
 
 $sqlInsertServer = "INSERT INTO tblserver(ownerID, servername) VALUES('".$ownerID."','".$servername."')";
 
+mysqli_query($connection, $sqlInsertServer);
+
 $sqlGetLatestServer = "SELECT * FROM tblserver ORDER BY serverID DESC LIMIT 1";
 $resultLatestServer = mysqli_query($connection, $sqlGetLatestServer);
-$countLatestServer = mysqli_num_rows($resultLatestServer);
-$serverID;
-if($countLatestServer == 0){
-    $serverID = 1;
-}else{
-    $rowLatestServer = mysqli_fetch_array($resultLatestServer);
-    $serverID = (int)$rowLatestServer[0] + 1;
-}
+$rowLatestServer = mysqli_fetch_array($resultLatestServer);
+$serverID = (int)$rowLatestServer[0];
 
 $sqlInsertChannel = "INSERT INTO tblchannel(serverID, channelname) VALUES('".$serverID."', 'general')";
 
 $sqlInsertUserServer = "INSERT INTO tbluserserver(userID, serverID) VALUES('".$ownerID."', '".$serverID."')";
 
-mysqli_query($connection, $sqlInsertServer);
 mysqli_query($connection, $sqlInsertChannel);
 mysqli_query($connection, $sqlInsertUserServer);
 

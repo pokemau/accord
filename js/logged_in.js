@@ -37,12 +37,7 @@ $(document).ready(function(){
                 return responseInner   
             });
             if(response['status'] == false){
-                if(response['errorType'] != "serverAlreadyExist"){
-                    location.reload();
-                }else{
-                    showMessage("Server with this name has already been created by you!");
-                }
-                throw new Error(response['message']);
+                throw new Error(String(response['message']));
             }
             return response['message'];
         }catch(error){
@@ -98,14 +93,17 @@ $(document).ready(function(){
 
         createServer(serverName)
             .then(response => {
-                console.log(response);
                 $("#create-server-confirm").addClass("blur");
                 $("#create-server-success").show();
             })
             .catch(error => {
+                if(typeof error == String){
+                    showMessage(error);
+                }else{
+                    showMessage("Please dont include \' or \" in the servername");
+                }
                 $("#create-server-confirm").hide();
                 $("#create-server-section").removeClass("blur");
-                console.error("Error:", error);
             });
     
     });
