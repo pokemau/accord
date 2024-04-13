@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 13, 2024 at 06:30 AM
+-- Generation Time: Apr 13, 2024 at 01:54 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -62,7 +62,9 @@ CREATE TABLE `tblchannel` (
 
 INSERT INTO `tblchannel` (`channelID`, `serverID`, `channelname`) VALUES
 (14, 5, 'general'),
-(16, 7, 'general');
+(16, 7, 'general'),
+(22, 13, 'general'),
+(24, 15, 'general');
 
 -- --------------------------------------------------------
 
@@ -82,7 +84,31 @@ CREATE TABLE `tblserver` (
 
 INSERT INTO `tblserver` (`serverID`, `ownerID`, `servername`) VALUES
 (5, 5, 'Yahallo'),
-(7, 5, 'GameServer');
+(7, 5, 'GameServer'),
+(13, 4, 'mau server'),
+(15, 4, 'new server');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblserverrole`
+--
+
+CREATE TABLE `tblserverrole` (
+  `roleID` int(7) NOT NULL,
+  `serverID` int(7) NOT NULL,
+  `roleName` varchar(60) NOT NULL,
+  `canEditServer` int(1) NOT NULL,
+  `canDeleteServer` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tblserverrole`
+--
+
+INSERT INTO `tblserverrole` (`roleID`, `serverID`, `roleName`, `canEditServer`, `canDeleteServer`) VALUES
+(11, 15, 'new role here', 1, 1),
+(12, 15, 'another role', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -125,7 +151,9 @@ CREATE TABLE `tbluserserver` (
 
 INSERT INTO `tbluserserver` (`userServerID`, `userID`, `serverID`) VALUES
 (16, 5, 5),
-(18, 5, 7);
+(18, 5, 7),
+(24, 4, 13),
+(26, 4, 15);
 
 --
 -- Indexes for dumped tables
@@ -150,6 +178,13 @@ ALTER TABLE `tblchannel`
 ALTER TABLE `tblserver`
   ADD PRIMARY KEY (`serverID`),
   ADD KEY `server-owner` (`ownerID`);
+
+--
+-- Indexes for table `tblserverrole`
+--
+ALTER TABLE `tblserverrole`
+  ADD PRIMARY KEY (`roleID`),
+  ADD KEY `fk_Server_Role` (`serverID`);
 
 --
 -- Indexes for table `tbluser`
@@ -180,13 +215,19 @@ ALTER TABLE `tblaccount`
 -- AUTO_INCREMENT for table `tblchannel`
 --
 ALTER TABLE `tblchannel`
-  MODIFY `channelID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `channelID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `tblserver`
 --
 ALTER TABLE `tblserver`
-  MODIFY `serverID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `serverID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT for table `tblserverrole`
+--
+ALTER TABLE `tblserverrole`
+  MODIFY `roleID` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `tbluser`
@@ -198,7 +239,7 @@ ALTER TABLE `tbluser`
 -- AUTO_INCREMENT for table `tbluserserver`
 --
 ALTER TABLE `tbluserserver`
-  MODIFY `userServerID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `userServerID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- Constraints for dumped tables
@@ -215,6 +256,12 @@ ALTER TABLE `tblchannel`
 --
 ALTER TABLE `tblserver`
   ADD CONSTRAINT `server-owner` FOREIGN KEY (`ownerID`) REFERENCES `tblaccount` (`accountID`);
+
+--
+-- Constraints for table `tblserverrole`
+--
+ALTER TABLE `tblserverrole`
+  ADD CONSTRAINT `fk_Server_Role` FOREIGN KEY (`serverID`) REFERENCES `tblserver` (`serverID`);
 
 --
 -- Constraints for table `tbluser`
