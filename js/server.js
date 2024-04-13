@@ -9,7 +9,7 @@ $(document).ready(() => {
             : 0;
 
         if (
-            (canEditServer == 0 && canEditServer == 0) ||
+            (canEditServer == 0 && canDeleteServer == 0) ||
             roleName.length == 0
         ) {
             return;
