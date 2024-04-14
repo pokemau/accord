@@ -12,6 +12,18 @@ $serverID;
 $roleName;
 $canEditServer;
 $canDeleteServer;
+$userID;
+
+if (isset($_SESSION["userid"])) {
+  $userID = $_SESSION["userid"];
+} else {
+  $response = array(
+    'status' => false,
+    'message' => "NOT LOGGED IN"
+  );
+  echo json_encode($response);
+  return;
+}
 
 if (isset($_SESSION["current_server_id"])) {
   $serverID = $_SESSION["current_server_id"];
@@ -58,6 +70,14 @@ if (isset($_POST["canDeleteServer"])) {
 
 
 
+if (!checkIfUserCanCreateServerRole($connection, $userID, $serverID)) {
+  $response = array(
+    'status' => false,
+    'message' => "USER HAS NO PERMISSION TO CREATE A ROLE IN THIS SERVER"
+  );
+  echo json_encode($response);
+  return;
+}
 
 $sqlExistingServerRole = "SELECT * FROM tblserverrole WHERE serverID='" . $serverID . "' AND roleName='" . $roleName . "'";
 $resultExistingServerRole = mysqli_query($connection, $sqlExistingServerRole);
@@ -80,6 +100,13 @@ if ($rowExistingServerRole > 0) {
   echo json_encode($response);
 }
 
+function checkIfUserCanCreateServerRole($connection, $userID, $serverID) {
+  $getServerOwner_QUERY = "SELECT * FROM tblserver WHERE ownerID='" . $userID . "'";
+  $res = mysqli_query($connection, $getServerOwner_QUERY);
+  $count    = mysqli_num_rows($res);
+
+  return $count != 0;
+}
 
 function insertServerRoleToDatabase($connection, $serverID, $roleName, $canEditServer, $canDeleteServer) {
   $SQL_InsertServerRole = "INSERT INTO tblserverrole(serverID, roleName, canEditServer, canDeleteServer) VALUES('" . $serverID . "', '" . $roleName . "', '" . $canEditServer . "', '" . $canDeleteServer . "')";
