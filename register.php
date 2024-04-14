@@ -22,31 +22,13 @@ require_once 'includes/messageBox.php';
     <form method="post">
       <h1>Create an account</h1>
       <label for="email">Email address</label>
-      <input 
-        id="email" 
-        name="txtemail" 
-        class="txtInput" 
-        type="email" 
-        placeholder="abcd@email.com" 
-        required />
+      <input id="email" name="txtemail" class="txtInput" type="email" placeholder="abcd@email.com" required />
 
       <label for="username">Username</label>
-      <input 
-        id="username" 
-        name="txtusername" 
-        class="txtInput" 
-        type="text" 
-        placeholder="accord.mod12" 
-        required />
+      <input id="username" name="txtusername" class="txtInput" type="text" placeholder="accord.mod12" required />
 
       <label for="password">Password</label>
-      <input 
-        id="password" 
-        name="txtpassword" 
-        class="txtInput" 
-        type="password" 
-        placeholder="*******" 
-        required />
+      <input id="password" name="txtpassword" class="txtInput" type="password" placeholder="*******" required />
 
       <label for="birthdate">Date of birth</label>
       <div>
@@ -64,32 +46,36 @@ require_once 'includes/messageBox.php';
 
 <?php
 if (isset($_POST['btnRegister'])) {
-  //retrieve data from form and save the value to a variable
-  //for tbluserprofile
 
-  //////////////////////////////////
   $emailAdd   = $_POST['txtemail'];
   $userName   = $_POST['txtusername'];
   $birthDay   = $_POST['txtbirthday'];
   $password   = $_POST['txtpassword'];
 
-  //Check tbluseraccount if username is already existing. Save info if false. Prompt msg if true.
-  $getUname_QUERY = "SELECT * FROM tblaccount WHERE username='" . $userName . "'";
-  $result = mysqli_query($connection, $getUname_QUERY);
-  $row = mysqli_num_rows($result);
-  if ($row == 0) {
+  function checkIfUserAccountExists($connection, $userName) {
+    $getUsername_QUERY = "SELECT * FROM tblaccount WHERE username='" . $userName . "'";
+    $res = mysqli_query($connection, $getUsername_QUERY);
+    $row = mysqli_num_rows($res);
+
+    if ($row == 0) {
+      return false;
+    }
+    return true;
+  }
+
+  if (!checkIfUserAccountExists($connection, $userName)) {
 
     $hashedPW = password_hash($password, PASSWORD_DEFAULT);
-
-    $tblAccountInsert_QUERY = "INSERT INTO tblaccount(emailadd,username,password) VALUES('". $emailAdd ."','". $userName ."','". $hashedPW ."')";
+    $tblAccountInsert_QUERY = "INSERT INTO tblaccount(emailadd,username,password) VALUES('" . $emailAdd . "','" . $userName . "','" . $hashedPW . "')";
     mysqli_query($connection, $tblAccountInsert_QUERY);
 
     $accountKey = mysqli_insert_id($connection);
-    $tblUserInsert_QUERY = "INSERT INTO tbluser(accountID,birthdate,displayname) VALUES('". $accountKey ."','". $birthDay ."', '". $userName ."')";
+    $tblUserInsert_QUERY = "INSERT INTO tbluser(accountID,birthdate,displayname) VALUES('" . $accountKey . "','" . $birthDay . "', '" . $userName . "')";
     mysqli_query($connection, $tblUserInsert_QUERY);
 
     showMessage("New Record Saved");
   } else {
+
     showMessage("Account Already Exists");
   }
 }
