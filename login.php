@@ -26,8 +26,8 @@ require_once 'includes/messageBox.php';
       <form method="post">
 
         <div>
-          <label for="uname">Username: </label>
-          <input id="uname" type="text" name="txtusername">
+          <label for="userName">Username: </label>
+          <input id="userName" type="text" name="txtusername">
         </div>
 
         <div>
@@ -49,26 +49,35 @@ require_once 'includes/messageBox.php';
 
 <?php
 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
 
 if (isset($_POST['btnLogin'])) {
-  $uname    = $_POST['txtusername'];
-  $pwd      = $_POST['txtpassword'];
+  $userName    = $_POST['txtusername'];
+  $password    = $_POST['txtpassword'];
 
-  if (empty($uname) || empty($pwd)) {
+  if (empty($userName) || empty($password)) {
     return;
   }
 
-  $QUERY    = "SELECT * FROM tblaccount WHERE username='" . $uname . "'";
-
-  $result   = mysqli_query($connection, $QUERY);
+  $getUsername_QUERY    = "SELECT * FROM tblaccount WHERE username='" . $userName . "'";
+  $result   = mysqli_query($connection, $getUsername_QUERY);
   $count    = mysqli_num_rows($result);
   $row      = mysqli_fetch_array($result);
 
+  function getUserID($connection, $accountID) {
+    $getUserID_QUERY = "SELECT * FROM tbluser WHERE accountID='" . $accountID . "'";
+    $res = mysqli_query($connection, $getUserID_QUERY);
+    $row = mysqli_fetch_array($res);
+    return $row[0];
+  }
+
+
   if ($count == 0) {
     showMessage("Username does not exist.");
-  } else if (password_verify($pwd, $row[3])) {
-    $_SESSION['userid'] = $row[0];
+  } else if (password_verify($password, $row[3])) {
+    $_SESSION['userid'] = getUserID($connection, $row[0]);
     $_SESSION['username'] = $row[2];
     header("location: index.php");
   } else {
