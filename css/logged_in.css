@@ -22,14 +22,15 @@
   margin: 0;
   padding: 0;
 }
+html,body{
+  height:100%;
+  min-height:100%; 
+}
 #main-cont {
   margin-top: 3rem;
-  margin-right: 0;
   height: 100%;
   width: 100%;
   text-align: center;
-  display: flex;
-  flex-direction: row;
 }
 .blur {  
   filter: blur(5px);
@@ -37,23 +38,20 @@
   user-select: none;
 }
 #servers-sidebar {
+  float: left;
   height: 100%;
-  width: 20%;
-  left: 0;
-  margin-right: auto;
+  width: 15rem;
 
   background-color: beige;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  position: fixed;
   border: 2px solid black;
 }
 #servers-header {
   height: 10%;
-  margin-bottom: auto;
-  padding: 20px;
+  padding: 10px;
   width: 100%;
   box-sizing: border-box;
 
@@ -72,7 +70,7 @@
 #server-create-start > * {
   margin: auto;
 }
-#btnCreateServerSection {
+#btnCreateServerSection, #btnCreateChannelSection {
   margin-left: 10px;
   width: 30px;
   height: 30px;
@@ -99,18 +97,47 @@
   border: 3px solid black;
 }
 
+#channels-middlebar{
+  float: left;
+  height: 100%;
+  width: 15rem;
+
+  background-color: aqua;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid black;
+}
+
+#channels-header{
+  height: 10%;
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+
+  background-color: beige;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  overflow-x: visible;
+}
+
+#channels-wrapper{
+  height: 90%;
+  width: 100%;
+}
+
 #right-page {
   height: 100%;
-  width: 80%;
-  right: 0;
 
   background-color: beige;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  position: fixed;
-  overflow-y: scroll;
+  overflow: hidden scroll;
 }
 
 #tblservers {
@@ -157,7 +184,7 @@ td, th{
 }
 
 
-#create-server-section {
+#create-server-section, #create-channel-section {
   width: 30rem;
   height: 30rem;
 }
@@ -165,7 +192,7 @@ td, th{
   display: flex;
   margin: 0;
 }
-#create-server-confirm {
+#create-server-confirm, #create-channel-confirm {
   width: 20rem;
   height: 20rem;
 }

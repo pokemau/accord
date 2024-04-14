@@ -52,24 +52,32 @@ if($rowExistingServer > 0){
     return;
 }
 
+//insert new server
 $sqlInsertServer = "INSERT INTO tblserver(ownerID, servername) VALUES('".$ownerID."','".$servername."')";
-
 mysqli_query($connection, $sqlInsertServer);
 
+//get latest server ID after inserting new for new channel and user-server table
 $sqlGetLatestServer = "SELECT * FROM tblserver ORDER BY serverID DESC LIMIT 1";
 $resultLatestServer = mysqli_query($connection, $sqlGetLatestServer);
 $rowLatestServer = mysqli_fetch_array($resultLatestServer);
 $serverID = (int)$rowLatestServer[0];
 
-$sqlInsertChannel = "INSERT INTO tblchannel(serverID, channelname) VALUES('".$serverID."', 'general')";
-
-$sqlInsertUserServer = "INSERT INTO tbluserserver(userID, serverID) VALUES('".$ownerID."', '".$serverID."')";
-
+//insert new general channel in server
+$sqlInsertChannel = "INSERT INTO tblserverchannel(serverID, channelname) VALUES('".$serverID."', 'general')";
 mysqli_query($connection, $sqlInsertChannel);
-mysqli_query($connection, $sqlInsertUserServer);
 
-// to add tblUserServer
-// to add general channel to tblChannel
+//get latest channel ID (general) for user-serverchanneltable 
+$sqlGetLatestChannel = "SELECT * FROM tblserverchannel ORDER BY channelID DESC LIMIT 1";
+$resultLatestChannel = mysqli_query($connection, $sqlGetLatestChannel);
+$rowLatestChannel = mysqli_fetch_array($resultLatestChannel);
+$channelID = (int)$rowLatestChannel[0];
+
+//insert new many-to-many relationship tables
+$sqlInsertUserServer = "INSERT INTO tbluserserver(userID, serverID) VALUES('".$ownerID."', '".$serverID."')";
+$sqlInsertUserServerChannel = "INSERT INTO tbluserserverchannel(userID, serverchannelID) VALUES('".$ownerID."', '".$channelID."')";
+mysqli_query($connection, $sqlInsertUserServer);
+mysqli_query($connection, $sqlInsertUserServerChannel);
+
 $response = array(
     'status' => true,
     'message' => "Created server successfully (createServer.php)"

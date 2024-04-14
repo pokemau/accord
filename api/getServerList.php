@@ -18,7 +18,7 @@ if(isset($_SESSION["userid"])){
     $response = array(
         'status' => false,
         'errorType' => 'noUserID',
-        'message' => "No user id provided (createServer.php)"
+        'message' => "No user id provided (getServerList.php)"
     );
     echo json_encode($response);
     return;

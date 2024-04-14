@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 13, 2024 at 01:54 PM
+-- Generation Time: Apr 14, 2024 at 12:18 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -47,28 +47,6 @@ INSERT INTO `tblaccount` (`accountID`, `emailadd`, `username`, `password`, `user
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tblchannel`
---
-
-CREATE TABLE `tblchannel` (
-  `channelID` int(10) NOT NULL,
-  `serverID` int(10) NOT NULL,
-  `channelname` varchar(60) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tblchannel`
---
-
-INSERT INTO `tblchannel` (`channelID`, `serverID`, `channelname`) VALUES
-(14, 5, 'general'),
-(16, 7, 'general'),
-(22, 13, 'general'),
-(24, 15, 'general');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `tblserver`
 --
 
@@ -83,10 +61,30 @@ CREATE TABLE `tblserver` (
 --
 
 INSERT INTO `tblserver` (`serverID`, `ownerID`, `servername`) VALUES
-(5, 5, 'Yahallo'),
-(7, 5, 'GameServer'),
-(13, 4, 'mau server'),
-(15, 4, 'new server');
+(18, 5, 'Yahallo'),
+(19, 5, 'GameServer');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblserverchannel`
+--
+
+CREATE TABLE `tblserverchannel` (
+  `channelID` int(10) NOT NULL,
+  `serverID` int(10) NOT NULL,
+  `channelname` varchar(60) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tblserverchannel`
+--
+
+INSERT INTO `tblserverchannel` (`channelID`, `serverID`, `channelname`) VALUES
+(27, 18, 'general'),
+(28, 18, 'chat here'),
+(29, 18, 'all-csit'),
+(30, 19, 'general');
 
 -- --------------------------------------------------------
 
@@ -101,14 +99,6 @@ CREATE TABLE `tblserverrole` (
   `canEditServer` int(1) NOT NULL,
   `canDeleteServer` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tblserverrole`
---
-
-INSERT INTO `tblserverrole` (`roleID`, `serverID`, `roleName`, `canEditServer`, `canDeleteServer`) VALUES
-(11, 15, 'new role here', 1, 1),
-(12, 15, 'another role', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -150,10 +140,30 @@ CREATE TABLE `tbluserserver` (
 --
 
 INSERT INTO `tbluserserver` (`userServerID`, `userID`, `serverID`) VALUES
-(16, 5, 5),
-(18, 5, 7),
-(24, 4, 13),
-(26, 4, 15);
+(29, 5, 18),
+(30, 5, 19);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbluserserverchannel`
+--
+
+CREATE TABLE `tbluserserverchannel` (
+  `user-serverchannelID` int(10) NOT NULL,
+  `userID` int(10) NOT NULL,
+  `serverchannelID` int(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbluserserverchannel`
+--
+
+INSERT INTO `tbluserserverchannel` (`user-serverchannelID`, `userID`, `serverchannelID`) VALUES
+(1, 5, 27),
+(2, 5, 28),
+(3, 5, 29),
+(4, 5, 30);
 
 --
 -- Indexes for dumped tables
@@ -166,18 +176,18 @@ ALTER TABLE `tblaccount`
   ADD PRIMARY KEY (`accountID`);
 
 --
--- Indexes for table `tblchannel`
---
-ALTER TABLE `tblchannel`
-  ADD PRIMARY KEY (`channelID`),
-  ADD KEY `server-channel` (`serverID`);
-
---
 -- Indexes for table `tblserver`
 --
 ALTER TABLE `tblserver`
   ADD PRIMARY KEY (`serverID`),
   ADD KEY `server-owner` (`ownerID`);
+
+--
+-- Indexes for table `tblserverchannel`
+--
+ALTER TABLE `tblserverchannel`
+  ADD PRIMARY KEY (`channelID`),
+  ADD KEY `server-channel` (`serverID`);
 
 --
 -- Indexes for table `tblserverrole`
@@ -202,6 +212,14 @@ ALTER TABLE `tbluserserver`
   ADD KEY `userserver-server` (`serverID`);
 
 --
+-- Indexes for table `tbluserserverchannel`
+--
+ALTER TABLE `tbluserserverchannel`
+  ADD PRIMARY KEY (`user-serverchannelID`),
+  ADD KEY `fk-user` (`userID`),
+  ADD KEY `fk-serverchannel` (`serverchannelID`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -212,16 +230,16 @@ ALTER TABLE `tblaccount`
   MODIFY `accountID` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT for table `tblchannel`
---
-ALTER TABLE `tblchannel`
-  MODIFY `channelID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
-
---
 -- AUTO_INCREMENT for table `tblserver`
 --
 ALTER TABLE `tblserver`
-  MODIFY `serverID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `serverID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
+--
+-- AUTO_INCREMENT for table `tblserverchannel`
+--
+ALTER TABLE `tblserverchannel`
+  MODIFY `channelID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `tblserverrole`
@@ -239,17 +257,17 @@ ALTER TABLE `tbluser`
 -- AUTO_INCREMENT for table `tbluserserver`
 --
 ALTER TABLE `tbluserserver`
-  MODIFY `userServerID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `userServerID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+
+--
+-- AUTO_INCREMENT for table `tbluserserverchannel`
+--
+ALTER TABLE `tbluserserverchannel`
+  MODIFY `user-serverchannelID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `tblchannel`
---
-ALTER TABLE `tblchannel`
-  ADD CONSTRAINT `server-channel` FOREIGN KEY (`serverID`) REFERENCES `tblserver` (`serverID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `tblserver`
@@ -258,10 +276,16 @@ ALTER TABLE `tblserver`
   ADD CONSTRAINT `server-owner` FOREIGN KEY (`ownerID`) REFERENCES `tblaccount` (`accountID`);
 
 --
+-- Constraints for table `tblserverchannel`
+--
+ALTER TABLE `tblserverchannel`
+  ADD CONSTRAINT `server-channel` FOREIGN KEY (`serverID`) REFERENCES `tblserver` (`serverID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `tblserverrole`
 --
 ALTER TABLE `tblserverrole`
-  ADD CONSTRAINT `fk_Server_Role` FOREIGN KEY (`serverID`) REFERENCES `tblserver` (`serverID`);
+  ADD CONSTRAINT `fk_Server_Role` FOREIGN KEY (`serverID`) REFERENCES `tblserver` (`serverID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `tbluser`
@@ -275,6 +299,13 @@ ALTER TABLE `tbluser`
 ALTER TABLE `tbluserserver`
   ADD CONSTRAINT `userserver-server` FOREIGN KEY (`serverID`) REFERENCES `tblserver` (`serverID`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `userserver-user` FOREIGN KEY (`userID`) REFERENCES `tblaccount` (`accountID`);
+
+--
+-- Constraints for table `tbluserserverchannel`
+--
+ALTER TABLE `tbluserserverchannel`
+  ADD CONSTRAINT `fk-serverchannel` FOREIGN KEY (`serverchannelID`) REFERENCES `tblserverchannel` (`channelID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk-user` FOREIGN KEY (`userID`) REFERENCES `tblaccount` (`accountID`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

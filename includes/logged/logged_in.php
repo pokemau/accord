@@ -41,16 +41,27 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
   <div id="main-cont">
     <div id="servers-sidebar">
       <div id="servers-header">
-        <h2>SERVERS</h2>
+        <h3>SERVERS</h3>
         <div id="server-create-start">
-          <h3>Create: </h3>
+          <h4>Create: </h4>
           <button id="btnCreateServerSection">+</button>
         </div>
       </div>
       <div id="servers-wrapper">
       </div>
+    </div>
 
-      <div id="right-page">
+    <div id="channels-middlebar">
+      <div id="channels-header">
+        <h2 class="lblServerName">Server</h2>
+        <button id="btnCreateChannelSection">+</button>
+      </div>
+      <br>
+      <div id="channels-wrapper">
+      </div>
+    </div>
+
+    <div id="right-page">
         <?php echo "<h2>UserID: " . $_SESSION['userid'] . "</h2>";
         echo "<h2>Username: " . $_SESSION['username'] . "</h2>"; ?>
 
@@ -108,21 +119,21 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
           </tbody>
         </table>
       </div>
-
     </div>
 
+    <!-- pop-up forms -->
     <div id="create-server-section" class="popUpForm">
       <div id="create-server-section-closeBtnDiv" class="divCloseBtn">
-        <button type="button" id="btnCreateEventAreaClose" class="btn btn-danger closeBtn">Close</button>
+        <button type="button" id="btnCreateServerSectionClose" class="closeBtn">Close</button>
       </div>
       <label for="txtServerName">Server Name</label>
       <input type="text" id="txtServerName" placeholder="Name"><br>
-      <button id="btnCreateEvent">Create Server</button>
+      <button id="btnCreateServer">Create Server</button>
     </div>
 
     <div id="create-server-confirm" class="popUpForm">
       <h4 class="longTxt">Are you sure you want to create a server named:</h4>
-      <h3 id="lblServerName"></h3>
+      <h3 id="lblServerNameConfirm"></h3>
       <div>
         <button id="btnYESCreateServerConfirm">Yes</button>
         <button id="btnNOCreateServerConfirm">No</button>
@@ -136,6 +147,33 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
       </div>
     </div>
 
+    <div id="create-channel-section" class="popUpForm">
+      <div id="create-channel-section-closeBtnDiv" class="divCloseBtn">
+        <button type="button" id="btnCreateChannelSectionClose" class="closeBtn">Close</button>
+      </div>
+      <label for="txtChannelName">Channel Name</label>
+      <input type="text" id="txtChannelName" placeholder="Name"><br>
+      <button id="btnCreateChannel">Create Server</button>
+    </div>
+
+    <div id="create-channel-confirm" class="popUpForm">
+      <h4 class="longTxt">Are you sure you want to create a channel named:</h4>
+      <h3 id="lblChannelNameConfirm"></h3>
+      <h4 class="longTxt">in the server:</h4>
+      <h3 class="lblServerName"></h3>
+      <div>
+        <button id="btnYESCreateChannelConfirm">Yes</button>
+        <button id="btnNOCreateChannelConfirm">No</button>
+      </div>
+    </div>
+
+    <div id="create-channel-success" class="popUpForm">
+      <h4 class="longTxt">Successfully created!</h4>
+      <div>
+        <button id="btnOKCreateChannelSuccess">Ok</button>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>
