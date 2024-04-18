@@ -14,8 +14,11 @@ $(document).ready(function(){
     }
     function refresh(){
         $(".popUpForm").hide();
+        $("#channels-middlebar").hide();
+        $("#messages-rightbar").hide();
         unBlurEverything();
         getServerList();
+        getServerChannelList();
     }
     function showMessage(message){
         $("body").append("<div id='message-box'> <p>"+message+"</p> </div>");
@@ -107,17 +110,20 @@ $(document).ready(function(){
 
     function printServerChannels(channelList){
         $("#channels-wrapper").html("");
+        $("#channels-middlebar").show();
         for(let i=0; i<channelList.length; i++){
             let channelInfo = channelList[i];
             let string = "<div data-channelID='" + Number(channelInfo.channelID) + "' class='channel-div'>"
-                + "<h2>" + String(channelInfo.channelname) + "</h2>"
+                + "<h4>" + String(channelInfo.channelname) + "</h4>"
                 + "</div>";
             $(string).appendTo("#channels-wrapper");
         }
     }
 
     $("#servers-wrapper").on('click', '.server-div', function(){
-        $(".clicked").removeClass("clicked");
+        if($(this).hasClass("clicked")) return;
+
+        $(".server-div.clicked").removeClass("clicked");
         $(this).addClass("clicked");
         let serverID = $(this).data("serverid");
         getServerChannelList(serverID)
@@ -128,6 +134,22 @@ $(document).ready(function(){
             });
         sessionStorage.setItem("serverID", serverID);
     });
+
+    $("#channels-wrapper").on('click', '.channel-div', function(){
+        if($(this).hasClass("clicked")) return;
+
+        $(".channel-div.clicked").removeClass("clicked");
+        $(this).addClass("clicked");
+        let channelID = $(this).data("channelid");
+        sessionStorage.setItem("channelID", channelID);
+
+        $("#channelNameHeader").html("#"+$(".channel-div.clicked").children().text());
+
+        $("#messages-rightbar").show();
+        $("#right-page").hide();
+    });
+
+
 
     $("#btnCreateServerSection").on('click', function(){
         backgroundBlur();

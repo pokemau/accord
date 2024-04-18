@@ -97,6 +97,17 @@ html,body{
   border: 3px solid black;
 }
 
+.channel-div {
+  margin: 2px;
+  width: 100%;
+  height: 2rem;
+  border: 1px solid black;
+  align-items: center;
+}
+.channel-div.clicked {
+  border: 3px solid black;
+}
+
 #channels-middlebar{
   float: left;
   height: 100%;
@@ -127,6 +138,31 @@ html,body{
 #channels-wrapper{
   height: 90%;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden scroll;
+  padding: 10px;
+}
+
+#messages-rightbar{
+  height: 100%;
+
+  background-color: pink;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden scroll;
+}
+
+#channel-header{
+  width: 100%;
+  height: 5rem;
+  border: 1px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 10px;
 }
 
 #right-page {

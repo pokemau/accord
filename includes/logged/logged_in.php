@@ -46,8 +46,18 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
         <h2 class="lblServerName">Server</h2>
         <button id="btnCreateChannelSection">+</button>
       </div>
-      <br>
       <div id="channels-wrapper">
+      </div>
+    </div>
+
+    <div id="messages-rightbar">
+      <div id="channel-header">
+        <h3 id="channelNameHeader">TEST</h3>
+      </div>
+      <div id="messages-wrapper"></div>
+      <div id="message-inputgroup">
+        <textarea id="inpMessage" placeholder="Message here"></textarea>
+        <button id="btnSendMessage">Send</button>
       </div>
     </div>
 
