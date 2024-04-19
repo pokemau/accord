@@ -45,6 +45,7 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
       <div id="channels-header">
         <h2 class="lblServerName">Server</h2>
         <button id="btnCreateChannelSection">+</button>
+        <img src="images\settings_icon.png" alt="SettingsIcon" id="serverSettings">
       </div>
       <div id="channels-wrapper">
       </div>
@@ -52,7 +53,8 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
 
     <div id="messages-rightbar">
       <div id="channel-header">
-        <h3 id="channelNameHeader">TEST</h3>
+        <h3 id="channelNameHeader"></h3>
+        <img src="images\settings_icon.png" alt="SettingsIcon" id="channelSettings">
       </div>
       <div id="messages-wrapper"></div>
       <div id="message-inputgroup">
@@ -133,7 +135,7 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
 
   <div id="create-server-confirm" class="popUpForm">
     <h4 class="longTxt">Are you sure you want to create a server named:</h4>
-    <h3 id="lblServerNameConfirm"></h3>
+    <h3 class="lblServerNameConfirm"></h3>
     <div>
       <button id="btnYESCreateServerConfirm">Yes</button>
       <button id="btnNOCreateServerConfirm">No</button>
@@ -141,9 +143,9 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
   </div>
 
   <div id="create-server-success" class="popUpForm">
-    <h4 class="longTxt">Successfully created!</h4>
+    <h4 class="longTxt">Successfully created the server!</h4>
     <div>
-      <button id="btnOKCreateServerSuccess">Ok</button>
+      <button class="btnOKSuccess">Ok</button>
     </div>
   </div>
 
@@ -153,12 +155,12 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
     </div>
     <label for="txtChannelName">Channel Name</label>
     <input type="text" id="txtChannelName" placeholder="Name"><br>
-    <button id="btnCreateChannel">Create Server</button>
+    <button id="btnCreateChannel">Create Channel</button>
   </div>
 
   <div id="create-channel-confirm" class="popUpForm">
     <h4 class="longTxt">Are you sure you want to create a channel named:</h4>
-    <h3 id="lblChannelNameConfirm"></h3>
+    <h3 class="lblChannelNameConfirm"></h3>
     <h4 class="longTxt">in the server:</h4>
     <h3 class="lblServerName"></h3>
     <div>
@@ -168,12 +170,106 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
   </div>
 
   <div id="create-channel-success" class="popUpForm">
-    <h4 class="longTxt">Successfully created!</h4>
+    <h4 class="longTxt">Successfully created the channel!</h4>
     <div>
-      <button id="btnOKCreateChannelSuccess">Ok</button>
+      <button class="btnOKSuccess">Ok</button>
     </div>
   </div>
+
+  <!-- server update and delete section -->
+  <div id="update-delete-server-section" class="popUpForm">
+    <div id="update-server-section-closeBtnDiv" class="divCloseBtn">
+      <button type="button" id="btnUpdateServerSectionClose" class="closeBtn">Close</button>
+    </div>
+    <label for="txtNewServerName">New Server Name</label>
+    <input type="text" id="txtNewServerName" placeholder="Name"><br>
+    <button id="btnUpdateServer">Update Server</button>
+
+    <h4>or do you want to delete the server?</h4>
+    <button id="btnDeleteServer">Delete Server</button>
   </div>
+
+  <div id="update-server-confirm" class="popUpForm">
+    <h4 class="longTxt">Are you sure you want to update a server name from:</h4>
+    <h3 class="lblServerNameConfirm"></h3>
+    <h4 class="longTxt">into:</h4>
+    <h3 class="lblNewServerName"></h3>
+    <div>
+      <button id="btnYESUpdateServerConfirm">Yes</button>
+      <button id="btnNOUpdateServerConfirm">No</button>
+    </div>
+  </div>
+
+  <div id="update-server-success" class="popUpForm">
+    <h4 class="longTxt">Successfully updated the server!</h4>
+    <div>
+      <button class="btnOKSuccess">Ok</button>
+    </div>
+  </div>
+
+  <div id="delete-server-confirm" class="popUpForm">
+    <h4 class="longTxt">Are you sure you want to delete the server:</h4>
+    <h3 class="lblServerNameConfirm"></h3>
+    <div>
+      <button id="btnYESDeleteServerConfirm">Yes</button>
+      <button id="btnNODeleteServerConfirm">No</button>
+    </div>
+  </div>
+
+  <div id="delete-server-success" class="popUpForm">
+    <h4 class="longTxt">Successfully deleted the server!</h4>
+    <div>
+      <button class="btnOKSuccess">Ok</button>
+    </div>
+  </div>
+
+  <!-- channel update and delete section -->
+  <div id="update-delete-channel-section" class="popUpForm">
+    <div id="update-channel-section-closeBtnDiv" class="divCloseBtn">
+      <button type="button" id="btnUpdateChannelSectionClose" class="closeBtn">Close</button>
+    </div>
+    <label for="txtNewChannelName">New Channel Name</label>
+    <input type="text" id="txtNewChannelName" placeholder="Name"><br>
+    <button id="btnUpdateChannel">Update Channel</button>
+
+    <h4>or do you want to delete the channel?</h4>
+    <button id="btnDeleteChannel">Delete Channel</button>
+  </div>
+
+  <div id="update-channel-confirm" class="popUpForm">
+    <h4 class="longTxt">Are you sure you want to update a channel name from:</h4>
+    <h3 class="lblChannelNameConfirm"></h3>
+    <h4 class="longTxt">into:</h4>
+    <h3 class="lblNewChannelName"></h3>
+    <div>
+      <button id="btnYESUpdateChannelConfirm">Yes</button>
+      <button id="btnNOUpdateChannelConfirm">No</button>
+    </div>
+  </div>
+
+  <div id="update-channel-success" class="popUpForm">
+    <h4 class="longTxt">Successfully updated the channel!</h4>
+    <div>
+      <button class="btnOKSuccess">Ok</button>
+    </div>
+  </div>
+
+  <div id="delete-channel-confirm" class="popUpForm">
+    <h4 class="longTxt">Are you sure you want to delete the channel:</h4>
+    <h3 class="lblServerChannelConfirm"></h3>
+    <div>
+      <button id="btnYESDeleteChannelConfirm">Yes</button>
+      <button id="btnNODeleteChannelConfirm">No</button>
+    </div>
+  </div>
+
+  <div id="delete-channel-success" class="popUpForm">
+    <h4 class="longTxt">Successfully deleted!</h4>
+    <div>
+      <button class="btnOKSuccess">Ok</button>
+    </div>
+  </div>
+
 </body>
 
 </html>

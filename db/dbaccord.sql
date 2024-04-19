@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 14, 2024 at 01:59 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- Generation Time: Apr 19, 2024 at 03:42 AM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 8.1.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -40,7 +40,8 @@ CREATE TABLE `tblaccount` (
 --
 
 INSERT INTO `tblaccount` (`accountID`, `emailadd`, `username`, `password`, `usertype`) VALUES
-(1, 'rentillosa90@gmail.com', 'pokemau', '$2y$10$JksoIDI/X3wceJJ43uNu0O.Ibmrx2GLXN/hmmGx4zq/gkpwzkOiIi', 'user');
+(1, 'rentillosa90@gmail.com', 'pokemau', '$2y$10$JksoIDI/X3wceJJ43uNu0O.Ibmrx2GLXN/hmmGx4zq/gkpwzkOiIi', 'user'),
+(2, 'jorash@gmail.com', 'Jorash', '$2y$10$LlSMMDXp6YPxQtxdTvMuiewAY9c2rgmts9wyYwvQdIdPxUY8/pB1O', 'user');
 
 -- --------------------------------------------------------
 
@@ -60,7 +61,8 @@ CREATE TABLE `tblserver` (
 
 INSERT INTO `tblserver` (`serverID`, `ownerID`, `servername`) VALUES
 (1, 1, 'mau_server'),
-(2, 1, 'new mau server');
+(2, 1, 'new mau server'),
+(4, 2, 'Yahallo');
 
 -- --------------------------------------------------------
 
@@ -82,7 +84,10 @@ INSERT INTO `tblserverchannel` (`channelID`, `serverID`, `channelname`) VALUES
 (1, 1, 'general'),
 (2, 1, 'all-csit'),
 (3, 1, 'test'),
-(4, 2, 'general');
+(4, 2, 'general'),
+(7, 4, 'general'),
+(8, 4, 'chat-here'),
+(10, 4, 'mudae23');
 
 -- --------------------------------------------------------
 
@@ -124,7 +129,8 @@ CREATE TABLE `tbluser` (
 --
 
 INSERT INTO `tbluser` (`userID`, `accountID`, `displayname`, `gender`, `birthdate`) VALUES
-(1, 1, 'pokemau', 'none', '2003-11-08');
+(1, 1, 'pokemau', 'none', '2003-11-08'),
+(2, 2, 'Jorash', 'none', '2024-04-01');
 
 -- --------------------------------------------------------
 
@@ -144,7 +150,8 @@ CREATE TABLE `tbluserserver` (
 
 INSERT INTO `tbluserserver` (`userServerID`, `userID`, `serverID`) VALUES
 (1, 1, 1),
-(2, 1, 2);
+(2, 1, 2),
+(4, 2, 4);
 
 -- --------------------------------------------------------
 
@@ -166,7 +173,10 @@ INSERT INTO `tbluserserverchannel` (`user-serverchannelID`, `userID`, `servercha
 (1, 1, 1),
 (2, 1, 2),
 (3, 1, 3),
-(4, 1, 4);
+(4, 1, 4),
+(7, 2, 7),
+(8, 2, 8),
+(10, 2, 10);
 
 --
 -- Indexes for dumped tables
@@ -230,19 +240,19 @@ ALTER TABLE `tbluserserverchannel`
 -- AUTO_INCREMENT for table `tblaccount`
 --
 ALTER TABLE `tblaccount`
-  MODIFY `accountID` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `accountID` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `tblserver`
 --
 ALTER TABLE `tblserver`
-  MODIFY `serverID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `serverID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `tblserverchannel`
 --
 ALTER TABLE `tblserverchannel`
-  MODIFY `channelID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `channelID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `tblserverrole`
@@ -254,19 +264,19 @@ ALTER TABLE `tblserverrole`
 -- AUTO_INCREMENT for table `tbluser`
 --
 ALTER TABLE `tbluser`
-  MODIFY `userID` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `userID` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `tbluserserver`
 --
 ALTER TABLE `tbluserserver`
-  MODIFY `userServerID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `userServerID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `tbluserserverchannel`
 --
 ALTER TABLE `tbluserserverchannel`
-  MODIFY `user-serverchannelID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `user-serverchannelID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- Constraints for dumped tables
