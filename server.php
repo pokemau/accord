@@ -38,6 +38,7 @@ function showServerRoles($id, $connection) {
         <td>" . $canEdit . "</td>
         <td>" . $canDelete . "</td>
         <td>
+          <a href='api/serverRole/editServerRole.php?roleID=" . $row['roleID'] . "'>EDIT</a>
           <a href='api/serverRole/deleteServerRole.php?server_id=" . $id . "&role_id=" . $row['roleID'] . "'>DELETE</a>
         </td>
       </tr>
