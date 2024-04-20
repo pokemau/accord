@@ -57,10 +57,8 @@ if (isset($_POST['btnRegister'])) {
     $res = mysqli_query($connection, $getUsername_QUERY);
     $row = mysqli_num_rows($res);
 
-    if ($row == 0) {
-      return false;
-    }
-    return true;
+
+    return $row != 0;
   }
 
   if (!checkIfUserAccountExists($connection, $userName)) {

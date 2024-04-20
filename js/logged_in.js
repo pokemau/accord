@@ -453,4 +453,9 @@ $(document).ready(function(){
             });
     
     });
+
+    // user settings btn
+    $("#user-settings-btn").click(() => {
+        window.location.assign("user.php");
+    });
 })
