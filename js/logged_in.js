@@ -11,13 +11,54 @@ $(document).ready(function(){
     function backgroundBlur(){
         $("nav").addClass('blur');
         $("#divServerList").addClass('blur');
+        $("#main-cont").addClass('blur');
+    }
+    function channelsMiddleBarShow(){
+        $(".lblServerName").text($(".server-div.clicked").children().text());
+        $("#channels-middlebar").show();
+    }
+    function messagesRightBarShow(){
+        $("#channelNameHeader").text("#"+$(".channel-div.clicked").children().text());
+        $("#messages-rightbar").show();
     }
     function refresh(){
-        $(".popUpForm").hide();
-        $("#channels-middlebar").hide();
-        $("#messages-rightbar").hide();
         unBlurEverything();
-        getServerList();
+        $(".popUpForm").hide();
+        $(".popUpForm").addClass("unblurred");
+        let promiseServers = getServerList();
+        let promiseChannels = $.Deferred();     //initialize a promise-type in case we dont go through an async func
+        if($(".server-div.clicked")[0]){        //if clicked server-div exists already, just update the channelslist
+            promiseServers.then(function() {
+                getServerChannelList()
+                    .then(response => {
+                        channelsMiddleBarShow();
+                        promiseChannels.resolve(response);
+                    })
+                    .catch(error => {
+                        promiseChannels.reject(error);
+                    });
+            });
+        }else{      //else complete initialized 'resolved' promise and hide channels
+            promiseChannels.resolve();      //resolves the initialized promise cuz we dont have async func
+            $("#channels-middlebar").hide();
+        }
+
+        if($(".channel-div.clicked")[0]){       //if channel div has clicked, wait for updated channels before showing messages 
+            promiseChannels.done(function() {
+                // getMessageList()     //not yet implemented
+                //     .then(response => {
+                //         messagesRightBarShow();
+                //         promiseChannels.resolve(response);
+                //     })
+                //     .catch(error => {
+                //         promiseChannels.reject(error);
+                //     });
+
+                messagesRightBarShow();
+            });
+        }else{
+            $("#messages-rightbar").hide();
+        }
     }
     function showMessage(message){
         $("body").append("<div id='message-box'> <p>"+message+"</p> </div>");
@@ -28,6 +69,7 @@ $(document).ready(function(){
             }
           }, 3000);
     }
+    
 
     async function createServer(serverName){
         try{
@@ -47,8 +89,9 @@ $(document).ready(function(){
         }
     }
 
-    async function updateServer(toUpdateServerID, newServerName){
+    async function updateServer(newServerName){
         try{
+            let toUpdateServerID = sessionStorage.getItem("serverID");
             let response = await $.post("api/updateServer.php",
             {
                 serverID: toUpdateServerID,
@@ -66,8 +109,9 @@ $(document).ready(function(){
         }
     }
 
-    async function deleteServer(toDeleteServerID){
+    async function deleteServer(){
         try{
+            let toDeleteServerID = sessionStorage.getItem("serverID");
             let response = await $.post("api/deleteServer.php",
             {
                 serverID: toDeleteServerID
@@ -84,8 +128,9 @@ $(document).ready(function(){
         }
     }
 
-    async function createServerChannel(serverIDparam, channelName){
+    async function createServerChannel(channelName){
         try{
+            let serverIDparam = sessionStorage.getItem("serverID");
             let response = await $.post("api/createServerChannel.php",
             {
                 serverID: serverIDparam,
@@ -103,8 +148,9 @@ $(document).ready(function(){
         }
     }
 
-    async function updateServerChannel(toUpdateChannelID, newChannelName){
+    async function updateServerChannel(newChannelName){
         try{
+            let toUpdateChannelID = sessionStorage.getItem("channelID");
             let response = await $.post("api/updateServerChannel.php",
             {
                 channelID: toUpdateChannelID,
@@ -122,8 +168,9 @@ $(document).ready(function(){
         }
     }
 
-    async function deleteServerChannel(toDeleteChannelID){
+    async function deleteServerChannel(){
         try{
+            let toDeleteChannelID = sessionStorage.getItem("channelID");
             let response = await $.post("api/deleteServerChannel.php",
             {
                 channelID: toDeleteChannelID
@@ -153,18 +200,24 @@ $(document).ready(function(){
     }
 
     function printServers(serverList){
+        let serverIDClicked = $(".server-div.clicked").data("serverid");
         $("#servers-wrapper").html("");
         for(let i=0; i<serverList.length; i++){
             let serverInfo = serverList[i];
-            let string = "<div data-serverid='" + Number(serverInfo.serverID) + "' class='server-div'>"
+            let string = "<div data-serverid='" + Number(serverInfo.serverID) + "' class='server-div";
+            if(serverInfo.serverID == serverIDClicked){
+                string += " clicked";
+            }
+            string += "'>"
                 + "<h2>" + String(serverInfo.servername) + "</h2>"
                 + "</div>";
             $(string).appendTo("#servers-wrapper");
         }
     }
 
-    async function getServerChannelList(serverIDparam){
+    async function getServerChannelList(){
         try{
+            let serverIDparam = sessionStorage.getItem("serverID");
             let response = await $.get("api/getServerChannelList.php",
             {
                 serverID: serverIDparam  
@@ -182,11 +235,16 @@ $(document).ready(function(){
     }
 
     function printServerChannels(channelList){
+        let channelIDClicked = $(".channel-div.clicked").data("channelid");
         $("#channels-wrapper").html("");
-        $("#channels-middlebar").show();
+        channelsMiddleBarShow();
         for(let i=0; i<channelList.length; i++){
             let channelInfo = channelList[i];
-            let string = "<div data-channelID='" + Number(channelInfo.channelID) + "' class='channel-div'>"
+            let string = "<div data-channelid='" + Number(channelInfo.channelID) + "' class='channel-div";
+            if(channelInfo.channelID == channelIDClicked){
+                string += " clicked";
+            }
+            string += "'>"
                 + "<h4>" + String(channelInfo.channelname) + "</h4>"
                 + "</div>";
             $(string).appendTo("#channels-wrapper");
@@ -200,13 +258,13 @@ $(document).ready(function(){
         $(".server-div.clicked").removeClass("clicked");
         $(this).addClass("clicked");
         let serverID = $(this).data("serverid");
-        getServerChannelList(serverID)
+        sessionStorage.setItem("serverID", serverID);
+        getServerChannelList()
             .then(response => {
             })
             .catch(error => {
                 console.log(error);
             });
-        sessionStorage.setItem("serverID", serverID);
     });
 
     $("#channels-wrapper").on('click', '.channel-div', function(){
@@ -217,96 +275,95 @@ $(document).ready(function(){
         let channelID = $(this).data("channelid");
         sessionStorage.setItem("channelID", channelID);
 
-        $("#channelNameHeader").html("#"+$(".channel-div.clicked").children().text());
-
-        $("#messages-rightbar").show();
+        messagesRightBarShow();
         $("#right-page").hide();
     });
 
+    function openPopUpForm(callingButton){
+        let callingButtonDiv = $(callingButton).parent()
+        let callingPopUpForm = $(callingButtonDiv).parent();
 
+        callingPopUpForm.addClass("blur");
+        callingPopUpForm.removeClass("unblurred");
+
+        let index = 0;
+
+        if($(callingPopUpForm).find('.divSubmitBtn').length > 1){
+            index = $(callingPopUpForm).find('.divSubmitBtn').index(callingButtonDiv);
+        }
+
+        let childPopUpForm =  $(callingPopUpForm).find('.popUpForm')[index];
+        $(childPopUpForm).show();
+    };
+    function closePopUpForm(callingButton){
+        let callingPopUpForm = $(callingButton).parent().parent();
+        callingPopUpForm.addClass("unblurred");
+        callingPopUpForm.hide();
+        let parentPopUpForm =  $(callingPopUpForm).parent();
+        if($(parentPopUpForm).is('body')) {
+            refresh();
+            return;
+        }
+        parentPopUpForm.removeClass("blur");
+        parentPopUpForm.addClass("unblurred");
+    }
 
     $("#btnCreateServerSection").on('click', function(){
         backgroundBlur();
         $("#create-server-section").show();
     });
-    $("#btnCreateServerSectionClose").on('click', function(){
-        $("#create-server-section").hide();
-        unBlurEverything();
+
+    $(".closeBtn").on('click', function(){
+        closePopUpForm(this)
     });
+    $(".noBtn").on('click', function(){
+        closePopUpForm(this)
+    });
+
     $("#btnCreateServer").on('click', function(){
         let serverName = $("#txtServerName").val();
         if(serverName == "") return;
         $(".lblServerNameConfirm").text(serverName);
-        $("#create-server-section").addClass("blur");
-        $("#create-server-confirm").show();
+        openPopUpForm(this);
     });
     $("#btnYESCreateServerConfirm").on('click', function(){
         let serverName = $("#txtServerName").val();
 
         createServer(serverName)
             .then(response => {
-                $("#create-server-confirm").addClass("blur");
-                $("#create-server-success").show();
+                refresh();
+                showMessage("Successfully created the server!");
             })
             .catch(error => {
-                if(typeof error == String){
-                    showMessage(error);
-                }else{
-                    showMessage("Please dont include \' or \" in the servername");
-                    console.log(error);
-                }
-                $("#create-server-confirm").hide();
-                $("#create-server-section").removeClass("blur");
+                showMessage(error);
+                return;
             });
-    
     });
-    $("#btnNOCreateServerConfirm").on('click', function(){
-        $("#create-server-confirm").hide();
-        $("#create-server-section").removeClass("blur");
-    });
-    $("#btnOKCreateServerSuccess").on('click', function(){
-        refresh();
-    });
-
 
     $("#btnCreateChannelSection").on('click', function(){
         backgroundBlur();
         $("#create-channel-section").show();
     });
-    $("#btnCreateChannelSectionClose").on('click', function(){
-        $("#create-channel-section").hide();
-        unBlurEverything();
-    });
     $("#btnCreateChannel").on('click', function(){
         let channelName = $("#txtChannelName").val();
         if(channelName == "") return;
         $(".lblChannelNameConfirm").text(channelName);
-        $("#create-channel-section").addClass("blur");
-        $("#create-channel-confirm").show();
+        $(".lblServerNameConfirm").text($(".server-div.clicked").children().text())
+        openPopUpForm(this);
     });
     $("#btnYESCreateChannelConfirm").on('click', function(){
         let channelName = $("#txtChannelName").val();
 
-        createServerChannel(sessionStorage.getItem("serverID"), channelName)
+        createServerChannel(channelName)
             .then(response => {
-                $("#create-channel-confirm").addClass("blur");
-                $("#create-channel-success").show();
+                refresh();
+                showMessage("Successfully created the channel!");
             })
             .catch(error => {
-                if(typeof error == String){
-                    showMessage(error);
-                }else{
-                    showMessage("Please dont include \' or \" in the channel name");
-                    console.log(error);
-                }
-                $("#create-channel-confirm").hide();
-                $("#create-channel-section").removeClass("blur");
+                showMessage(error);
+                closePopUpForm();
             });
     
-    });
-    $("#btnNOCreateChannelConfirm").on('click', function(){
-        $("#create-channel-confirm").hide();
-        $("#create-channel-section").removeClass("blur");
     });
 
     //server update and delete
@@ -314,138 +371,86 @@ $(document).ready(function(){
         backgroundBlur();
         $("#update-delete-server-section").show();
     });
-    $("#btnUpdateServerSectionClose").on('click', function(){
-        $("#update-delete-server-section").hide();
-        unBlurEverything();
-    });
     $("#btnUpdateServer").on('click', function(){
         let newServerName = $("#txtNewServerName").val();
         if(newServerName == "") return;
         $(".lblServerNameConfirm").text($(".server-div.clicked").children().text())
         $(".lblNewServerName").text(newServerName);
-        $("#update-delete-server-section").addClass("blur");
-        $("#update-server-confirm").show();
+        openPopUpForm(this);
     });
     $("#btnYESUpdateServerConfirm").on('click', function(){
         let newServerName = $("#txtNewServerName").val();
 
-        updateServer(sessionStorage.getItem("serverID"), newServerName)
+        updateServer(newServerName)
             .then(response => {
-                $("#update-server-confirm").addClass("blur");
-                $("#update-server-success").show();
+                refresh();
+                showMessage("Successfully updated the server!");
             })
             .catch(error => {
-                if(typeof error == String){
-                    showMessage(error);
-                }else{
-                    showMessage("Please dont include \' or \" in the server name");
-                    console.log(error);
-                }
-                $("#update-server-confirm").hide();
-                $("#update-delete-server-section").removeClass("blur");
+                showMessage(error);
+                closePopUpForm();
             });
     
-    });
-    $("#btnNOUpdateServerConfirm").on('click', function(){
-        $("#update-server-confirm").hide();
-        $("#update-delete-server-section").removeClass("blur");
     });
 
     $("#btnDeleteServer").on('click', function(){
         $(".lblServerNameConfirm").text($(".server-div.clicked").children().text())
-        $("#update-delete-server-section").addClass("blur");
-        $("#delete-server-confirm").show();
+       openPopUpForm(this);
     });
     $("#btnYESDeleteServerConfirm").on('click', function(){
-        deleteServer(sessionStorage.getItem("serverID"))
+        deleteServer()
             .then(response => {
-                $("#delete-server-confirm").addClass("blur");
-                $("#delete-server-success").show();
+                refresh();
+                showMessage("Successfully deleted the server!");
             })
             .catch(error => {
-                if(typeof error == String){
-                    showMessage(error);
-                }
-                $("#delete-server-confirm").hide();
-                $("#update-delete-server-section").removeClass("blur");
+                showMessage(error);
+                closePopUpForm();
             });
     
     });
-    $("#btnNODeleteServerConfirm").on('click', function(){
-        $("#delete-server-confirm").hide();
-        $("#update-delete-server-section").removeClass("blur");
-    });
-
 
     //channel update and delete
     $("#channelSettings").on('click', function(){
         backgroundBlur();
         $("#update-delete-channel-section").show();
     });
-    $("#btnUpdateChannelSectionClose").on('click', function(){
-        $("#update-delete-channel-section").hide();
-        unBlurEverything();
-    });
     $("#btnUpdateChannel").on('click', function(){
         let newChannelName = $("#txtNewChannelName").val();
         if(newChannelName == "") return;
         $(".lblChannelNameConfirm").text($(".channel-div.clicked").children().text())
         $(".lblNewChannelName").text(newChannelName);
-        $("#update-delete-channel-section").addClass("blur");
-        $("#update-channel-confirm").show();
+        openPopUpForm(this);
     });
     $("#btnYESUpdateChannelConfirm").on('click', function(){
         let newChannelName = $("#txtNewChannelName").val();
 
-        updateServerChannel(sessionStorage.getItem("channelID"), newChannelName)
+        updateServerChannel(newChannelName)
             .then(response => {
-                $("#update-channel-confirm").addClass("blur");
-                $("#update-channel-success").show();
+                refresh();
+                showMessage("Successfully updated the channel!");
             })
             .catch(error => {
-                if(typeof error == String){
-                    showMessage(error);
-                }else{
-                    showMessage("Please dont include \' or \" in the channel name");
-                    console.log(error);
-                }
-                $("#update-channel-confirm").hide();
-                $("#update-delete-channel-section").removeClass("blur");
+                showMessage(error);
+                closePopUpForm();
             });
     
-    });
-    $("#btnNOUpdateChannelConfirm").on('click', function(){
-        $("#update-channel-confirm").hide();
-        $("#update-delete-channel-section").removeClass("blur");
     });
 
     $("#btnDeleteChannel").on('click', function(){
         $(".lblChannelNameConfirm").text($(".channel-div.clicked").children().text())
-        $("#update-delete-channel-section").addClass("blur");
-        $("#delete-channel-confirm").show();
+        openPopUpForm(this);
     });
     $("#btnYESDeleteChannelConfirm").on('click', function(){
-        deleteServerChannel(sessionStorage.getItem("channelID"))
+        deleteServerChannel()
             .then(response => {
-                $("#delete-channel-confirm").addClass("blur");
-                $("#delete-channel-success").show();
+                refresh();
+                showMessage("Successfully deleted the channel!");
             })
             .catch(error => {
-                if(typeof error == String){
-                    showMessage(error);
-                }
-                $("#delete-channel-confirm").hide();
-                $("#update-delete-channel-section").removeClass("blur");
+                showMessage(error)
+                closePopUpForm();
             });
     
-    });
-    $("#btnNODeleteChannelConfirm").on('click', function(){
-        $("#delete-channel-confirm").hide();
-        $("#update-delete-channel-section").removeClass("blur");
-    });
-
-    
-    $(".btnOKSuccess").on('click', function(){
-        refresh();
     });
 })
