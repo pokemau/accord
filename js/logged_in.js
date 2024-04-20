@@ -448,4 +448,9 @@ $(document).ready(function(){
     $(".btnOKSuccess").on('click', function(){
         refresh();
     });
+
+    // user settings btn
+    $("#user-settings-btn").click(() => {
+        window.location.assign("user.php");
+    });
 })

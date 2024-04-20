@@ -39,6 +39,11 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
       </div>
       <div id="servers-wrapper">
       </div>
+      <div id="profile-cont">
+        <div>
+          <button id="user-settings-btn">User Settings</button>
+        </div>
+      </div>
     </div>
 
     <div id="channels-middlebar">
