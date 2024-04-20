@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 19, 2024 at 03:42 AM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 8.1.12
+-- Generation Time: Apr 20, 2024 at 09:00 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -62,7 +62,8 @@ CREATE TABLE `tblserver` (
 INSERT INTO `tblserver` (`serverID`, `ownerID`, `servername`) VALUES
 (1, 1, 'mau_server'),
 (2, 1, 'new mau server'),
-(4, 2, 'Yahallo');
+(4, 2, 'Yahallo'),
+(19, 2, 'test');
 
 -- --------------------------------------------------------
 
@@ -87,7 +88,11 @@ INSERT INTO `tblserverchannel` (`channelID`, `serverID`, `channelname`) VALUES
 (4, 2, 'general'),
 (7, 4, 'general'),
 (8, 4, 'chat-here'),
-(10, 4, 'mudae23');
+(10, 4, 'mudae23'),
+(27, 19, 'general'),
+(28, 19, 'chat-here'),
+(31, 4, 'school-stuff'),
+(33, 19, '1234');
 
 -- --------------------------------------------------------
 
@@ -151,7 +156,8 @@ CREATE TABLE `tbluserserver` (
 INSERT INTO `tbluserserver` (`userServerID`, `userID`, `serverID`) VALUES
 (1, 1, 1),
 (2, 1, 2),
-(4, 2, 4);
+(4, 2, 4),
+(19, 2, 19);
 
 -- --------------------------------------------------------
 
@@ -176,7 +182,11 @@ INSERT INTO `tbluserserverchannel` (`user-serverchannelID`, `userID`, `servercha
 (4, 1, 4),
 (7, 2, 7),
 (8, 2, 8),
-(10, 2, 10);
+(10, 2, 10),
+(27, 2, 27),
+(28, 2, 28),
+(31, 2, 31),
+(33, 2, 33);
 
 --
 -- Indexes for dumped tables
@@ -246,13 +256,13 @@ ALTER TABLE `tblaccount`
 -- AUTO_INCREMENT for table `tblserver`
 --
 ALTER TABLE `tblserver`
-  MODIFY `serverID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `serverID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `tblserverchannel`
 --
 ALTER TABLE `tblserverchannel`
-  MODIFY `channelID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `channelID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `tblserverrole`
@@ -270,13 +280,13 @@ ALTER TABLE `tbluser`
 -- AUTO_INCREMENT for table `tbluserserver`
 --
 ALTER TABLE `tbluserserver`
-  MODIFY `userServerID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `userServerID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `tbluserserverchannel`
 --
 ALTER TABLE `tbluserserverchannel`
-  MODIFY `user-serverchannelID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `user-serverchannelID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- Constraints for dumped tables
