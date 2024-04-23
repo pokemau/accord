@@ -5,6 +5,25 @@ $(document).ready(function(){
 
     refresh();
 
+    const isToday = (someDate) => {
+        const today = new Date()
+        return someDate.getDate() == today.getDate() &&
+          someDate.getMonth() == today.getMonth() &&
+          someDate.getFullYear() == today.getFullYear()
+    }
+    function tConvert (time) {
+        // Check correct time format and split into components
+        time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+      
+        if (time.length > 1) { // If time format correct
+          time = time.slice (1);  // Remove full string match value
+          time[5] = +time[0] < 12 ? 'AM' : 'PM'; // Set AM/PM
+          time[0] = +time[0] % 12 || 12; // Adjust hours
+        }
+        return time.join (''); // return adjusted time or original string
+      }
+      
+
     function unBlurEverything(){
         $(".blur").removeClass('blur');
     }
@@ -45,16 +64,13 @@ $(document).ready(function(){
 
         if($(".channel-div.clicked")[0]){       //if channel div has clicked, wait for updated channels before showing messages 
             promiseChannels.done(function() {
-                // getMessageList()     //not yet implemented
-                //     .then(response => {
-                //         messagesRightBarShow();
-                //         promiseChannels.resolve(response);
-                //     })
-                //     .catch(error => {
-                //         promiseChannels.reject(error);
-                //     });
-
-                messagesRightBarShow();
+                getMessageList()
+                    .then(response => {
+                        messagesRightBarShow();
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
             });
         }else{
             $("#messages-rightbar").hide();
@@ -187,6 +203,26 @@ $(document).ready(function(){
         }
     }
 
+    async function sendMessage(messageTextparam){
+        try{
+            let channelIDparam = sessionStorage.getItem("channelID");
+            let response = await $.post("api/sendMessage.php",
+            {
+                channelID: channelIDparam,
+                messageText: messageTextparam
+            },
+            function(responseInner, status){
+                return responseInner   
+            });
+            if(response['status'] == false){
+                throw new Error(String(response['message']));
+            }
+            return response['message'];
+        }catch(error){
+            throw error;
+        }
+    }
+
     async function getServerList(){
         let response = await $.get("api/getServerList.php",
         function(responseInner, status){
@@ -251,6 +287,53 @@ $(document).ready(function(){
         }
     }
 
+    async function getMessageList(){
+        try{
+            let channelIDparam = sessionStorage.getItem("channelID");
+            let response = await $.get("api/getMessageList.php",
+            {
+                channelID: channelIDparam  
+            },
+            function(responseInner, status){
+                return responseInner;
+            });
+            if(response['status'] == false){
+                throw new Error(String(response['message']));
+            }
+            printMessages(response['messageList']); 
+        }catch(error){
+            throw error;
+        }
+    }
+
+    function printMessages(messageList){
+        $("#messages-wrapper").html("");
+        messagesRightBarShow();
+        for(let i=0; i<messageList.length; i++){
+            let messageInfo = messageList[i];
+            let string = "<div data-messageid='" + Number(messageInfo.messageID) + "' class='message-div'>"
+            +   "<div class='message-header'>"
+            +       "<h4>" + String(messageInfo.senderdisplayname) + "</h4>"
+            +       "<h6>";
+
+            let messageTimeDate = messageInfo.dateTimeSent;
+            let messageDate = messageTimeDate.slice(0, 10);
+            let messageTime = messageTimeDate.slice(10, 15);
+            if (isToday(new Date(messageDate))){
+                string += "Today";
+            }else{
+                string += String(messageDate);
+            }
+            string += " at " + String(tConvert(messageTime)) + "</h6>"
+            +   "</div>"
+            +   "<div class='message-contents'>"
+            +       "<h5>" + String(messageInfo.messageText) + "</h5>"
+            +   "</div>"
+            + "</div>";
+            $(string).appendTo("#messages-wrapper");
+        }
+    }
+
     $("#servers-wrapper").on('click', '.server-div', function(){
         if($(this).hasClass("clicked")) return;
 
@@ -260,10 +343,8 @@ $(document).ready(function(){
         let serverID = $(this).data("serverid");
         sessionStorage.setItem("serverID", serverID);
         getServerChannelList()
-            .then(response => {
-            })
             .catch(error => {
-                console.log(error);
+                showMessage(error);
             });
     });
 
@@ -275,8 +356,11 @@ $(document).ready(function(){
         let channelID = $(this).data("channelid");
         sessionStorage.setItem("channelID", channelID);
 
-        messagesRightBarShow();
         $("#right-page").hide();
+        getMessageList()
+            .catch(error => {
+                showMessage(error);
+            });
     });
 
     function openPopUpForm(callingButton){
@@ -452,6 +536,17 @@ $(document).ready(function(){
                 closePopUpForm();
             });
     
+    });
+
+    $("#btnSendMessage").click(() => {
+        $messageText = $("#inpMessage").val();
+        sendMessage($messageText)
+            .then(response => {
+                refresh();
+            })
+            .catch(error => {
+                showMessage(error);
+            });
     });
 
     // user settings btn

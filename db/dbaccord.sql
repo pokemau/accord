@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 20, 2024 at 09:00 AM
+-- Generation Time: Apr 23, 2024 at 05:19 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -41,7 +41,40 @@ CREATE TABLE `tblaccount` (
 
 INSERT INTO `tblaccount` (`accountID`, `emailadd`, `username`, `password`, `usertype`) VALUES
 (1, 'rentillosa90@gmail.com', 'pokemau', '$2y$10$JksoIDI/X3wceJJ43uNu0O.Ibmrx2GLXN/hmmGx4zq/gkpwzkOiIi', 'user'),
-(2, 'jorash@gmail.com', 'Jorash', '$2y$10$LlSMMDXp6YPxQtxdTvMuiewAY9c2rgmts9wyYwvQdIdPxUY8/pB1O', 'user');
+(2, 'jorash@gmail.com', 'Jorash', '$2y$10$LlSMMDXp6YPxQtxdTvMuiewAY9c2rgmts9wyYwvQdIdPxUY8/pB1O', 'user'),
+(3, 'jorash2@gmail.com', 'Jorash2', '$2y$10$L4QFfdYaFVXnq7lRZeSmfO7mG.s9nPYoONHwUmbmkOGOqdobcPVqi', 'user');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblmessage`
+--
+
+CREATE TABLE `tblmessage` (
+  `messageID` int(10) NOT NULL,
+  `senderID` int(10) NOT NULL,
+  `channelID` int(10) NOT NULL,
+  `messageText` varchar(200) NOT NULL,
+  `dateTimeSent` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tblmessage`
+--
+
+INSERT INTO `tblmessage` (`messageID`, `senderID`, `channelID`, `messageText`, `dateTimeSent`) VALUES
+(4, 2, 7, 'test', '2024-04-23 04:50:41'),
+(5, 2, 7, 'test', '2024-04-23 04:51:40'),
+(6, 2, 7, 'testss', '2024-04-23 04:52:31'),
+(7, 2, 7, 'test', '2024-04-23 04:53:21'),
+(8, 2, 7, 'teasdasdawdsadawd', '2024-04-23 04:58:07'),
+(9, 2, 7, 'test', '2024-04-23 04:59:24'),
+(10, 2, 7, 'asdasdadadada', '2024-04-23 04:59:52'),
+(11, 2, 7, 'test', '2024-04-23 05:02:34'),
+(12, 2, 7, 'testss', '2024-04-23 05:03:39'),
+(13, 2, 7, 'test', '2024-04-23 05:05:22'),
+(14, 2, 7, 'test', '2024-04-23 05:06:08'),
+(15, 2, 7, 'test', '2024-04-23 05:07:32');
 
 -- --------------------------------------------------------
 
@@ -92,7 +125,7 @@ INSERT INTO `tblserverchannel` (`channelID`, `serverID`, `channelname`) VALUES
 (27, 19, 'general'),
 (28, 19, 'chat-here'),
 (31, 4, 'school-stuff'),
-(33, 19, '1234');
+(33, 19, '12345');
 
 -- --------------------------------------------------------
 
@@ -135,7 +168,8 @@ CREATE TABLE `tbluser` (
 
 INSERT INTO `tbluser` (`userID`, `accountID`, `displayname`, `gender`, `birthdate`) VALUES
 (1, 1, 'pokemau', 'none', '2003-11-08'),
-(2, 2, 'Jorash', 'none', '2024-04-01');
+(2, 2, 'Jorash', 'none', '2024-04-01'),
+(3, 3, 'Jorash2', 'none', '2024-04-01');
 
 -- --------------------------------------------------------
 
@@ -199,6 +233,14 @@ ALTER TABLE `tblaccount`
   ADD PRIMARY KEY (`accountID`);
 
 --
+-- Indexes for table `tblmessage`
+--
+ALTER TABLE `tblmessage`
+  ADD PRIMARY KEY (`messageID`),
+  ADD KEY `message-channel` (`channelID`),
+  ADD KEY `message-sender` (`senderID`);
+
+--
 -- Indexes for table `tblserver`
 --
 ALTER TABLE `tblserver`
@@ -250,7 +292,13 @@ ALTER TABLE `tbluserserverchannel`
 -- AUTO_INCREMENT for table `tblaccount`
 --
 ALTER TABLE `tblaccount`
-  MODIFY `accountID` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `accountID` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `tblmessage`
+--
+ALTER TABLE `tblmessage`
+  MODIFY `messageID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `tblserver`
@@ -274,7 +322,7 @@ ALTER TABLE `tblserverrole`
 -- AUTO_INCREMENT for table `tbluser`
 --
 ALTER TABLE `tbluser`
-  MODIFY `userID` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `userID` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tbluserserver`
@@ -291,6 +339,13 @@ ALTER TABLE `tbluserserverchannel`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `tblmessage`
+--
+ALTER TABLE `tblmessage`
+  ADD CONSTRAINT `message-channel` FOREIGN KEY (`channelID`) REFERENCES `tblserverchannel` (`channelID`),
+  ADD CONSTRAINT `message-sender` FOREIGN KEY (`senderID`) REFERENCES `tbluser` (`userID`);
 
 --
 -- Constraints for table `tblserver`

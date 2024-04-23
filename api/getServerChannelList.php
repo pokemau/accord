@@ -38,22 +38,15 @@ if(isset($_GET["serverID"])){
     return;
 }
 
-$sqlGetChannelList = "SELECT * FROM tbluserserverchannel WHERE userID='".$ownerID."'";
+$sqlGetChannelList = "SELECT channelID, channelname FROM tbluserserverchannel, tblserverchannel 
+    WHERE userID = '".$ownerID."' AND serverchannelID = channelID AND serverID = '" . $serverID . "'";
 $resultChannelList = mysqli_query($connection, $sqlGetChannelList);
 
 $channelList = array();
 while($row = mysqli_fetch_assoc($resultChannelList)){
-    $sqlGetChannelInfo = "SELECT * FROM tblserverchannel WHERE channelID='".$row['serverchannelID']."' 
-        AND serverID='".$serverID."'";
-    $resultGetChannelInfo = mysqli_query($connection, $sqlGetChannelInfo);
-    
-    //if the current channel is not part of the server we finding, skip
-    if(mysqli_num_rows($resultGetChannelInfo) == 0) continue;
-
-    $channelInfo = mysqli_fetch_assoc($resultGetChannelInfo);
     $channelList[] = array(
-        'channelID' => $channelInfo['channelID'],
-        'channelname' => $channelInfo['channelname']
+        'channelID' => $row['channelID'],
+        'channelname' => $row['channelname']
     );
 }
 

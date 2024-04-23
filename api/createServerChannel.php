@@ -69,10 +69,7 @@ $sqlInsertChannel = "INSERT INTO tblserverchannel(serverID, channelname) VALUES(
 mysqli_query($connection, $sqlInsertChannel);
 
 //get latest server ID after inserting new for new channel and user-server table
-$sqlGetLatestChannel = "SELECT * FROM tblserverchannel ORDER BY channelID DESC LIMIT 1";
-$resultLatestChannel = mysqli_query($connection, $sqlGetLatestChannel);
-$rowLatestChannel = mysqli_fetch_array($resultLatestChannel);
-$channelID = (int)$rowLatestChannel[0];
+$channelID = mysqli_insert_id($connection);
 
 //insert new many-to-many relationship table entry
 $sqlInsertUserServerChannel = "INSERT INTO tbluserserverchannel(userID, serverchannelID) VALUES('".$userID."', '".$channelID."')";

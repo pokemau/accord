@@ -24,17 +24,15 @@ if(isset($_SESSION["userid"])){
     return;
 }
 
-$sqlGetServerList = "SELECT * FROM tbluserserver WHERE userID='".$ownerID."'";
+$sqlGetServerList = "SELECT tblserver.serverID, servername FROM tbluserserver, tblserver 
+    WHERE userID = '".$ownerID."' AND tbluserserver.serverID = tblserver.serverID";
 $resultServerList = mysqli_query($connection, $sqlGetServerList);
 
 $serverList = array();
 while($row = mysqli_fetch_assoc($resultServerList)){
-    $sqlGetServerInfo = "SELECT * FROM tblserver WHERE serverID='".$row['serverID']."'";
-    $resultGetServerInfo = mysqli_query($connection, $sqlGetServerInfo);
-    $serverInfo = mysqli_fetch_assoc($resultGetServerInfo);
     $serverList[] = array(
-        'serverID' => $serverInfo['serverID'],
-        'servername' => $serverInfo['servername']
+        'serverID' => $row['serverID'],
+        'servername' => $row['servername']
     );
 }
 

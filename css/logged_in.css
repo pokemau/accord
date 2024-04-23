@@ -162,6 +162,47 @@ body {
   justify-content: space-between;
   padding: 10px;
 }
+#messages-wrapper {
+  width: 100%;
+}
+
+#message-inputgroup {
+  width: 100%;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#inpMessage {
+  width: 90%;
+  height: 5rem;
+}
+
+#btnSendMessage {
+  width: 5rem;
+  height: 3rem;
+}
+
+.message-div {
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid black;
+  box-sizing: border-box;
+}
+.message-header {
+  display: flex;
+  flex: row;
+  align-items: center
+}
+.message-header > *{
+  margin-right: 2rem;
+}
+.message-contents {
+  text-align: left;
+}
+
 
 #right-page {
   width: 100%;
@@ -174,7 +215,6 @@ body {
   justify-content: center;
   overflow: auto;
 }
-
 #tblservers {
   width: 70%;
   padding: 30px;
