@@ -329,6 +329,10 @@ $(document).ready(function(){
             +   "<div class='message-contents'>"
             +       "<h5>" + String(messageInfo.messageText) + "</h5>"
             +   "</div>"
+            +   "<div class='message-options' style='display: none'>"
+            +       "<a href='#' class='iconBtn'><img src='images/edit-icon.png' alt='editIcon'></a>"
+            +       "<a href='#' class='iconBtn'><img src='images/delete-icon.png' alt='deleteIcon'></a>"
+            +   "</div>"
             + "</div>";
             $(string).appendTo("#messages-wrapper");
         }
@@ -372,6 +376,7 @@ $(document).ready(function(){
 
         let index = 0;
 
+        //if multiple popUpForm is a child of this popUpForm
         if($(callingPopUpForm).find('.divSubmitBtn').length > 1){
             index = $(callingPopUpForm).find('.divSubmitBtn').index(callingButtonDiv);
         }
@@ -392,25 +397,25 @@ $(document).ready(function(){
         parentPopUpForm.addClass("unblurred");
     }
 
-    $("#btnCreateServerSection").on('click', function(){
+    $("#btnCreateServerSection").click(() => {
         backgroundBlur();
         $("#create-server-section").show();
     });
 
-    $(".closeBtn").on('click', function(){
-        closePopUpForm(this)
+    $(".closeBtn").click((event) => {
+        closePopUpForm(event.currentTarget)
     });
-    $(".noBtn").on('click', function(){
-        closePopUpForm(this)
+    $(".noBtn").click((event) => {
+        closePopUpForm(event.currentTarget)
     });
 
-    $("#btnCreateServer").on('click', function(){
+    $("#btnCreateServer").click((event) => {
         let serverName = $("#txtServerName").val();
         if(serverName == "") return;
         $(".lblServerNameConfirm").text(serverName);
-        openPopUpForm(this);
+        openPopUpForm(event.currentTarget);
     });
-    $("#btnYESCreateServerConfirm").on('click', function(){
+    $("#btnYESCreateServerConfirm").click((event) => {
         let serverName = $("#txtServerName").val();
 
         createServer(serverName)
@@ -424,18 +429,18 @@ $(document).ready(function(){
             });
     });
 
-    $("#btnCreateChannelSection").on('click', function(){
+    $("#btnCreateChannelSection").click(() => {
         backgroundBlur();
         $("#create-channel-section").show();
     });
-    $("#btnCreateChannel").on('click', function(){
+    $("#btnCreateChannel").click((event) => {
         let channelName = $("#txtChannelName").val();
         if(channelName == "") return;
         $(".lblChannelNameConfirm").text(channelName);
         $(".lblServerNameConfirm").text($(".server-div.clicked").children().text())
-        openPopUpForm(this);
+        openPopUpForm(event.currentTarget);
     });
-    $("#btnYESCreateChannelConfirm").on('click', function(){
+    $("#btnYESCreateChannelConfirm").click((event) => {
         let channelName = $("#txtChannelName").val();
 
         createServerChannel(channelName)
@@ -445,24 +450,24 @@ $(document).ready(function(){
             })
             .catch(error => {
                 showMessage(error);
-                closePopUpForm();
+                closePopUpForm(event.currentTarget);
             });
     
     });
 
     //server update and delete
-    $("#serverSettings").on('click', function(){
+    $("#serverSettings").click(() => {
         backgroundBlur();
         $("#update-delete-server-section").show();
     });
-    $("#btnUpdateServer").on('click', function(){
+    $("#btnUpdateServer").click((event) => {
         let newServerName = $("#txtNewServerName").val();
         if(newServerName == "") return;
         $(".lblServerNameConfirm").text($(".server-div.clicked").children().text())
         $(".lblNewServerName").text(newServerName);
-        openPopUpForm(this);
+        openPopUpForm(event.currentTarget);
     });
-    $("#btnYESUpdateServerConfirm").on('click', function(){
+    $("#btnYESUpdateServerConfirm").click((event) => {
         let newServerName = $("#txtNewServerName").val();
 
         updateServer(newServerName)
@@ -472,16 +477,16 @@ $(document).ready(function(){
             })
             .catch(error => {
                 showMessage(error);
-                closePopUpForm();
+                closePopUpForm(event.currentTarget);
             });
     
     });
 
-    $("#btnDeleteServer").on('click', function(){
+    $("#btnDeleteServer").click((event) => {
         $(".lblServerNameConfirm").text($(".server-div.clicked").children().text())
-       openPopUpForm(this);
+       openPopUpForm(event.currentTarget);
     });
-    $("#btnYESDeleteServerConfirm").on('click', function(){
+    $("#btnYESDeleteServerConfirm").click((event) => {
         deleteServer()
             .then(response => {
                 refresh();
@@ -489,24 +494,24 @@ $(document).ready(function(){
             })
             .catch(error => {
                 showMessage(error);
-                closePopUpForm();
+                closePopUpForm(event.currentTarget);
             });
     
     });
 
     //channel update and delete
-    $("#channelSettings").on('click', function(){
+    $("#channelSettings").click(() => {
         backgroundBlur();
         $("#update-delete-channel-section").show();
     });
-    $("#btnUpdateChannel").on('click', function(){
+    $("#btnUpdateChannel").click((event) => {
         let newChannelName = $("#txtNewChannelName").val();
         if(newChannelName == "") return;
         $(".lblChannelNameConfirm").text($(".channel-div.clicked").children().text())
         $(".lblNewChannelName").text(newChannelName);
-        openPopUpForm(this);
+        openPopUpForm(event.currentTarget);
     });
-    $("#btnYESUpdateChannelConfirm").on('click', function(){
+    $("#btnYESUpdateChannelConfirm").click((event) => {
         let newChannelName = $("#txtNewChannelName").val();
 
         updateServerChannel(newChannelName)
@@ -516,16 +521,16 @@ $(document).ready(function(){
             })
             .catch(error => {
                 showMessage(error);
-                closePopUpForm();
+                closePopUpForm(event.currentTarget);
             });
     
     });
 
-    $("#btnDeleteChannel").on('click', function(){
+    $("#btnDeleteChannel").click(() => {
         $(".lblChannelNameConfirm").text($(".channel-div.clicked").children().text())
-        openPopUpForm(this);
+        openPopUpForm(currentTarget);
     });
-    $("#btnYESDeleteChannelConfirm").on('click', function(){
+    $("#btnYESDeleteChannelConfirm").click((event) => {
         deleteServerChannel()
             .then(response => {
                 refresh();
@@ -533,7 +538,7 @@ $(document).ready(function(){
             })
             .catch(error => {
                 showMessage(error)
-                closePopUpForm();
+                closePopUpForm(event.currentTarget);
             });
     
     });
@@ -548,6 +553,22 @@ $(document).ready(function(){
                 showMessage(error);
             });
     });
+
+    $("#messages-wrapper").on('mouseenter', '.message-div', function(event){
+        mouseOnMessageHandlerIn(this);
+    }).on("mouseleave", ".message-div", function() {
+        mouseOnMessageHandlerOut(this);
+    });
+
+    function mouseOnMessageHandlerIn(messageDiv){
+        console.log(messageDiv);
+        $(messageDiv).find(".message-options").show();
+    }
+
+    function mouseOnMessageHandlerOut(messageDiv){
+        $(messageDiv).find(".message-options").hide();
+
+    }
 
     // user settings btn
     $("#user-settings-btn").click(() => {

@@ -190,6 +190,7 @@ body {
   padding: 10px;
   border: 1px solid black;
   box-sizing: border-box;
+  position: relative;
 }
 .message-header {
   display: flex;
@@ -201,6 +202,16 @@ body {
 }
 .message-contents {
   text-align: left;
+}
+.message-options {
+  position: absolute;
+  top: -16px;
+  right: 0;
+  display: flex;
+  flex-direction: row;
+  z-index: 1;
+  border: 1px solid black;
+  background-color: pink;
 }
 
 
