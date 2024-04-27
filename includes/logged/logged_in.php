@@ -233,7 +233,7 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
       <h3 class="lblNewChannelName"></h3>
       <div class="divSubmitBtn">
         <button id="btnYESUpdateChannelConfirm">Yes</button>
-        <button id="btnNOUpdateChannelConfirm">No</button>
+        <button id="btnNOUpdateChannelConfirm" class="noBtn">No</button>
       </div>
     </div>
     <div id="delete-channel-confirm" class="popUpForm">
@@ -241,8 +241,17 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
       <h3 class="lblServerChannelConfirm"></h3>
       <div class="divSubmitBtn">
         <button id="btnYESDeleteChannelConfirm">Yes</button>
-        <button id="btnNODeleteChannelConfirm">No</button>
+        <button id="btnNODeleteChannelConfirm" class="noBtn">No</button>
       </div>
+    </div>
+  </div>
+
+  <!-- message -->
+  <div id="delete-message-confirm" class="popUpForm">
+    <h4 class="longTxt">Are you sure you want to delete this message></h4>
+    <div class="divSubmitBtn">
+      <button id="btnYESDeleteMessageConfirm">Yes</button>
+      <button id="btnNODeleteMessageConfirm" class="noBtn">No</button>
     </div>
   </div>
 

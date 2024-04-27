@@ -2,7 +2,7 @@
 
 //post
 //errorTypes: noServerID, noNewServerName, servernameInvalid, serverAlreadyExist
-//parameters: 'serverID','newservername'
+//parameters: 'serverID', 'updaterID', 'newservername'
 
 include_once('../connect.php');
 header("Access-Control-Allow-Origin: *");
@@ -25,6 +25,19 @@ if (isset($_POST["serverID"])) {
   return;
 }
 
+$updaterID;
+if (isset($_SESSION["userid"])) {
+  $updaterID = $_SESSION["userid"];
+} else {
+  $response = array(
+    'status' => false,
+    'errorType' => 'noUpdaterID',
+    'message' => "No updater id provided (updateServer.php)"
+  );
+  echo json_encode($response);
+  return;
+}
+
 $newservername;
 if (isset($_POST["newservername"])) {
   $newservername = $_POST["newservername"];
@@ -37,13 +50,10 @@ if (isset($_POST["newservername"])) {
   echo json_encode($response);
   return;
 }
-$sqlGetOwnerID = "SELECT * FROM tblserver WHERE serverID='" . $serverID . "'";
-$rowGetOwnerID = mysqli_fetch_assoc(mysqli_query($connection, $sqlGetOwnerID));
 
-
-$sqlExistingServer = "SELECT * FROM tblserver WHERE ownerID='" . $rowGetOwnerID['ownerID'] . "' AND servername='" . $newservername . "'";
-$resultExistingServer = mysqli_query($connection, $sqlExistingServer);
-$rowExistingServer = mysqli_num_rows($resultExistingServer);
+$sqlExistingServer = "SELECT serverID FROM tblserver WHERE serverID=$serverID AND ownerID=$updaterID AND servername='$newservername'";
+$result = mysqli_query($connection, $sqlExistingServer);
+$rowExistingServer = mysqli_num_rows($result);
 
 if ($rowExistingServer > 0) {
   $response = array(

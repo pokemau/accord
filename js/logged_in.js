@@ -1,8 +1,5 @@
 
-
 $(document).ready(function(){
-    var currUser = null
-
     refresh();
 
     const isToday = (someDate) => {
@@ -21,8 +18,28 @@ $(document).ready(function(){
           time[0] = +time[0] % 12 || 12; // Adjust hours
         }
         return time.join (''); // return adjusted time or original string
-      }
+    }
       
+    function promiseHandler(promise, successCallback = null, errorCallback = null){
+        promise
+        .then(response => {
+            if (successCallback) {
+                successCallback(response);
+            }
+        })
+        .catch(error => {
+            if(error.responseText){
+                showMessage(error.responseText);
+                console.log(error.responseText);
+            }else{
+                showMessage(error);
+                console.log(error);
+            }
+            if (errorCallback) {
+                errorCallback(error);
+            }
+        });
+    }
 
     function unBlurEverything(){
         $(".blur").removeClass('blur');
@@ -47,16 +64,14 @@ $(document).ready(function(){
         let promiseServers = getServerList();
         let promiseChannels = $.Deferred();     //initialize a promise-type in case we dont go through an async func
         if($(".server-div.clicked")[0]){        //if clicked server-div exists already, just update the channelslist
-            promiseServers.then(function() {
-                getServerChannelList()
-                    .then(response => {
-                        channelsMiddleBarShow();
-                        promiseChannels.resolve(response);
-                    })
-                    .catch(error => {
-                        promiseChannels.reject(error);
-                    });
-            });
+            promiseHandler(promiseServers, ()=>{
+                promiseHandler(getServerChannelList(), (response)=>{
+                    channelsMiddleBarShow();
+                    promiseChannels.resolve(response);
+                }, (error)=>{
+                    promiseChannels.reject(error);
+                })
+            })
         }else{      //else complete initialized 'resolved' promise and hide channels
             promiseChannels.resolve();      //resolves the initialized promise cuz we dont have async func
             $("#channels-middlebar").hide();
@@ -64,13 +79,7 @@ $(document).ready(function(){
 
         if($(".channel-div.clicked")[0]){       //if channel div has clicked, wait for updated channels before showing messages 
             promiseChannels.done(function() {
-                getMessageList()
-                    .then(response => {
-                        messagesRightBarShow();
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
+                promiseHandler(getMessageList(), messagesRightBarShow());
             });
         }else{
             $("#messages-rightbar").hide();
@@ -85,7 +94,6 @@ $(document).ready(function(){
             }
           }, 3000);
     }
-    
 
     async function createServer(serverName){
         try{
@@ -223,14 +231,53 @@ $(document).ready(function(){
         }
     }
 
+    async function updateMessage(newText){
+        try{
+            let toUpdateMessageID = sessionStorage.getItem("messageID");
+            let response = await $.post("api/updateMessage.php",
+            {
+                messageID: toUpdateMessageID,
+                newtext: newText
+            },
+            function(responseInner, status){
+                return responseInner   
+            });
+            if(response['status'] == false){
+                throw new Error(String(response['message']));
+            }
+            return response['message'];
+        }catch(error){
+            throw error;
+        }
+    }
+
+
+    async function deleteMessage(){
+        try{
+            let toDeleteMessageID = sessionStorage.getItem("messageID");
+            let response = await $.post("api/deleteMessage.php",
+            {
+                messageID: toDeleteMessageID
+            },
+            function(responseInner, status){
+                return responseInner   
+            });
+            if(response['status'] == false){
+                throw new Error(String(response['message']));
+            }
+            return response['message'];
+        }catch(error){
+            throw error;
+        }
+    }
+
     async function getServerList(){
         let response = await $.get("api/getServerList.php",
         function(responseInner, status){
             return responseInner;
         });
         if(response['status'] == false){
-            console.log("Something was wrong (getServerList)");
-            return;
+            throw new Error(String(response['message']));
         }
         printServers(response['serverList']);
     }
@@ -330,8 +377,8 @@ $(document).ready(function(){
             +       "<h5>" + String(messageInfo.messageText) + "</h5>"
             +   "</div>"
             +   "<div class='message-options' style='display: none'>"
-            +       "<a href='#' class='iconBtn'><img src='images/edit-icon.png' alt='editIcon'></a>"
-            +       "<a href='#' class='iconBtn'><img src='images/delete-icon.png' alt='deleteIcon'></a>"
+            +       "<a href='#' class='btnMsgEdit'><img src='images/edit-icon.png' alt='editIcon'></a>"
+            +       "<a href='#' class='btnMsgDelete'><img src='images/delete-icon.png' alt='deleteIcon'></a>"
             +   "</div>"
             + "</div>";
             $(string).appendTo("#messages-wrapper");
@@ -346,10 +393,7 @@ $(document).ready(function(){
         $(this).addClass("clicked");
         let serverID = $(this).data("serverid");
         sessionStorage.setItem("serverID", serverID);
-        getServerChannelList()
-            .catch(error => {
-                showMessage(error);
-            });
+        promiseHandler(getServerChannelList());
     });
 
     $("#channels-wrapper").on('click', '.channel-div', function(){
@@ -361,10 +405,7 @@ $(document).ready(function(){
         sessionStorage.setItem("channelID", channelID);
 
         $("#right-page").hide();
-        getMessageList()
-            .catch(error => {
-                showMessage(error);
-            });
+        promiseHandler(getMessageList(), ()=>{}, (error)=>{showMessage(error)});
     });
 
     function openPopUpForm(callingButton){
@@ -376,7 +417,7 @@ $(document).ready(function(){
 
         let index = 0;
 
-        //if multiple popUpForm is a child of this popUpForm
+        //if multiple popUpForm are children of this popUpForm
         if($(callingPopUpForm).find('.divSubmitBtn').length > 1){
             index = $(callingPopUpForm).find('.divSubmitBtn').index(callingButtonDiv);
         }
@@ -417,16 +458,10 @@ $(document).ready(function(){
     });
     $("#btnYESCreateServerConfirm").click((event) => {
         let serverName = $("#txtServerName").val();
-
-        createServer(serverName)
-            .then(response => {
-                refresh();
-                showMessage("Successfully created the server!");
-            })
-            .catch(error => {
-                showMessage(error);
-                return;
-            });
+        promiseHandler(createServer(serverName), ()=>{
+            refresh();
+            showMessage("Successfully created the server!");
+        })
     });
 
     $("#btnCreateChannelSection").click(() => {
@@ -443,15 +478,12 @@ $(document).ready(function(){
     $("#btnYESCreateChannelConfirm").click((event) => {
         let channelName = $("#txtChannelName").val();
 
-        createServerChannel(channelName)
-            .then(response => {
-                refresh();
-                showMessage("Successfully created the channel!");
-            })
-            .catch(error => {
-                showMessage(error);
-                closePopUpForm(event.currentTarget);
-            });
+        promiseHandler(createServerChannel(channelName), ()=>{
+            refresh();
+            showMessage("Successfully created the channel!");
+        }, (error)=>{
+            closePopUpForm(event.currentTarget);
+        })
     
     });
 
@@ -470,16 +502,12 @@ $(document).ready(function(){
     $("#btnYESUpdateServerConfirm").click((event) => {
         let newServerName = $("#txtNewServerName").val();
 
-        updateServer(newServerName)
-            .then(response => {
-                refresh();
-                showMessage("Successfully updated the server!");
-            })
-            .catch(error => {
-                showMessage(error);
-                closePopUpForm(event.currentTarget);
-            });
-    
+        promiseHandler(updateServer(newServerName), ()=>{
+            refresh();
+            showMessage("Successfully updated the server!");
+        },(error)=>{
+            closePopUpForm(event.currentTarget);
+        });
     });
 
     $("#btnDeleteServer").click((event) => {
@@ -487,16 +515,12 @@ $(document).ready(function(){
        openPopUpForm(event.currentTarget);
     });
     $("#btnYESDeleteServerConfirm").click((event) => {
-        deleteServer()
-            .then(response => {
-                refresh();
-                showMessage("Successfully deleted the server!");
-            })
-            .catch(error => {
-                showMessage(error);
-                closePopUpForm(event.currentTarget);
-            });
-    
+        promiseHandler(deleteServer(), ()=>{
+            refresh();
+            showMessage("Successfully deleted the server!");
+        }, ()=>{
+            closePopUpForm(event.currentTarget);
+        });
     });
 
     //channel update and delete
@@ -513,61 +537,85 @@ $(document).ready(function(){
     });
     $("#btnYESUpdateChannelConfirm").click((event) => {
         let newChannelName = $("#txtNewChannelName").val();
-
-        updateServerChannel(newChannelName)
-            .then(response => {
-                refresh();
-                showMessage("Successfully updated the channel!");
-            })
-            .catch(error => {
-                showMessage(error);
-                closePopUpForm(event.currentTarget);
-            });
-    
+        promiseHandler(updateServerChannel(newChannelName), ()=>{
+            refresh();
+            showMessage("Successfully updated the channel!");
+        }, (error)=>{
+            closePopUpForm(event.currentTarget);
+        });
     });
 
-    $("#btnDeleteChannel").click(() => {
+    $("#btnDeleteChannel").click((event) => {
         $(".lblChannelNameConfirm").text($(".channel-div.clicked").children().text())
-        openPopUpForm(currentTarget);
+        openPopUpForm(event.currentTarget);
     });
     $("#btnYESDeleteChannelConfirm").click((event) => {
-        deleteServerChannel()
-            .then(response => {
-                refresh();
-                showMessage("Successfully deleted the channel!");
-            })
-            .catch(error => {
-                showMessage(error)
-                closePopUpForm(event.currentTarget);
-            });
-    
+        promiseHandler(deleteServerChannel(), ()=>{
+            refresh();
+            showMessage("Successfully deleted the channel!");
+        }, (error)=>{
+            closePopUpForm(event.currentTarget);
+        })
     });
 
     $("#btnSendMessage").click(() => {
-        $messageText = $("#inpMessage").val();
-        sendMessage($messageText)
-            .then(response => {
-                refresh();
-            })
-            .catch(error => {
-                showMessage(error);
-            });
+        let messageText = $("#inpMessage").val();
+        promiseHandler(sendMessage(messageText), refresh());
     });
 
-    $("#messages-wrapper").on('mouseenter', '.message-div', function(event){
+    $("#messages-wrapper").on('mouseenter', '.message-div', function(){
         mouseOnMessageHandlerIn(this);
     }).on("mouseleave", ".message-div", function() {
         mouseOnMessageHandlerOut(this);
     });
 
+    $("#messages-wrapper").on('click', ".btnMsgEdit", function(){
+        let messageDiv = $(this).parent().parent();
+        sessionStorage.setItem("messageID", $(messageDiv).data("messageid"));
+        let messageContents = $(messageDiv).find(".message-contents");
+        let messageContentH5 = $(messageContents).find("h5");
+        let string = "<textarea class='taMessageEdit'>" + $(messageContentH5).text() + "</textarea>"
+        +"<div class='edit-message-options'>"
+        +   "<button class='btnEditMessageSave'>Save</button>"
+        +   "<button class='btnEditMessageCancel noBtn'>Cancel</button>"
+        +"</div>";  
+        $(messageContentH5).remove();
+        $(messageContents).append(string);
+        let taMessageEdit = $(messageContents).find(".taMessageEdit")[0];
+        taMessageEdit.selectionStart = taMessageEdit.selectionEnd = taMessageEdit.value.length;
+        taMessageEdit.focus();
+    })
+
+    $("#messages-wrapper").on('click', ".btnEditMessageCancel", ()=>{refresh()});
+
+    $("#messages-wrapper").on('click', ".btnEditMessageSave", function(){
+        let newText = $(this).parent().parent().find(".taMessageEdit").val();
+        promiseHandler(updateMessage(newText), ()=>{
+            refresh();
+            showMessage("Successfully edited a message!");
+        });
+    });
+
+    $("#messages-wrapper").on('click', ".btnMsgDelete", function(){
+        sessionStorage.setItem("messageID", $(this).parent().parent().data("messageid"));
+        $("#delete-message-confirm").show();
+    });
+
+    $("#btnYESDeleteMessageConfirm").click(() => {
+        promiseHandler(deleteMessage(), (response)=>{
+            refresh();
+            showMessage("Successfully deleted the message!");
+        });
+    })
+
     function mouseOnMessageHandlerIn(messageDiv){
-        console.log(messageDiv);
         $(messageDiv).find(".message-options").show();
+        $(messageDiv).addClass("hovered");
     }
 
     function mouseOnMessageHandlerOut(messageDiv){
         $(messageDiv).find(".message-options").hide();
-
+        $(messageDiv).removeClass("hovered");
     }
 
     // user settings btn

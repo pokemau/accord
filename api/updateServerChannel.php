@@ -38,13 +38,10 @@ if (isset($_POST["newchannelname"])) {
   return;
 }
 
-$sqlGetServerID = "SELECT * FROM tblserverchannel WHERE channelID='" . $channelID . "'";
-$rowGetServerID = mysqli_fetch_assoc(mysqli_query($connection, $sqlGetServerID));
-
-
-$sqlExistingChannel = "SELECT * FROM tblserverchannel WHERE serverID='" . $rowGetServerID['serverID'] . "' AND channelname='" . $newchannelname . "'";
-$resultExistingChannel = mysqli_query($connection, $sqlExistingChannel);
-$rowExistingChannel = mysqli_num_rows($resultExistingChannel);
+$sqlExistingChannel = "SELECT tblserverchannel.channelID FROM tblserverchannel, tblserver WHERE 
+  channelID=$channelID AND tblserverchannel.serverID=tblserver.serverID AND channelname='$newchannelname'";
+$result = mysqli_query($connection, $sqlExistingChannel);
+$rowExistingChannel = mysqli_num_rows($result);
 
 if ($rowExistingChannel > 0) {
   $response = array(
