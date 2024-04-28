@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 23, 2024 at 05:19 PM
+-- Generation Time: Apr 28, 2024 at 06:39 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -63,18 +63,9 @@ CREATE TABLE `tblmessage` (
 --
 
 INSERT INTO `tblmessage` (`messageID`, `senderID`, `channelID`, `messageText`, `dateTimeSent`) VALUES
-(4, 2, 7, 'test', '2024-04-23 04:50:41'),
-(5, 2, 7, 'test', '2024-04-23 04:51:40'),
-(6, 2, 7, 'testss', '2024-04-23 04:52:31'),
-(7, 2, 7, 'test', '2024-04-23 04:53:21'),
-(8, 2, 7, 'teasdasdawdsadawd', '2024-04-23 04:58:07'),
-(9, 2, 7, 'test', '2024-04-23 04:59:24'),
-(10, 2, 7, 'asdasdadadada', '2024-04-23 04:59:52'),
-(11, 2, 7, 'test', '2024-04-23 05:02:34'),
-(12, 2, 7, 'testss', '2024-04-23 05:03:39'),
-(13, 2, 7, 'test', '2024-04-23 05:05:22'),
-(14, 2, 7, 'test', '2024-04-23 05:06:08'),
-(15, 2, 7, 'test', '2024-04-23 05:07:32');
+(9, 2, 27, 'sdadasd', '2024-04-28 12:35:13'),
+(10, 2, 27, 'asdasdadad', '2024-04-28 12:35:42'),
+(12, 2, 28, 'tester', '2024-04-28 12:35:49');
 
 -- --------------------------------------------------------
 
@@ -95,8 +86,8 @@ CREATE TABLE `tblserver` (
 INSERT INTO `tblserver` (`serverID`, `ownerID`, `servername`) VALUES
 (1, 1, 'mau_server'),
 (2, 1, 'new mau server'),
-(4, 2, 'Yahallo'),
-(19, 2, 'test');
+(19, 2, 'test'),
+(25, 2, 'tester');
 
 -- --------------------------------------------------------
 
@@ -119,13 +110,10 @@ INSERT INTO `tblserverchannel` (`channelID`, `serverID`, `channelname`) VALUES
 (2, 1, 'all-csit'),
 (3, 1, 'test'),
 (4, 2, 'general'),
-(7, 4, 'general'),
-(8, 4, 'chat-here'),
-(10, 4, 'mudae23'),
 (27, 19, 'general'),
 (28, 19, 'chat-here'),
-(31, 4, 'school-stuff'),
-(33, 19, '12345');
+(33, 19, 'tester'),
+(37, 25, 'general');
 
 -- --------------------------------------------------------
 
@@ -190,8 +178,8 @@ CREATE TABLE `tbluserserver` (
 INSERT INTO `tbluserserver` (`userServerID`, `userID`, `serverID`) VALUES
 (1, 1, 1),
 (2, 1, 2),
-(4, 2, 4),
-(19, 2, 19);
+(19, 2, 19),
+(25, 2, 25);
 
 -- --------------------------------------------------------
 
@@ -214,13 +202,10 @@ INSERT INTO `tbluserserverchannel` (`user-serverchannelID`, `userID`, `servercha
 (2, 1, 2),
 (3, 1, 3),
 (4, 1, 4),
-(7, 2, 7),
-(8, 2, 8),
-(10, 2, 10),
 (27, 2, 27),
 (28, 2, 28),
-(31, 2, 31),
-(33, 2, 33);
+(33, 2, 33),
+(37, 2, 37);
 
 --
 -- Indexes for dumped tables
@@ -298,19 +283,19 @@ ALTER TABLE `tblaccount`
 -- AUTO_INCREMENT for table `tblmessage`
 --
 ALTER TABLE `tblmessage`
-  MODIFY `messageID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `messageID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `tblserver`
 --
 ALTER TABLE `tblserver`
-  MODIFY `serverID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `serverID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `tblserverchannel`
 --
 ALTER TABLE `tblserverchannel`
-  MODIFY `channelID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `channelID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `tblserverrole`
@@ -328,13 +313,13 @@ ALTER TABLE `tbluser`
 -- AUTO_INCREMENT for table `tbluserserver`
 --
 ALTER TABLE `tbluserserver`
-  MODIFY `userServerID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `userServerID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `tbluserserverchannel`
 --
 ALTER TABLE `tbluserserverchannel`
-  MODIFY `user-serverchannelID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `user-serverchannelID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- Constraints for dumped tables
@@ -344,8 +329,8 @@ ALTER TABLE `tbluserserverchannel`
 -- Constraints for table `tblmessage`
 --
 ALTER TABLE `tblmessage`
-  ADD CONSTRAINT `message-channel` FOREIGN KEY (`channelID`) REFERENCES `tblserverchannel` (`channelID`),
-  ADD CONSTRAINT `message-sender` FOREIGN KEY (`senderID`) REFERENCES `tbluser` (`userID`);
+  ADD CONSTRAINT `message-channel` FOREIGN KEY (`channelID`) REFERENCES `tblserverchannel` (`channelID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `message-sender` FOREIGN KEY (`senderID`) REFERENCES `tbluser` (`userID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `tblserver`
