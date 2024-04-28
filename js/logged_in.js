@@ -2,22 +2,39 @@
 $(document).ready(function(){
     refresh();
 
-    const isToday = (someDate) => {
-        const today = new Date()
-        return someDate.getDate() == today.getDate() &&
-          someDate.getMonth() == today.getMonth() &&
-          someDate.getFullYear() == today.getFullYear()
+    function isToday(someDate){
+        const today = new Date();
+        return checkDate(someDate, today);
+    }
+    function isYesterday(someDate){
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        checkDate(someDate, yesterday);
+    }
+    function checkDate(someDate, compareDate){
+        return someDate.getDate() == compareDate.getDate() &&
+          someDate.getMonth() == compareDate.getMonth() &&
+          someDate.getFullYear() == compareDate.getFullYear()
     }
     function tConvert (time) {
-        // Check correct time format and split into components
-        time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
-      
-        if (time.length > 1) { // If time format correct
-          time = time.slice (1);  // Remove full string match value
-          time[5] = +time[0] < 12 ? 'AM' : 'PM'; // Set AM/PM
-          time[0] = +time[0] % 12 || 12; // Adjust hours
+        let timeParts = time.split(":");
+        let hours = parseInt(timeParts[0]);
+        let minutes = parseInt(timeParts[1]);
+
+        let ampm = hours >= 12 ? "pm" : "am";
+        hours = hours % 12;
+        hours = hours==0 ? 12 : hours;
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+
+        return hours + ":" + minutes + " " + ampm;
+    }
+    function formatDate(inputDate) {
+        var date = new Date(inputDate);
+        if (!isNaN(date.getTime())) {
+            // Months use 0 index.
+            return date.getMonth() + 1 + '-' + date.getDate() + '-' + date.getFullYear();
         }
-        return time.join (''); // return adjusted time or original string
     }
       
     function promiseHandler(promise, successCallback = null, errorCallback = null){
@@ -79,7 +96,7 @@ $(document).ready(function(){
 
         if($(".channel-div.clicked")[0]){       //if channel div has clicked, wait for updated channels before showing messages 
             promiseChannels.done(function() {
-                promiseHandler(getMessageList(), messagesRightBarShow());
+                promiseHandler(getMessageList());
             });
         }else{
             $("#messages-rightbar").hide();
@@ -287,7 +304,7 @@ $(document).ready(function(){
         $("#servers-wrapper").html("");
         for(let i=0; i<serverList.length; i++){
             let serverInfo = serverList[i];
-            let string = "<div data-serverid='" + Number(serverInfo.serverID) + "' class='server-div";
+            let string = "<div data-serverid='" + parseInt(serverInfo.serverID) + "' class='server-div";
             if(serverInfo.serverID == serverIDClicked){
                 string += " clicked";
             }
@@ -323,7 +340,7 @@ $(document).ready(function(){
         channelsMiddleBarShow();
         for(let i=0; i<channelList.length; i++){
             let channelInfo = channelList[i];
-            let string = "<div data-channelid='" + Number(channelInfo.channelID) + "' class='channel-div";
+            let string = "<div data-channelid='" + parseInt(channelInfo.channelID) + "' class='channel-div";
             if(channelInfo.channelID == channelIDClicked){
                 string += " clicked";
             }
@@ -358,18 +375,20 @@ $(document).ready(function(){
         messagesRightBarShow();
         for(let i=0; i<messageList.length; i++){
             let messageInfo = messageList[i];
-            let string = "<div data-messageid='" + Number(messageInfo.messageID) + "' class='message-div'>"
+            let string = "<div data-messageid='" + parseInt(messageInfo.messageID) + "' class='message-div'>"
             +   "<div class='message-header'>"
             +       "<h4>" + String(messageInfo.senderdisplayname) + "</h4>"
             +       "<h6>";
 
             let messageTimeDate = messageInfo.dateTimeSent;
             let messageDate = messageTimeDate.slice(0, 10);
-            let messageTime = messageTimeDate.slice(10, 15);
+            let messageTime = messageTimeDate.slice(10, 16);
             if (isToday(new Date(messageDate))){
                 string += "Today";
+            }else if(isYesterday(new Date(messageDate))){
+                string += "Yesterday";
             }else{
-                string += String(messageDate);
+                string += String(formatDate(messageDate));
             }
             string += " at " + String(tConvert(messageTime)) + "</h6>"
             +   "</div>"
@@ -383,6 +402,8 @@ $(document).ready(function(){
             + "</div>";
             $(string).appendTo("#messages-wrapper");
         }
+        let messagesWrapper = $("#messages-wrapper")[0];
+        messagesWrapper.scrollTop = messagesWrapper.scrollHeight - messagesWrapper.clientHeight;
     }
 
     $("#servers-wrapper").on('click', '.server-div', function(){
@@ -560,6 +581,7 @@ $(document).ready(function(){
 
     $("#btnSendMessage").click(() => {
         let messageText = $("#inpMessage").val();
+        $("#inpMessage").val("");
         promiseHandler(sendMessage(messageText), refresh());
     });
 

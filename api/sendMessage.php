@@ -7,6 +7,7 @@
 include_once('../connect.php');
 header("Access-Control-Allow-Origin: *");
 header('Content-Type: application/json');
+date_default_timezone_set('Asia/Manila'); 
 
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
@@ -51,7 +52,7 @@ if (isset($_POST["messageText"])) {
   return;
 }
 
-$dateTimeSent = date("Y-m-d") ."-" . date("h:i:sa");
+$dateTimeSent = date("Y-m-d H:i:s");
 
 $sqlInsertMessage = "INSERT INTO tblmessage(senderID,channelID,messageText,dateTimeSent) 
     VALUES('". $senderID ."', '". $channelID ."', '". $messageText ."', '". $dateTimeSent ."')";

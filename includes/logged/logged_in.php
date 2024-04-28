@@ -57,7 +57,7 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
     </div>
 
     <div id="messages-rightbar">
-      <div id="channel-header">
+      <div id="messages-channel-header">
         <h3 id="channelNameHeader"></h3>
         <img src="images\settings_icon.png" alt="SettingsIcon" id="channelSettings">
       </div>
