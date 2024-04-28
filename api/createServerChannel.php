@@ -68,13 +68,6 @@ if(mysqli_num_rows($resultExistingChannel) > 0){
 $sqlInsertChannel = "INSERT INTO tblserverchannel(serverID, channelname) VALUES('".$serverID."','".$channelname."')";
 mysqli_query($connection, $sqlInsertChannel);
 
-//get latest server ID after inserting new for new channel and user-server table
-$channelID = mysqli_insert_id($connection);
-
-//insert new many-to-many relationship table entry
-$sqlInsertUserServerChannel = "INSERT INTO tbluserserverchannel(userID, serverchannelID) VALUES('".$userID."', '".$channelID."')";
-mysqli_query($connection, $sqlInsertUserServerChannel);
-
 $response = array(
     'status' => true,
     'message' => "Created new channel successfully (createServerChannel.php)"

@@ -75,6 +75,7 @@ $(document).ready(function(){
         $("#messages-rightbar").show();
     }
     function refresh(){
+        promiseHandler(getCurrUserID());
         unBlurEverything();
         $(".popUpForm").hide();
         $(".options-form").hide();
@@ -112,6 +113,20 @@ $(document).ready(function(){
             }
           }, 3000);
     }
+    async function getCurrUserID(){
+        try{
+            let response = await $.post("api/getCurrUserID.php",
+            function(responseInner, status){
+                return responseInner   
+            });
+            if(response['status'] == false){
+                throw new Error(String(response['message']));
+            }
+            sessionStorage.setItem("userID", response['userID']);
+        }catch(error){
+            throw error;
+        }
+    }
 
     async function createServer(serverName){
         try{
@@ -138,6 +153,26 @@ $(document).ready(function(){
             {
                 serverID: toUpdateServerID,
                 newservername: newServerName
+            },
+            function(responseInner, status){
+                return responseInner   
+            });
+            if(response['status'] == false){
+                throw new Error(String(response['message']));
+            }
+            return response['message'];
+        }catch(error){
+            throw error;
+        }
+    }
+
+    async function addUserToServer(userIDToJoin){
+        try{
+            let serverIDToJoin = sessionStorage.getItem("serverID");
+            let response = await $.post("api/addUserToServer.php",
+            {
+                joinerID: userIDToJoin,
+                serverID: serverIDToJoin
             },
             function(responseInner, status){
                 return responseInner   
@@ -376,7 +411,8 @@ $(document).ready(function(){
         messagesRightBarShow();
         for(let i=0; i<messageList.length; i++){
             let messageInfo = messageList[i];
-            let string = "<div class='message-div' data-messageid='" + parseInt(messageInfo.messageID) + "'>"
+            let string = "<div class='message-div' data-messageid='" + parseInt(messageInfo.messageID) 
+            +"' data-senderid='"+parseInt(messageInfo.senderID)+"'>"
             +   "<div class='message-header'>"
             +       "<h4>" + String(messageInfo.senderdisplayname) + "</h4>"
             +       "<h6>";
@@ -405,6 +441,38 @@ $(document).ready(function(){
         }
         let messagesWrapper = $("#messages-wrapper")[0];
         messagesWrapper.scrollTop = messagesWrapper.scrollHeight - messagesWrapper.clientHeight;
+    };
+
+    async function getSearchedUserList(usernameKeywordparam){
+        try{
+            let serverIDparam = sessionStorage.getItem("serverID");
+            let response = await $.get("api/searchUsersToServer.php",
+            {
+                serverID: serverIDparam,
+                usernameKeyword: usernameKeywordparam
+            },
+            function(responseInner, status){
+                return responseInner;
+            });
+            if(response['status'] == false){
+                throw new Error(String(response['message']));
+            }
+            printSearchedUsers(response['searchedUsers']); 
+        }catch(error){
+            throw error;
+        }
+    };
+
+    function printSearchedUsers(searchedUsers){
+        $("#users-search-wrapper").html("");
+        for(let i=0; i<searchedUsers.length; i++){
+            let userInfo = searchedUsers[i];
+            let string = "<div data-userid='" + parseInt(userInfo.userID) + "' class='user-div option'>"
+                + "<h2>" + String(userInfo.displayname) + "</h2>"
+                + "<h4>#" + String(userInfo.username) + "</h4>"
+                + "</div>";
+            $(string).appendTo("#users-search-wrapper");
+        }
     }
 
     $("#servers-wrapper").on('click', '.server-div', function(){
@@ -526,6 +594,24 @@ $(document).ready(function(){
     }).on("mouseleave", function() {
         mouseOnOptionHandlerOut(this);
     });
+    $("#users-search-wrapper").on('mouseenter', ".option", function(){
+        mouseOnOptionHandlerIn(this);
+    }).on("mouseleave", ".option", function() {
+        mouseOnOptionHandlerOut(this);
+    });
+
+    $("#invitePeopleToServer").click(()=>{
+        $("#user-search").show();
+    });
+    $("#txtUsername").on('input', function(){
+        let searchedKeyword = $("#txtUsername").val();
+        promiseHandler(getSearchedUserList(searchedKeyword));
+    });
+    $("#users-search-wrapper").on('click', ".user-div", function(){
+        promiseHandler(addUserToServer($(this).data('userid')));
+        let searchedKeyword = $("#txtUsername").val();
+        promiseHandler(getSearchedUserList(searchedKeyword));
+    });
 
     $("#serverSettings").click(()=>{
         $("#update-server-section").show();
@@ -611,7 +697,9 @@ $(document).ready(function(){
     });
 
     function mouseOnMessageHandlerIn(messageDiv){
-        $(messageDiv).find(".message-options").show();
+        if($(messageDiv).data("senderid") == sessionStorage.getItem("userID")){
+            $(messageDiv).find(".message-options").show();
+        }
         $(messageDiv).addClass("hovered");
     }
 

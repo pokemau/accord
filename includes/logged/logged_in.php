@@ -97,7 +97,7 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
     <div id="right-page">
       <?php echo "<h2>UserID: " . $_SESSION['userid'] . "</h2>";
       echo "<h2>Username: " . $_SESSION['username'] . "</h2>"; ?>
-
+    
       <br>
 
       <h2>Servers Table</h2>
@@ -158,19 +158,19 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
 
   <!-- create server -->
   <div id="create-server-section" class="popUpForm">
-    <div id="create-server-section-closeBtnDiv" class="divCloseBtn">
+    <div id="create-server-section-closeBtnDiv" class="close-btns">
       <button type="button" id="btnCreateServerSectionClose" class="closeBtn">Close</button>
     </div>
     <label for="txtServerName">Server Name</label>
     <input type="text" id="txtServerName" placeholder="Name"><br>
-    <div class="divSubmitBtn">
+    <div class="submit-btns">
       <button id="btnCreateServer">Create Server</button>
     </div>
 
     <div id="create-server-confirm" class="popUpForm">
       <h4 class="longTxt">Are you sure you want to create a server named:</h4>
       <h3 class="lblServerNameConfirm"></h3>
-      <div class="divSubmitBtn">
+      <div class="submit-btns">
         <button id="btnYESCreateServerConfirm">Yes</button>
         <button id="btnNOCreateServerConfirm" class="noBtn">No</button>
       </div>
@@ -179,12 +179,12 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
 
   <!-- create channel -->
   <div id="create-channel-section" class="popUpForm">
-    <div class="divCloseBtn">
+    <div class="close-btns">
       <button type="button" id="btnCreateChannelSectionClose" class="closeBtn">Close</button>
     </div>
     <label for="txtChannelName">Channel Name</label>
     <input type="text" id="txtChannelName" placeholder="Name"><br>
-    <div class="divSubmitBtn">
+    <div class="submit-btns">
       <button id="btnCreateChannel">Create Channel</button>
     </div>
 
@@ -193,7 +193,7 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
       <h3 class="lblChannelNameConfirm"></h3>
       <h4 class="longTxt">in the server:</h4>
       <h3 class="lblServerNameConfirm"></h3>
-      <div class="divSubmitBtn">
+      <div class="submit-btns">
         <button id="btnYESCreateChannelConfirm">Yes</button>
         <button id="btnNOCreateChannelConfirm" class="noBtn">No</button>
       </div>
@@ -202,12 +202,12 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
 
   <!-- server update and delete section -->
   <div id="update-server-section" class="popUpForm">
-    <div class="divCloseBtn">
+    <div class="close-btns">
       <button type="button" id="btnUpdateServerSectionClose" class="closeBtn">Close</button>
     </div>
     <label for="txtNewServerName">New Server Name</label>
     <input type="text" id="txtNewServerName" placeholder="Name"><br>
-    <div class="divSubmitBtn">
+    <div class="submit-btns">
       <button id="btnUpdateServer">Update Server</button>
     </div>
 
@@ -216,7 +216,7 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
       <h3 class="lblServerNameConfirm"></h3>
       <h4 class="longTxt">into:</h4>
       <h3 class="lblNewServerName"></h3>
-      <div class="divSubmitBtn">
+      <div class="submit-btns">
         <button id="btnYESUpdateServerConfirm">Yes</button>
         <button id="btnNOUpdateServerConfirm" class="noBtn">No</button>
       </div>
@@ -226,7 +226,7 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
   <div id="delete-server-confirm" class="popUpForm">
     <h4 class="longTxt">Are you sure you want to delete the server:</h4>
     <h3 class="lblServerNameConfirm"></h3>
-    <div class="divSubmitBtn">
+    <div class="submit-btns">
       <button id="btnYESDeleteServerConfirm">Yes</button>
       <button id="btnNODeleteServerConfirm" class="noBtn">No</button>
     </div>
@@ -235,12 +235,12 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
 
   <!-- channel update and delete section -->
   <div id="update-channel-section" class="popUpForm">
-    <div class="divCloseBtn">
+    <div class="close-btns">
       <button type="button" id="btnUpdateChannelSectionClose" class="closeBtn">Close</button>
     </div>
     <label for="txtNewChannelName">New Channel Name</label>
     <input type="text" id="txtNewChannelName" placeholder="Name"><br>
-    <div class="divSubmitBtn">
+    <div class="submit-btns">
       <button id="btnUpdateChannel">Update Channel</button>
     </div>
 
@@ -249,7 +249,7 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
       <h3 class="lblChannelNameConfirm"></h3>
       <h4 class="longTxt">into:</h4>
       <h3 class="lblNewChannelName"></h3>
-      <div class="divSubmitBtn">
+      <div class="submit-btns">
         <button id="btnYESUpdateChannelConfirm">Yes</button>
         <button id="btnNOUpdateChannelConfirm" class="noBtn">No</button>
       </div>
@@ -259,19 +259,28 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
   <div id="delete-channel-confirm" class="popUpForm">
     <h4 class="longTxt">Are you sure you want to delete the channel:</h4>
     <h3 class="lblServerChannelConfirm"></h3>
-    <div class="divSubmitBtn">
+    <div class="submit-btns">
       <button id="btnYESDeleteChannelConfirm">Yes</button>
       <button id="btnNODeleteChannelConfirm" class="noBtn">No</button>
     </div>
   </div>
 
-  <!-- message -->
+  <!-- delete message -->
   <div id="delete-message-confirm" class="popUpForm">
     <h4 class="longTxt">Are you sure you want to delete this message></h4>
-    <div class="divSubmitBtn">
+    <div class="submit-btns">
       <button id="btnYESDeleteMessageConfirm">Yes</button>
       <button id="btnNODeleteMessageConfirm" class="noBtn">No</button>
     </div>
+  </div>
+
+  <!-- search users to invite -->
+  <div id="user-search" class="popUpForm">
+    <div class="close-btns">
+      <button type="button" class="closeBtn">Close</button>
+    </div>
+    <input type="text" id="txtUsername" placeholder="username"><br>
+    <div id="users-search-wrapper"></div>
   </div>
 
 </body>

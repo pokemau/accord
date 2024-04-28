@@ -38,8 +38,8 @@ if(isset($_GET["channelID"])){
     return;
 }
 
-$sqlGetMessageList = "SELECT displayname, messageID, messageText, dateTimeSent FROM tbluser, tblmessage 
-    WHERE userID = '".$senderID."' AND senderID = '".$senderID."' AND channelID = '" . $channelID . "'";
+$sqlGetMessageList = "SELECT displayname, messageID, senderID, messageText, dateTimeSent FROM tbluser, tblmessage 
+    WHERE channelID = '$channelID' AND userID = senderID ORDER BY dateTimeSent";
 $resultMessageList = mysqli_query($connection, $sqlGetMessageList);
 
 $messageList = array();
@@ -47,6 +47,7 @@ while($row = mysqli_fetch_assoc($resultMessageList)){
     $messageList[] = array(
         'messageID' => $row['messageID'],
         'senderdisplayname' => $row['displayname'],
+        'senderID' => $row['senderID'],
         'messageText' => $row['messageText'],
         'dateTimeSent' => $row['dateTimeSent'],
     );

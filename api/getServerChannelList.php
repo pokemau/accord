@@ -1,7 +1,7 @@
 <?php
 
 //get
-//errorTypes: noOwnerID, noServerID
+//errorTypes: noServerID
 //parameters: serverID
 
 include_once('../connect.php');
@@ -10,19 +10,6 @@ header('Content-Type: application/json');
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
-}
-
-$ownerID;
-if(isset($_SESSION["userid"])){
-    $ownerID = $_SESSION["userid"];
-}else{
-    $response = array(
-        'status' => false,
-        'errorType' => 'noUserID',
-        'message' => "No user id provided (getServerChannelList.php)"
-    );
-    echo json_encode($response);
-    return;
 }
 
 $serverID;
@@ -38,8 +25,8 @@ if(isset($_GET["serverID"])){
     return;
 }
 
-$sqlGetChannelList = "SELECT channelID, channelname FROM tbluserserverchannel, tblserverchannel 
-    WHERE userID = '".$ownerID."' AND serverchannelID = channelID AND serverID = '" . $serverID . "'";
+$sqlGetChannelList = "SELECT channelID, channelname FROM tblserverchannel 
+    WHERE serverID = '$serverID'";
 $resultChannelList = mysqli_query($connection, $sqlGetChannelList);
 
 $channelList = array();

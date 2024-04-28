@@ -38,6 +38,7 @@ while($row = mysqli_fetch_assoc($resultServerList)){
 
 $response = array(
     'status' => true,
+    'message' => "Successfully returned server list",
     'serverList' => $serverList
 );
 

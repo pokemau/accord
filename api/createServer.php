@@ -66,11 +66,9 @@ mysqli_query($connection, $sqlInsertChannel);
 //get latest channel ID (general) for user-serverchanneltable 
 $channelID = mysqli_insert_id($connection);
 
-//insert new many-to-many relationship tables
+//insert new many-to-many relationship table
 $sqlInsertUserServer = "INSERT INTO tbluserserver(userID, serverID) VALUES('" . $ownerID . "', '" . $serverID . "')";
-$sqlInsertUserServerChannel = "INSERT INTO tbluserserverchannel(userID, serverchannelID) VALUES('" . $ownerID . "', '" . $channelID . "')";
 mysqli_query($connection, $sqlInsertUserServer);
-mysqli_query($connection, $sqlInsertUserServerChannel);
 
 $response = array(
   'status' => true,

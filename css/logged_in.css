@@ -189,7 +189,6 @@ textarea{
 }
 #messages-wrapper {
   width: 100%;
-  max-height: 100%;
   overflow-y: scroll;
 
   flex: 1 1 auto;
@@ -328,7 +327,7 @@ th {
   width: 20rem;
   height: 20rem;
 }
-.divCloseBtn {
+.close-btns {
   display: flex;
   margin: 0;
 }
@@ -341,4 +340,12 @@ th {
 }
 .noBtn{
   color: red;
+}
+#user-search {
+  width: 20rem;
+  height: 30rem;
+  display: block;
+}
+#users-search-wrapper {
+  overflow-y: scroll;
 }
