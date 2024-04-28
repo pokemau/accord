@@ -77,6 +77,7 @@ $(document).ready(function(){
     function refresh(){
         unBlurEverything();
         $(".popUpForm").hide();
+        $(".options-form").hide();
         $(".popUpForm").addClass("unblurred");
         let promiseServers = getServerList();
         let promiseChannels = $.Deferred();     //initialize a promise-type in case we dont go through an async func
@@ -94,13 +95,13 @@ $(document).ready(function(){
             $("#channels-middlebar").hide();
         }
 
-        if($(".channel-div.clicked")[0]){       //if channel div has clicked, wait for updated channels before showing messages 
-            promiseChannels.done(function() {
+        promiseChannels.done(function(){
+            if($(".channel-div.clicked")[0]){       //if channel div has clicked, wait for updated channels before showing messages 
                 promiseHandler(getMessageList());
-            });
-        }else{
-            $("#messages-rightbar").hide();
-        }
+            }else{
+                $("#messages-rightbar").hide();
+            }
+        });
     }
     function showMessage(message){
         $("body").append("<div id='message-box'> <p>"+message+"</p> </div>");
@@ -375,7 +376,7 @@ $(document).ready(function(){
         messagesRightBarShow();
         for(let i=0; i<messageList.length; i++){
             let messageInfo = messageList[i];
-            let string = "<div data-messageid='" + parseInt(messageInfo.messageID) + "' class='message-div'>"
+            let string = "<div class='message-div' data-messageid='" + parseInt(messageInfo.messageID) + "'>"
             +   "<div class='message-header'>"
             +       "<h4>" + String(messageInfo.senderdisplayname) + "</h4>"
             +       "<h6>";
@@ -396,8 +397,8 @@ $(document).ready(function(){
             +       "<h5>" + String(messageInfo.messageText) + "</h5>"
             +   "</div>"
             +   "<div class='message-options' style='display: none'>"
-            +       "<a href='#' class='btnMsgEdit'><img src='images/edit-icon.png' alt='editIcon'></a>"
-            +       "<a href='#' class='btnMsgDelete'><img src='images/delete-icon.png' alt='deleteIcon'></a>"
+            +       "<img src='images/edit_icon.png' alt='editIcon' class='btnMsgEdit'>"
+            +       "<img src='images/delete_icon.png' alt='deleteIcon' class='btnMsgDelete'>"
             +   "</div>"
             + "</div>";
             $(string).appendTo("#messages-wrapper");
@@ -509,17 +510,32 @@ $(document).ready(function(){
     });
 
     //server update and delete
-    $("#serverSettings").click(() => {
-        backgroundBlur();
-        $("#update-delete-server-section").show();
+    $("#serverOptionDropdown").click(() => {
+        $("#server-options").toggle();
     });
-    $("#btnUpdateServer").click((event) => {
-        let newServerName = $("#txtNewServerName").val();
-        if(newServerName == "") return;
+    function mouseOnOptionHandlerIn(optionDiv){
+        $(optionDiv).addClass("hovered");
+    }
+
+    function mouseOnOptionHandlerOut(optionDiv){
+        $(optionDiv).removeClass("hovered");
+    }
+    
+    $(".option").on('mouseenter', function(){
+        mouseOnOptionHandlerIn(this);
+    }).on("mouseleave", function() {
+        mouseOnOptionHandlerOut(this);
+    });
+
+    $("#serverSettings").click(()=>{
+        $("#update-server-section").show();
+    });
+
+    $("#serverDelete").click(()=>{
         $(".lblServerNameConfirm").text($(".server-div.clicked").children().text())
-        $(".lblNewServerName").text(newServerName);
-        openPopUpForm(event.currentTarget);
+        $("#delete-server-confirm").show();
     });
+
     $("#btnYESUpdateServerConfirm").click((event) => {
         let newServerName = $("#txtNewServerName").val();
 
@@ -531,10 +547,6 @@ $(document).ready(function(){
         });
     });
 
-    $("#btnDeleteServer").click((event) => {
-        $(".lblServerNameConfirm").text($(".server-div.clicked").children().text())
-       openPopUpForm(event.currentTarget);
-    });
     $("#btnYESDeleteServerConfirm").click((event) => {
         promiseHandler(deleteServer(), ()=>{
             refresh();
@@ -544,11 +556,37 @@ $(document).ready(function(){
         });
     });
 
-    //channel update and delete
-    $("#channelSettings").click(() => {
-        backgroundBlur();
-        $("#update-delete-channel-section").show();
+    $("#btnUpdateServer").click((event) => {
+        let newServerName = $("#txtNewServerName").val();
+        if(newServerName == "") return;
+        $(".lblServerNameConfirm").text($(".server-div.clicked").children().text())
+        $(".lblNewServerName").text(newServerName);
+        openPopUpForm(event.currentTarget);
     });
+
+    //channel update and delete
+    $("#channelOptionDropdown").click(() => {
+        $("#channel-options").toggle();
+    });
+
+    $("#channelSettings").click(()=>{
+        $("#update-channel-section").show();
+    });
+
+    $("#channelDelete").click(()=>{
+        $(".lblChannelNameConfirm").text($(".channel-div.clicked").children().text());
+        $("#delete-channel-confirm").show();
+    });
+
+    $("#btnYESDeleteChannelConfirm").click((event) => {
+        promiseHandler(deleteServerChannel(), ()=>{
+            refresh();
+            showMessage("Successfully deleted the channel!");
+        }, (error)=>{
+            closePopUpForm(event.currentTarget);
+        })
+    });
+
     $("#btnUpdateChannel").click((event) => {
         let newChannelName = $("#txtNewChannelName").val();
         if(newChannelName == "") return;
@@ -566,24 +604,21 @@ $(document).ready(function(){
         });
     });
 
-    $("#btnDeleteChannel").click((event) => {
-        $(".lblChannelNameConfirm").text($(".channel-div.clicked").children().text())
-        openPopUpForm(event.currentTarget);
-    });
-    $("#btnYESDeleteChannelConfirm").click((event) => {
-        promiseHandler(deleteServerChannel(), ()=>{
-            refresh();
-            showMessage("Successfully deleted the channel!");
-        }, (error)=>{
-            closePopUpForm(event.currentTarget);
-        })
-    });
-
     $("#btnSendMessage").click(() => {
         let messageText = $("#inpMessage").val();
         $("#inpMessage").val("");
         promiseHandler(sendMessage(messageText), refresh());
     });
+
+    function mouseOnMessageHandlerIn(messageDiv){
+        $(messageDiv).find(".message-options").show();
+        $(messageDiv).addClass("hovered");
+    }
+
+    function mouseOnMessageHandlerOut(messageDiv){
+        $(messageDiv).find(".message-options").hide();
+        $(messageDiv).removeClass("hovered");
+    }
 
     $("#messages-wrapper").on('mouseenter', '.message-div', function(){
         mouseOnMessageHandlerIn(this);
@@ -629,16 +664,6 @@ $(document).ready(function(){
             showMessage("Successfully deleted the message!");
         });
     })
-
-    function mouseOnMessageHandlerIn(messageDiv){
-        $(messageDiv).find(".message-options").show();
-        $(messageDiv).addClass("hovered");
-    }
-
-    function mouseOnMessageHandlerOut(messageDiv){
-        $(messageDiv).find(".message-options").hide();
-        $(messageDiv).removeClass("hovered");
-    }
 
     // user settings btn
     $("#user-settings-btn").click(() => {

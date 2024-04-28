@@ -50,7 +50,22 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
       <div id="channels-header">
         <h2 class="lblServerName">Server</h2>
         <button id="btnCreateChannelSection">+</button>
-        <img src="images\settings_icon.png" alt="SettingsIcon" id="serverSettings">
+        <img src="images\dropdown_icon.png" alt="DropdownIcon" id="serverOptionDropdown">
+
+        <div id="server-options" class="options-form">
+          <div class='option' id="invitePeopleToServer">
+            <h6>Invite people</h6>
+            <img src="images\invite_people_icon.png" alt="InvitePeopleIcon">
+          </div>
+          <div class='option' id="serverSettings">
+            <h6>Server Settings</h6>
+            <img src="images\settings_icon.png" alt="SettingsIcon">
+          </div>
+          <div class='option' id="serverDelete">
+            <h6>Delete Server</h6>
+            <img src="images\delete_icon.png" alt="DeleteIcon">
+          </div>
+        </div>
       </div>
       <div id="channels-wrapper">
       </div>
@@ -59,7 +74,18 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
     <div id="messages-rightbar">
       <div id="messages-channel-header">
         <h3 id="channelNameHeader"></h3>
-        <img src="images\settings_icon.png" alt="SettingsIcon" id="channelSettings">
+        <img src="images\dropdown_icon.png" alt="DropdownIcon" id="channelOptionDropdown">
+
+        <div id="channel-options" class="options-form">
+          <div class='option' id="channelSettings">
+            <h6>Channel Settings</h6>
+            <img src="images\settings_icon.png" alt="SettingsIcon">
+          </div>
+          <div class='option' id="channelDelete">
+            <h6>Delete Channel</h6>
+            <img src="images\delete_icon.png" alt="DeleteIcon">
+          </div>
+        </div>
       </div>
       <div id="messages-wrapper"></div>
       <div id="message-inputgroup">
@@ -175,7 +201,7 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
   </div>
 
   <!-- server update and delete section -->
-  <div id="update-delete-server-section" class="popUpForm">
+  <div id="update-server-section" class="popUpForm">
     <div class="divCloseBtn">
       <button type="button" id="btnUpdateServerSectionClose" class="closeBtn">Close</button>
     </div>
@@ -183,10 +209,6 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
     <input type="text" id="txtNewServerName" placeholder="Name"><br>
     <div class="divSubmitBtn">
       <button id="btnUpdateServer">Update Server</button>
-    </div>
-    <h4>or do you want to delete the server?</h4>
-    <div class="divSubmitBtn">
-      <button id="btnDeleteServer">Delete Server</button>
     </div>
 
     <div id="update-server-confirm" class="popUpForm">
@@ -199,20 +221,20 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
         <button id="btnNOUpdateServerConfirm" class="noBtn">No</button>
       </div>
     </div>
+  </div>
 
-    <div id="delete-server-confirm" class="popUpForm">
-      <h4 class="longTxt">Are you sure you want to delete the server:</h4>
-      <h3 class="lblServerNameConfirm"></h3>
-      <div class="divSubmitBtn">
-        <button id="btnYESDeleteServerConfirm">Yes</button>
-        <button id="btnNODeleteServerConfirm" class="noBtn">No</button>
-      </div>
+  <div id="delete-server-confirm" class="popUpForm">
+    <h4 class="longTxt">Are you sure you want to delete the server:</h4>
+    <h3 class="lblServerNameConfirm"></h3>
+    <div class="divSubmitBtn">
+      <button id="btnYESDeleteServerConfirm">Yes</button>
+      <button id="btnNODeleteServerConfirm" class="noBtn">No</button>
     </div>
   </div>
 
 
   <!-- channel update and delete section -->
-  <div id="update-delete-channel-section" class="popUpForm">
+  <div id="update-channel-section" class="popUpForm">
     <div class="divCloseBtn">
       <button type="button" id="btnUpdateChannelSectionClose" class="closeBtn">Close</button>
     </div>
@@ -220,10 +242,6 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
     <input type="text" id="txtNewChannelName" placeholder="Name"><br>
     <div class="divSubmitBtn">
       <button id="btnUpdateChannel">Update Channel</button>
-    </div>
-    <h4>or do you want to delete the channel?</h4>
-    <div class="divSubmitBtn">
-      <button id="btnDeleteChannel">Delete Channel</button>
     </div>
 
     <div id="update-channel-confirm" class="popUpForm">
@@ -236,13 +254,14 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
         <button id="btnNOUpdateChannelConfirm" class="noBtn">No</button>
       </div>
     </div>
-    <div id="delete-channel-confirm" class="popUpForm">
-      <h4 class="longTxt">Are you sure you want to delete the channel:</h4>
-      <h3 class="lblServerChannelConfirm"></h3>
-      <div class="divSubmitBtn">
-        <button id="btnYESDeleteChannelConfirm">Yes</button>
-        <button id="btnNODeleteChannelConfirm" class="noBtn">No</button>
-      </div>
+  </div>
+
+  <div id="delete-channel-confirm" class="popUpForm">
+    <h4 class="longTxt">Are you sure you want to delete the channel:</h4>
+    <h3 class="lblServerChannelConfirm"></h3>
+    <div class="divSubmitBtn">
+      <button id="btnYESDeleteChannelConfirm">Yes</button>
+      <button id="btnNODeleteChannelConfirm" class="noBtn">No</button>
     </div>
   </div>
 
