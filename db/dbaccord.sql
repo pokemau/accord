@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 28, 2024 at 06:39 AM
+-- Generation Time: Apr 28, 2024 at 05:54 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -42,7 +42,8 @@ CREATE TABLE `tblaccount` (
 INSERT INTO `tblaccount` (`accountID`, `emailadd`, `username`, `password`, `usertype`) VALUES
 (1, 'rentillosa90@gmail.com', 'pokemau', '$2y$10$JksoIDI/X3wceJJ43uNu0O.Ibmrx2GLXN/hmmGx4zq/gkpwzkOiIi', 'user'),
 (2, 'jorash@gmail.com', 'Jorash', '$2y$10$LlSMMDXp6YPxQtxdTvMuiewAY9c2rgmts9wyYwvQdIdPxUY8/pB1O', 'user'),
-(3, 'jorash2@gmail.com', 'Jorash2', '$2y$10$L4QFfdYaFVXnq7lRZeSmfO7mG.s9nPYoONHwUmbmkOGOqdobcPVqi', 'user');
+(3, 'jorash2@gmail.com', 'Jorash2', '$2y$10$L4QFfdYaFVXnq7lRZeSmfO7mG.s9nPYoONHwUmbmkOGOqdobcPVqi', 'user'),
+(4, 'test@gmail.com', 'Test', '$2y$10$PSd5L6IJxRs.CVLka1lipOwuOiGGd.xbmJ.9bPej4okYbMiXxqVHi', 'user');
 
 -- --------------------------------------------------------
 
@@ -65,7 +66,19 @@ CREATE TABLE `tblmessage` (
 INSERT INTO `tblmessage` (`messageID`, `senderID`, `channelID`, `messageText`, `dateTimeSent`) VALUES
 (9, 2, 27, 'sdadasd', '2024-04-28 12:35:13'),
 (10, 2, 27, 'asdasdadad', '2024-04-28 12:35:42'),
-(12, 2, 28, 'tester', '2024-04-28 12:35:49');
+(12, 2, 28, 'tester', '2024-04-28 12:35:49'),
+(13, 3, 27, 'asda', '2024-04-28 23:32:34'),
+(14, 2, 27, 'test', '2024-04-28 23:32:53'),
+(15, 2, 27, 'sadsadadvxzcxzczc', '2024-04-28 23:32:57'),
+(16, 2, 27, 'hihihiha', '2024-04-28 23:34:37'),
+(17, 3, 27, 'okay', '2024-04-28 23:34:50'),
+(18, 3, 27, 'sure buddy boy', '2024-04-28 23:35:06'),
+(19, 3, 28, '2nd\n', '2024-04-28 23:37:25'),
+(20, 2, 28, '1st', '2024-04-28 23:37:39'),
+(21, 2, 28, 'sdadsadadd', '2024-04-28 23:37:52'),
+(22, 2, 28, 'sadasda', '2024-04-28 23:38:00'),
+(23, 2, 28, 'sadasdadasd', '2024-04-28 23:38:05'),
+(25, 4, 28, 'sadsadda', '2024-04-28 23:52:50');
 
 -- --------------------------------------------------------
 
@@ -86,7 +99,7 @@ CREATE TABLE `tblserver` (
 INSERT INTO `tblserver` (`serverID`, `ownerID`, `servername`) VALUES
 (1, 1, 'mau_server'),
 (2, 1, 'new mau server'),
-(19, 2, 'test'),
+(19, 2, 'Yahallo'),
 (25, 2, 'tester');
 
 -- --------------------------------------------------------
@@ -157,7 +170,8 @@ CREATE TABLE `tbluser` (
 INSERT INTO `tbluser` (`userID`, `accountID`, `displayname`, `gender`, `birthdate`) VALUES
 (1, 1, 'pokemau', 'none', '2003-11-08'),
 (2, 2, 'Jorash', 'none', '2024-04-01'),
-(3, 3, 'Jorash2', 'none', '2024-04-01');
+(3, 3, 'Jorash2', 'none', '2024-04-01'),
+(4, 4, 'Test', 'none', '0000-00-00');
 
 -- --------------------------------------------------------
 
@@ -179,33 +193,10 @@ INSERT INTO `tbluserserver` (`userServerID`, `userID`, `serverID`) VALUES
 (1, 1, 1),
 (2, 1, 2),
 (19, 2, 19),
-(25, 2, 25);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tbluserserverchannel`
---
-
-CREATE TABLE `tbluserserverchannel` (
-  `user-serverchannelID` int(10) NOT NULL,
-  `userID` int(10) NOT NULL,
-  `serverchannelID` int(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tbluserserverchannel`
---
-
-INSERT INTO `tbluserserverchannel` (`user-serverchannelID`, `userID`, `serverchannelID`) VALUES
-(1, 1, 1),
-(2, 1, 2),
-(3, 1, 3),
-(4, 1, 4),
-(27, 2, 27),
-(28, 2, 28),
-(33, 2, 33),
-(37, 2, 37);
+(25, 2, 25),
+(26, 3, 19),
+(27, 1, 19),
+(28, 4, 19);
 
 --
 -- Indexes for dumped tables
@@ -262,14 +253,6 @@ ALTER TABLE `tbluserserver`
   ADD KEY `userserver-server` (`serverID`);
 
 --
--- Indexes for table `tbluserserverchannel`
---
-ALTER TABLE `tbluserserverchannel`
-  ADD PRIMARY KEY (`user-serverchannelID`),
-  ADD KEY `fk-user` (`userID`),
-  ADD KEY `fk-serverchannel` (`serverchannelID`);
-
---
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -277,13 +260,13 @@ ALTER TABLE `tbluserserverchannel`
 -- AUTO_INCREMENT for table `tblaccount`
 --
 ALTER TABLE `tblaccount`
-  MODIFY `accountID` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `accountID` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tblmessage`
 --
 ALTER TABLE `tblmessage`
-  MODIFY `messageID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `messageID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `tblserver`
@@ -307,19 +290,13 @@ ALTER TABLE `tblserverrole`
 -- AUTO_INCREMENT for table `tbluser`
 --
 ALTER TABLE `tbluser`
-  MODIFY `userID` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `userID` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tbluserserver`
 --
 ALTER TABLE `tbluserserver`
-  MODIFY `userServerID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
-
---
--- AUTO_INCREMENT for table `tbluserserverchannel`
---
-ALTER TABLE `tbluserserverchannel`
-  MODIFY `user-serverchannelID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `userServerID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- Constraints for dumped tables
@@ -362,13 +339,6 @@ ALTER TABLE `tbluser`
 ALTER TABLE `tbluserserver`
   ADD CONSTRAINT `userserver-server` FOREIGN KEY (`serverID`) REFERENCES `tblserver` (`serverID`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `userserver-user` FOREIGN KEY (`userID`) REFERENCES `tblaccount` (`accountID`);
-
---
--- Constraints for table `tbluserserverchannel`
---
-ALTER TABLE `tbluserserverchannel`
-  ADD CONSTRAINT `fk-serverchannel` FOREIGN KEY (`serverchannelID`) REFERENCES `tblserverchannel` (`channelID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk-user` FOREIGN KEY (`userID`) REFERENCES `tblaccount` (`accountID`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
