@@ -68,11 +68,11 @@ $(document).ready(function(){
     }
     function channelsMiddleBarShow(){
         $(".lblServerName").text($(".server-div.clicked").children().text());
-        $("#channels-middlebar").show();
+        // $("#channels-middlebar").show();
     }
     function messagesRightBarShow(){
         $("#channelNameHeader").text("#"+$(".channel-div.clicked").children().text());
-        $("#messages-rightbar").show();
+        // $("#messages-rightbar").show();
     }
     function refresh(){
         promiseHandler(getCurrUserID());
@@ -93,14 +93,14 @@ $(document).ready(function(){
             })
         }else{      //else complete initialized 'resolved' promise and hide channels
             promiseChannels.resolve();      //resolves the initialized promise cuz we dont have async func
-            $("#channels-middlebar").hide();
+            // $("#channels-middlebar").hide();
         }
 
         promiseChannels.done(function(){
             if($(".channel-div.clicked")[0]){       //if channel div has clicked, wait for updated channels before showing messages 
                 promiseHandler(getMessageList());
             }else{
-                $("#messages-rightbar").hide();
+                // $("#messages-rightbar").hide();
             }
         });
     }
@@ -336,19 +336,36 @@ $(document).ready(function(){
     }
 
     function printServers(serverList){
-        let serverIDClicked = $(".server-div.clicked").data("serverid");
+
+        let serverID = sessionStorage.getItem("serverID")
         $("#servers-wrapper").html("");
+
+        let clickedClassIsSet = false;
         for(let i=0; i<serverList.length; i++){
             let serverInfo = serverList[i];
-            let string = "<div data-serverid='" + parseInt(serverInfo.serverID) + "' class='server-div";
-            if(serverInfo.serverID == serverIDClicked){
+            let string = `<div data-serverid="${parseInt(serverInfo.serverID)}" class="server-div`;
+
+
+            if (serverInfo.serverID == serverID){
                 string += " clicked";
+                clickedClassIsSet = true;
             }
-            string += "'>"
-                + "<h2>" + String(serverInfo.servername) + "</h2>"
-                + "</div>";
+            string += `
+                "> 
+                    <h2> ${String(serverInfo.servername)}</h2>
+                </div>`
+
             $(string).appendTo("#servers-wrapper");
         }
+
+        if (!clickedClassIsSet) {
+            const firstChild = $("#servers-wrapper > div:first-child")
+            firstChild.addClass("clicked")
+            sessionStorage.setItem("serverID", firstChild.data("serverid"))
+        }
+
+        getServerChannelList()
+        channelsMiddleBarShow()
     }
 
     async function getServerChannelList(){
@@ -371,20 +388,35 @@ $(document).ready(function(){
     }
 
     function printServerChannels(channelList){
-        let channelIDClicked = $(".channel-div.clicked").data("channelid");
+
+        let channelID = sessionStorage.getItem("channelID");
         $("#channels-wrapper").html("");
-        channelsMiddleBarShow();
+        channelsMiddleBarShow()
+
+        let clickedClassIsSet = false;
+
         for(let i=0; i<channelList.length; i++){
             let channelInfo = channelList[i];
-            let string = "<div data-channelid='" + parseInt(channelInfo.channelID) + "' class='channel-div";
-            if(channelInfo.channelID == channelIDClicked){
+            let string = `<div data-channelid="${parseInt(channelInfo.channelID)}" class="channel-div`;
+
+            if (channelInfo.channelID == channelID){
                 string += " clicked";
+                clickedClassIsSet = true;
             }
-            string += "'>"
-                + "<h4>" + String(channelInfo.channelname) + "</h4>"
-                + "</div>";
+            
+            string += `">
+                <h4> ${String(channelInfo.channelname)} </h4>
+                </div>`;
             $(string).appendTo("#channels-wrapper");
         }
+
+        if (!clickedClassIsSet) {
+            const firstChild = $("#channels-wrapper > div:first-child")
+            firstChild.addClass("clicked")
+            sessionStorage.setItem("channelID", firstChild.data("channelid"))
+        }
+
+        getMessageList()
     }
 
     async function getMessageList(){
@@ -478,7 +510,7 @@ $(document).ready(function(){
     $("#servers-wrapper").on('click', '.server-div', function(){
         if($(this).hasClass("clicked")) return;
 
-        $("#messages-rightbar").hide();
+        // $("#messages-rightbar").hide();
         $(".server-div.clicked").removeClass("clicked");
         $(this).addClass("clicked");
         let serverID = $(this).data("serverid");
@@ -757,4 +789,30 @@ $(document).ready(function(){
     $("#user-settings-btn").click(() => {
         window.location.assign("user.php");
     });
+
+    // direct messages
+    $("#direct-messages-cont").click(() => {
+        sessionStorage.setItem("serverID", -1)
+        sessionStorage.setItem("channelID", -1)
+        // channelsMiddleBarShow()
+
+
+        // $("#channels-header").html(`
+        //     <h3 class="lblServerName">Direct Messages</h3>
+        // `)
+
+        // $("#channels-wrapper").html("")
+    })
 })
+
+async function getUsers() {
+    try {
+
+    } catch (error) {
+
+    }
+}
+
+function showUsersOnDirectMessage() {
+
+}
