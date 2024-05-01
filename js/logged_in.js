@@ -1,16 +1,17 @@
 import * as datetime from "./imports/datetime.js";
 Object.assign(globalThis, datetime);
+import * as servers from "./imports/servers.js";
+Object.assign(globalThis, servers);
+import * as serverchannels from "./imports/serverchannels.js";
+Object.assign(globalThis, serverchannels);
+import * as messages from "./imports/messages.js";
+Object.assign(globalThis, messages);
+import * as popups from "./imports/popups.js";
+Object.assign(globalThis, popups);
+
 
 $(document).ready(function(){
     refresh();
-
-    function formatDate(inputDate) {
-        var date = new Date(inputDate);
-        if (!isNaN(date.getTime())) {
-            // Months use 0 index.
-            return date.getMonth() + 1 + '-' + date.getDate() + '-' + date.getFullYear();
-        }
-    }
       
     function promiseHandler(promise, successCallback = null, errorCallback = null){
         promise
@@ -43,11 +44,11 @@ $(document).ready(function(){
     }
     function channelsMiddleBarShow(){
         $(".lblServerName").text($(".server-div.clicked").children().text());
-        $("#channels-middlebar").show();
+        // $("#channels-middlebar").show();
     }
     function messagesRightBarShow(){
         $("#channelNameHeader").text("#"+$(".channel-div.clicked").children().text());
-        $("#messages-rightbar").show();
+        // $("#messages-rightbar").show();
     }
     function refresh(){
         promiseHandler(getCurrUserID());
@@ -68,14 +69,14 @@ $(document).ready(function(){
             })
         }else{      //else complete initialized 'resolved' promise and hide channels
             promiseChannels.resolve();      //resolves the initialized promise cuz we dont have async func
-            $("#channels-middlebar").hide();
+            // $("#channels-middlebar").hide();
         }
 
         promiseChannels.done(function(){
             if($(".channel-div.clicked")[0]){       //if channel div has clicked, wait for updated channels before showing messages 
                 promiseHandler(getMessageList());
             }else{
-                $("#messages-rightbar").hide();
+                // $("#messages-rightbar").hide();
             }
         });
     }
@@ -103,205 +104,6 @@ $(document).ready(function(){
         }
     }
 
-    async function createServer(serverName){
-        try{
-            let response = await $.post("api/createServer.php",
-            {
-                servername: serverName
-            },
-            function(responseInner, status){
-                return responseInner   
-            });
-            if(response['status'] == false){
-                throw new Error(String(response['message']));
-            }
-            return response['message'];
-        }catch(error){
-            throw error;
-        }
-    }
-
-    async function updateServer(newServerName){
-        try{
-            let toUpdateServerID = sessionStorage.getItem("serverID");
-            let response = await $.post("api/updateServer.php",
-            {
-                serverID: toUpdateServerID,
-                newservername: newServerName
-            },
-            function(responseInner, status){
-                return responseInner   
-            });
-            if(response['status'] == false){
-                throw new Error(String(response['message']));
-            }
-            return response['message'];
-        }catch(error){
-            throw error;
-        }
-    }
-
-    async function addUserToServer(userIDToJoin){
-        try{
-            let serverIDToJoin = sessionStorage.getItem("serverID");
-            let response = await $.post("api/addUserToServer.php",
-            {
-                joinerID: userIDToJoin,
-                serverID: serverIDToJoin
-            },
-            function(responseInner, status){
-                return responseInner   
-            });
-            if(response['status'] == false){
-                throw new Error(String(response['message']));
-            }
-            return response['message'];
-        }catch(error){
-            throw error;
-        }
-    }
-
-    async function deleteServer(){
-        try{
-            let toDeleteServerID = sessionStorage.getItem("serverID");
-            let response = await $.post("api/deleteServer.php",
-            {
-                serverID: toDeleteServerID
-            },
-            function(responseInner, status){
-                return responseInner   
-            });
-            if(response['status'] == false){
-                throw new Error(String(response['message']));
-            }
-            return response['message'];
-        }catch(error){
-            throw error;
-        }
-    }
-
-    async function createServerChannel(channelName){
-        try{
-            let serverIDparam = sessionStorage.getItem("serverID");
-            let response = await $.post("api/createServerChannel.php",
-            {
-                serverID: serverIDparam,
-                channelname: channelName
-            },
-            function(responseInner, status){
-                return responseInner   
-            });
-            if(response['status'] == false){
-                throw new Error(String(response['message']));
-            }
-            return response['message'];
-        }catch(error){
-            throw error;
-        }
-    }
-
-    async function updateServerChannel(newChannelName){
-        try{
-            let toUpdateChannelID = sessionStorage.getItem("channelID");
-            let response = await $.post("api/updateServerChannel.php",
-            {
-                channelID: toUpdateChannelID,
-                newchannelname: newChannelName
-            },
-            function(responseInner, status){
-                return responseInner   
-            });
-            if(response['status'] == false){
-                throw new Error(String(response['message']));
-            }
-            return response['message'];
-        }catch(error){
-            throw error;
-        }
-    }
-
-    async function deleteServerChannel(){
-        try{
-            let toDeleteChannelID = sessionStorage.getItem("channelID");
-            let response = await $.post("api/deleteServerChannel.php",
-            {
-                channelID: toDeleteChannelID
-            },
-            function(responseInner, status){
-                return responseInner   
-            });
-            if(response['status'] == false){
-                throw new Error(String(response['message']));
-            }
-            return response['message'];
-        }catch(error){
-            throw error;
-        }
-    }
-
-    async function sendMessage(messageTextparam, repliedMessageIDparam){
-        try{
-            let channelIDparam = sessionStorage.getItem("channelID");
-            let repliedMessageIDPOST = (repliedMessageIDparam === undefined || repliedMessageIDparam === -1) 
-                ? null : repliedMessageIDparam;
-            let response = await $.post("api/sendMessage.php",
-            {
-                channelID: channelIDparam,
-                messageText: messageTextparam,
-                repliedMessageID: repliedMessageIDPOST
-            },
-            function(responseInner, status){
-                return responseInner   
-            });
-            if(response['status'] == false){
-                throw new Error(String(response['message']));
-            }
-            return response['message'];
-        }catch(error){
-            throw error;
-        }
-    }
-
-    async function updateMessage(newText){
-        try{
-            let toUpdateMessageID = sessionStorage.getItem("messageID");
-            let response = await $.post("api/updateMessage.php",
-            {
-                messageID: toUpdateMessageID,
-                newtext: newText
-            },
-            function(responseInner, status){
-                return responseInner   
-            });
-            if(response['status'] == false){
-                throw new Error(String(response['message']));
-            }
-            return response['message'];
-        }catch(error){
-            throw error;
-        }
-    }
-
-
-    async function deleteMessage(){
-        try{
-            let toDeleteMessageID = sessionStorage.getItem("messageID");
-            let response = await $.post("api/deleteMessage.php",
-            {
-                messageID: toDeleteMessageID
-            },
-            function(responseInner, status){
-                return responseInner   
-            });
-            if(response['status'] == false){
-                throw new Error(String(response['message']));
-            }
-            return response['message'];
-        }catch(error){
-            throw error;
-        }
-    }
-
     async function getServerList(){
         let response = await $.get("api/getServerList.php",
         function(responseInner, status){
@@ -314,19 +116,36 @@ $(document).ready(function(){
     }
 
     function printServers(serverList){
-        let serverIDClicked = $(".server-div.clicked").data("serverid");
+
+        let serverID = sessionStorage.getItem("serverID")
         $("#servers-wrapper").html("");
+
+        let clickedClassIsSet = false;
         for(let i=0; i<serverList.length; i++){
             let serverInfo = serverList[i];
-            let string = "<div data-serverid='" + parseInt(serverInfo.serverID) + "' class='server-div";
-            if(serverInfo.serverID == serverIDClicked){
+            let string = `<div data-serverid="${parseInt(serverInfo.serverID)}" class="server-div`;
+
+
+            if (serverInfo.serverID == serverID){
                 string += " clicked";
+                clickedClassIsSet = true;
             }
-            string += "'>"
-                + "<h2>" + String(serverInfo.servername) + "</h2>"
-                + "</div>";
+            string += `
+                "> 
+                    <h2> ${String(serverInfo.servername)}</h2>
+                </div>`
+
             $(string).appendTo("#servers-wrapper");
         }
+
+        if (!clickedClassIsSet) {
+            const firstChild = $("#servers-wrapper > div:first-child")
+            firstChild.addClass("clicked")
+            sessionStorage.setItem("serverID", firstChild.data("serverid"))
+        }
+
+        getServerChannelList()
+        channelsMiddleBarShow()
     }
 
     async function getServerChannelList(){
@@ -349,20 +168,35 @@ $(document).ready(function(){
     }
 
     function printServerChannels(channelList){
-        let channelIDClicked = $(".channel-div.clicked").data("channelid");
+
+        let channelID = sessionStorage.getItem("channelID");
         $("#channels-wrapper").html("");
-        channelsMiddleBarShow();
+        channelsMiddleBarShow()
+
+        let clickedClassIsSet = false;
+
         for(let i=0; i<channelList.length; i++){
             let channelInfo = channelList[i];
-            let string = "<div data-channelid='" + parseInt(channelInfo.channelID) + "' class='channel-div";
-            if(channelInfo.channelID == channelIDClicked){
+            let string = `<div data-channelid="${parseInt(channelInfo.channelID)}" class="channel-div`;
+
+            if (channelInfo.channelID == channelID){
                 string += " clicked";
+                clickedClassIsSet = true;
             }
-            string += "'>"
-                + "<h4>" + String(channelInfo.channelname) + "</h4>"
-                + "</div>";
+            
+            string += `">
+                <h4> ${String(channelInfo.channelname)} </h4>
+                </div>`;
             $(string).appendTo("#channels-wrapper");
         }
+
+        if (!clickedClassIsSet) {
+            const firstChild = $("#channels-wrapper > div:first-child")
+            firstChild.addClass("clicked")
+            sessionStorage.setItem("channelID", firstChild.data("channelid"))
+        }
+
+        getMessageList()
     }
 
     async function getMessageList(){
@@ -465,7 +299,7 @@ $(document).ready(function(){
     $("#servers-wrapper").on('click', '.server-div', function(){
         if($(this).hasClass("clicked")) return;
 
-        $("#messages-rightbar").hide();
+        // $("#messages-rightbar").hide();
         $(".server-div.clicked").removeClass("clicked");
         $(this).addClass("clicked");
         let serverID = $(this).data("serverid");
@@ -484,36 +318,6 @@ $(document).ready(function(){
         $("#right-page").hide();
         promiseHandler(getMessageList(), ()=>{}, (error)=>{showMessage(error)});
     });
-
-    function openPopUpForm(callingButton){
-        let callingButtonDiv = $(callingButton).parent()
-        let callingPopUpForm = $(callingButtonDiv).parent();
-
-        callingPopUpForm.addClass("blur");
-        callingPopUpForm.removeClass("unblurred");
-
-        let index = 0;
-
-        //if multiple popUpForm are children of this popUpForm
-        if($(callingPopUpForm).find('.divSubmitBtn').length > 1){
-            index = $(callingPopUpForm).find('.divSubmitBtn').index(callingButtonDiv);
-        }
-
-        let childPopUpForm =  $(callingPopUpForm).find('.popUpForm')[index];
-        $(childPopUpForm).show();
-    };
-    function closePopUpForm(callingButton){
-        let callingPopUpForm = $(callingButton).parent().parent();
-        callingPopUpForm.addClass("unblurred");
-        callingPopUpForm.hide();
-        let parentPopUpForm =  $(callingPopUpForm).parent();
-        if($(parentPopUpForm).is('body')) {
-            refresh();
-            return;
-        }
-        parentPopUpForm.removeClass("blur");
-        parentPopUpForm.addClass("unblurred");
-    }
 
     $("#btnCreateServerSection").click(() => {
         backgroundBlur();
@@ -750,4 +554,33 @@ $(document).ready(function(){
     $("#user-settings-btn").click(() => {
         window.location.assign("user.php");
     });
+
+    // direct messages
+    $("#direct-messages-cont").click(() => {
+        sessionStorage.setItem("serverID", -1)
+        sessionStorage.setItem("channelID", -1)
+
+
+        // $("#channels-header").html(`
+        //     <h3 class="lblServerName">Direct Messages</h3>
+        // `)
+    })
 })
+
+async function getUsers() {
+    try {
+        let res = await $.get("api/getUsersList.php",
+        (responseInner, status) => { return responseInner; });
+
+        if (res['status'] == false) { throw new Error(String(response['message'])) }
+
+        showUsersOnDirectMessage(response['usersList'])
+
+    } catch (error) {
+
+    }
+}
+
+function showUsersOnDirectMessage(usersList) {
+
+}

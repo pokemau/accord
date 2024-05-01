@@ -2,6 +2,14 @@
 include 'connect.php';
 require_once 'includes/header.php';
 require_once 'includes/messageBox.php';
+
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+
+if (isset($_SESSION["userid"])) {
+  header("location: index.php");
+}
 ?>
 
 

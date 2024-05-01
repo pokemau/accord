@@ -59,9 +59,22 @@ mysqli_query($connection, $sqlInsertServer);
 //get latest server ID after inserting new for new channel and user-server table
 $serverID = mysqli_insert_id($connection);
 
+// get channelID from tblchannelid
+$SQL_GetChannelID = "SELECT channelID from tblchannelid";
+$res = mysqli_query($connection, $SQL_GetChannelID);
+$row = mysqli_fetch_assoc($res);
+$channelID = $row['channelID'];
+
 //insert new general channel in server
-$sqlInsertChannel = "INSERT INTO tblserverchannel(serverID, channelname) VALUES('" . $serverID . "', 'general')";
+$sqlInsertChannel = "INSERT INTO tblserverchannel(channelID, serverID, channelname) VALUES('" . $channelID . "','" . $serverID . "', 'general')";
 mysqli_query($connection, $sqlInsertChannel);
+
+$channelID++;
+
+// update channelID in tblchannelid
+$SQL_IncrementChannelID = "UPDATE tblchannelid SET channelID = $channelID WHERE ID=1";
+mysqli_query($connection, $SQL_IncrementChannelID);
+
 
 //get latest channel ID (general) for user-serverchanneltable 
 $channelID = mysqli_insert_id($connection);
@@ -75,5 +88,3 @@ $response = array(
   'message' => "Created server successfully (createServer.php)"
 );
 echo json_encode($response);
-
-?>

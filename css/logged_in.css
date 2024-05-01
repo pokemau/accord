@@ -7,7 +7,7 @@ body {
   height: 100%;
   min-height: 100%;
 }
-textarea{
+textarea {
   border-radius: 4px;
   background-color: #f8f8f8;
   font-size: 16px;
@@ -22,7 +22,7 @@ textarea{
 
   display: flex;
 }
-.blur > *{
+.blur > * {
   filter: blur(1.5px);
   pointer-events: none;
   user-select: none;
@@ -34,20 +34,16 @@ textarea{
 }
 
 #servers-sidebar {
-  /* float: left; */
   height: 100%;
-  min-width: 15rem;
-
+  min-width: 12rem;
   background-color: beige;
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* justify-content: center; */
   border: 2px solid black;
 }
+
 #servers-header {
-  /* height: 10%; */
-  /* padding: 10px; */
   padding: 0.3rem;
   width: 100%;
 
@@ -72,6 +68,12 @@ textarea{
   height: 30px;
 }
 
+#direct-messages-cont {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 #servers-wrapper {
   height: 100%;
   width: 100%;
@@ -81,7 +83,10 @@ textarea{
   padding: 0.5rem;
   overflow: auto;
 }
-#user-settings-btn, button, img, .option{
+#user-settings-btn,
+button,
+img,
+.option {
   cursor: pointer;
 }
 
@@ -91,6 +96,10 @@ textarea{
   border: 1px solid black;
   align-items: center;
   box-sizing: border-box;
+  font-size: 1.2rem;
+}
+.server-div h2 {
+  font-size: 1.2rem;
 }
 .server-div.clicked {
   border: 3px solid black;
@@ -109,7 +118,7 @@ textarea{
 
 #channels-middlebar {
   height: 100%;
-  min-width: 15rem;
+  min-width: 12rem;
 
   background-color: aqua;
   display: flex;
@@ -132,7 +141,7 @@ textarea{
   justify-content: space-between;
 }
 
-.options-form{
+.options-form {
   padding: 5px;
   width: 100%;
   background-color: skyblue;
@@ -144,7 +153,7 @@ textarea{
   transform: translateY(100%);
   z-index: 1;
 }
-.option{
+.option {
   padding: 5px;
   display: flex;
   flex-direction: row;
@@ -223,6 +232,9 @@ textarea{
   box-sizing: border-box;
   position: relative;
 }
+.message-div:has(.replied-message-div) {
+  padding-top: 0;
+}
 .message-div.hovered {
   background-color: rgb(247, 164, 178);
 }
@@ -232,6 +244,9 @@ textarea{
 }
 .replied-message-div > * {
   margin-right: 10px;
+}
+.reply-link-icon {
+  transform: translate(7px, 7px);
 }
 .display-name {
   color: darkslateblue;
@@ -243,7 +258,7 @@ textarea{
   display: flex;
   align-items: center
 }
-.message-header > *{
+.message-header > * {
   margin-right: 2rem;
 }
 .message-contents {
@@ -265,12 +280,11 @@ textarea{
   width: 70%;
   height: fit-content;
 }
-.edit-message-options{
+.edit-message-options {
   height: 100%;
   display: flex;
   flex-direction: column;
 }
-
 
 #right-page {
   width: 100%;
@@ -282,6 +296,8 @@ textarea{
   align-items: center;
   justify-content: center;
   overflow: auto;
+
+  display: none;
 }
 #tblservers {
   width: 70%;
@@ -350,7 +366,7 @@ th {
   width: 20rem;
   height: 20rem;
 }
-.noBtn{
+.noBtn {
   color: red;
 }
 #user-search {

@@ -1,3 +1,4 @@
+
 export function isToday(someDate){
     const today = new Date();
     return checkDate(someDate, today);
@@ -24,4 +25,12 @@ export function tConvert (time) {
     minutes = minutes < 10 ? "0" + minutes : minutes;
 
     return hours + ":" + minutes + " " + ampm;
+}
+
+export function formatDate(inputDate) {
+    var date = new Date(inputDate);
+    if (!isNaN(date.getTime())) {
+        // Months use 0 index.
+        return date.getMonth() + 1 + '-' + date.getDate() + '-' + date.getFullYear();
+    }
 }
