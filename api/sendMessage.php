@@ -2,7 +2,7 @@
 
 //post
 //errorTypes: noSenderID, noServerName, servernameInvalid, serverAlreadyExist
-//parameters: 'channelID', 'messageText'
+//parameters: 'channelID', 'messageText', 'repliedMessageID' (can be null)
 
 include_once('../connect.php');
 header("Access-Control-Allow-Origin: *");
@@ -39,6 +39,19 @@ if (isset($_POST["channelID"])) {
   return;
 }
 
+$repliedMessageID;
+if (isset($_POST["repliedMessageID"])) {
+  $repliedMessageID = $_POST["repliedMessageID"];
+} else {
+  $response = array(
+    'status' => false,
+    'errorType' => 'noRepliedMessageID',
+    'message' => "No replied message id provided (sendMessage.php)"
+  );
+  echo json_encode($response);
+  return;
+}
+
 $messageText;
 if (isset($_POST["messageText"])) {
   $messageText = $_POST["messageText"];
@@ -54,8 +67,14 @@ if (isset($_POST["messageText"])) {
 
 $dateTimeSent = date("Y-m-d H:i:s");
 
-$sqlInsertMessage = "INSERT INTO tblmessage(senderID,channelID,messageText,dateTimeSent) 
+$sqlInsertMessage;
+if($repliedMessageID != null){
+  $sqlInsertMessage = "INSERT INTO tblmessage(senderID,channelID,messageText,dateTimeSent,repliedMessageID) 
+  VALUES('". $senderID ."', '". $channelID ."', '". $messageText ."', '". $dateTimeSent ."', '".$repliedMessageID."')";
+}else{
+  $sqlInsertMessage = "INSERT INTO tblmessage(senderID,channelID,messageText,dateTimeSent) 
     VALUES('". $senderID ."', '". $channelID ."', '". $messageText ."', '". $dateTimeSent ."')";
+}
 mysqli_query($connection, $sqlInsertMessage);
 
 $response = array(

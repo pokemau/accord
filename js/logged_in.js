@@ -1,34 +1,9 @@
+import * as datetime from "./imports/datetime.js";
+Object.assign(globalThis, datetime);
 
 $(document).ready(function(){
     refresh();
 
-    function isToday(someDate){
-        const today = new Date();
-        return checkDate(someDate, today);
-    }
-    function isYesterday(someDate){
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        checkDate(someDate, yesterday);
-    }
-    function checkDate(someDate, compareDate){
-        return someDate.getDate() == compareDate.getDate() &&
-          someDate.getMonth() == compareDate.getMonth() &&
-          someDate.getFullYear() == compareDate.getFullYear()
-    }
-    function tConvert (time) {
-        let timeParts = time.split(":");
-        let hours = parseInt(timeParts[0]);
-        let minutes = parseInt(timeParts[1]);
-
-        let ampm = hours >= 12 ? "pm" : "am";
-        hours = hours % 12;
-        hours = hours==0 ? 12 : hours;
-
-        minutes = minutes < 10 ? "0" + minutes : minutes;
-
-        return hours + ":" + minutes + " " + ampm;
-    }
     function formatDate(inputDate) {
         var date = new Date(inputDate);
         if (!isNaN(date.getTime())) {
@@ -117,7 +92,7 @@ $(document).ready(function(){
         try{
             let response = await $.post("api/getCurrUserID.php",
             function(responseInner, status){
-                return responseInner   
+                return responseInner
             });
             if(response['status'] == false){
                 throw new Error(String(response['message']));
@@ -264,13 +239,16 @@ $(document).ready(function(){
         }
     }
 
-    async function sendMessage(messageTextparam){
+    async function sendMessage(messageTextparam, repliedMessageIDparam){
         try{
             let channelIDparam = sessionStorage.getItem("channelID");
+            let repliedMessageIDPOST = (repliedMessageIDparam === undefined || repliedMessageIDparam === -1) 
+                ? null : repliedMessageIDparam;
             let response = await $.post("api/sendMessage.php",
             {
                 channelID: channelIDparam,
-                messageText: messageTextparam
+                messageText: messageTextparam,
+                repliedMessageID: repliedMessageIDPOST
             },
             function(responseInner, status){
                 return responseInner   
@@ -412,10 +390,18 @@ $(document).ready(function(){
         for(let i=0; i<messageList.length; i++){
             let messageInfo = messageList[i];
             let string = "<div class='message-div' data-messageid='" + parseInt(messageInfo.messageID) 
-            +"' data-senderid='"+parseInt(messageInfo.senderID)+"'>"
-            +   "<div class='message-header'>"
-            +       "<h4>" + String(messageInfo.senderdisplayname) + "</h4>"
-            +       "<h6>";
+            +"' data-senderid='"+parseInt(messageInfo.senderID)+"'>";
+            let repliedMessageInfo = messageInfo.repliedMessageInfo
+            if(repliedMessageInfo.messageID != null){
+                string += "<div class='replied-message-div'>"
+                +   "<img src='images\\reply_link_icon.png' alt='ReplyLinkIcon' class='reply-link-icon'>"
+                +   "<h4 class='display-name'>" + String(repliedMessageInfo.senderdisplayname) + "</h4>"
+                +   "<h5 class='message-text'>" + String(repliedMessageInfo.messageText) + "</h5>"
+                + "</div>";
+            }
+            string +=   "<div class='message-header'>"
+            +       "<h4 class='display-name'>" + String(messageInfo.senderdisplayname) + "</h4>"
+            +       "<h6 class='message-date-time'>";
 
             let messageTimeDate = messageInfo.dateTimeSent;
             let messageDate = messageTimeDate.slice(0, 10);
@@ -430,9 +416,10 @@ $(document).ready(function(){
             string += " at " + String(tConvert(messageTime)) + "</h6>"
             +   "</div>"
             +   "<div class='message-contents'>"
-            +       "<h5>" + String(messageInfo.messageText) + "</h5>"
+            +       "<h5 class='message-text'>" + String(messageInfo.messageText) + "</h5>"
             +   "</div>"
             +   "<div class='message-options' style='display: none'>"
+            +       "<img src='images/reply_icon.png' alt='replyIcon' class='btnMsgReply'>"
             +       "<img src='images/edit_icon.png' alt='editIcon' class='btnMsgEdit'>"
             +       "<img src='images/delete_icon.png' alt='deleteIcon' class='btnMsgDelete'>"
             +   "</div>"
@@ -691,9 +678,10 @@ $(document).ready(function(){
     });
 
     $("#btnSendMessage").click(() => {
-        let messageText = $("#inpMessage").val();
-        $("#inpMessage").val("");
-        promiseHandler(sendMessage(messageText), refresh());
+        let messageText = $("#taInpMessage").val();
+        $("#taInpMessage").val("");
+        let repliedMessageID = $("#taInpMessage").data("repliedmessageid");
+        promiseHandler(sendMessage(messageText, repliedMessageID), refresh());
     });
 
     function mouseOnMessageHandlerIn(messageDiv){
@@ -712,6 +700,11 @@ $(document).ready(function(){
         mouseOnMessageHandlerIn(this);
     }).on("mouseleave", ".message-div", function() {
         mouseOnMessageHandlerOut(this);
+    });
+
+    $("#messages-wrapper").on('click', ".btnMsgReply", function(){
+        let messageToReplyID = $(this).parent().parent().data("messageid");
+        $("#taInpMessage").data("repliedmessageid", messageToReplyID);
     });
 
     $("#messages-wrapper").on('click', ".btnMsgEdit", function(){

@@ -206,7 +206,7 @@ textarea{
   flex: 0 0 auto;
 }
 
-#inpMessage {
+#taInpMessage {
   width: 90%;
   height: 4rem;
 }
@@ -223,12 +223,24 @@ textarea{
   box-sizing: border-box;
   position: relative;
 }
-.message-div.hovered{
+.message-div.hovered {
   background-color: rgb(247, 164, 178);
+}
+.replied-message-div {
+  display: flex;
+  align-items: center;
+}
+.replied-message-div > * {
+  margin-right: 10px;
+}
+.display-name {
+  color: darkslateblue;
+}
+.message-text {
+  color: rgb(35, 35, 35);
 }
 .message-header {
   display: flex;
-  flex: row;
   align-items: center
 }
 .message-header > *{

@@ -38,18 +38,45 @@ if(isset($_GET["channelID"])){
     return;
 }
 
-$sqlGetMessageList = "SELECT displayname, messageID, senderID, messageText, dateTimeSent FROM tbluser, tblmessage 
-    WHERE channelID = '$channelID' AND userID = senderID ORDER BY dateTimeSent";
+// $sqlGetMessageList = "SELECT displayname, messageID, senderID, messageText, dateTimeSent FROM tbluser, tblmessage 
+//     WHERE channelID = '$channelID' AND userID = senderID ORDER BY dateTimeSent";
+// $resultMessageList = mysqli_query($connection, $sqlGetMessageList);
+
+// $messageList = array();
+// while($row = mysqli_fetch_assoc($resultMessageList)){
+//     $messageList[] = array(
+//         'messageID' => $row['messageID'],
+//         'senderdisplayname' => $row['displayname'],
+//         'senderID' => $row['senderID'],
+//         'messageText' => $row['messageText'],
+//         'dateTimeSent' => $row['dateTimeSent'],
+//     );
+// }
+
+$sqlGetMessageList = "SELECT u1.displayname displayname1, m1.messageID messageID1, m1.senderID senderID1, 
+    m1.messageText messageText1, m1.dateTimeSent messageDateTimeSent,
+    u2.displayname displayname2, m2.messageID messageID2, m2.messageText messageText2
+    FROM tblmessage m1
+    LEFT JOIN tbluser u1 ON m1.senderID = u1.userID
+    LEFT JOIN tblmessage m2 ON m1.repliedMessageID = m2.messageID
+    LEFT JOIN tbluser u2 ON m2.senderID = u2.userID
+    WHERE m1.channelID = $channelID
+    ORDER BY messageDateTimeSent";
 $resultMessageList = mysqli_query($connection, $sqlGetMessageList);
 
 $messageList = array();
 while($row = mysqli_fetch_assoc($resultMessageList)){
     $messageList[] = array(
-        'messageID' => $row['messageID'],
-        'senderdisplayname' => $row['displayname'],
-        'senderID' => $row['senderID'],
-        'messageText' => $row['messageText'],
-        'dateTimeSent' => $row['dateTimeSent'],
+        'messageID' => $row['messageID1'],
+        'senderdisplayname' => $row['displayname1'],
+        'senderID' => $row['senderID1'],
+        'messageText' => $row['messageText1'],
+        'dateTimeSent' => $row['messageDateTimeSent'],
+        'repliedMessageInfo' => array(
+            'messageID' => $row['messageID2'],
+            'senderdisplayname' => $row['displayname2'],
+            'messageText' => $row['messageText2'],
+        )
     );
 }
 

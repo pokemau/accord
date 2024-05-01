@@ -23,7 +23,7 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
   <link rel="stylesheet" href="css/nav.css" />
   <link rel="stylesheet" href="css/logged_in.css" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <script src="js/logged_in.js" defer></script>
+  <script type="module" src="js/logged_in.js" defer></script>
   <title>Accord</title>
 </head>
 
@@ -89,7 +89,7 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
       </div>
       <div id="messages-wrapper"></div>
       <div id="message-inputgroup">
-        <textarea id="inpMessage" placeholder="Message here"></textarea>
+        <textarea id="taInpMessage" placeholder="Message here" data-repliedmessageid='-1'></textarea>
         <button id="btnSendMessage">Send</button>
       </div>
     </div>
