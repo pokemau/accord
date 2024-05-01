@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 01, 2024 at 09:52 AM
+-- Generation Time: May 01, 2024 at 02:05 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -60,7 +60,7 @@ CREATE TABLE `tblchannelid` (
 --
 
 INSERT INTO `tblchannelid` (`ID`, `channelID`) VALUES
-(1, 1);
+(1, 3);
 
 -- --------------------------------------------------------
 
@@ -73,8 +73,18 @@ CREATE TABLE `tblmessage` (
   `senderID` int(10) NOT NULL,
   `channelID` int(10) NOT NULL,
   `messageText` varchar(200) NOT NULL,
-  `dateTimeSent` datetime NOT NULL
+  `dateTimeSent` datetime NOT NULL,
+  `repliedMessageID` int(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tblmessage`
+--
+
+INSERT INTO `tblmessage` (`messageID`, `senderID`, `channelID`, `messageText`, `dateTimeSent`, `repliedMessageID`) VALUES
+(1, 2, 1, 'test', '2024-05-01 19:33:23', NULL),
+(2, 2, 1, 'nope', '2024-05-01 19:33:28', 1),
+(3, 2, 1, 'tesssssss', '2024-05-01 19:44:41', NULL);
 
 -- --------------------------------------------------------
 
@@ -100,6 +110,13 @@ CREATE TABLE `tblserver` (
   `servername` varchar(60) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `tblserver`
+--
+
+INSERT INTO `tblserver` (`serverID`, `ownerID`, `servername`) VALUES
+(4, 2, 'Yahallo');
+
 -- --------------------------------------------------------
 
 --
@@ -111,6 +128,14 @@ CREATE TABLE `tblserverchannel` (
   `serverID` int(10) NOT NULL,
   `channelname` varchar(60) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tblserverchannel`
+--
+
+INSERT INTO `tblserverchannel` (`channelID`, `serverID`, `channelname`) VALUES
+(1, 4, 'general'),
+(2, 4, 'chat here');
 
 -- --------------------------------------------------------
 
@@ -160,6 +185,13 @@ CREATE TABLE `tbluserserver` (
   `userID` int(10) NOT NULL,
   `serverID` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbluserserver`
+--
+
+INSERT INTO `tbluserserver` (`userServerID`, `userID`, `serverID`) VALUES
+(4, 2, 4);
 
 --
 -- Indexes for dumped tables
@@ -243,13 +275,13 @@ ALTER TABLE `tblaccount`
 -- AUTO_INCREMENT for table `tblmessage`
 --
 ALTER TABLE `tblmessage`
-  MODIFY `messageID` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `messageID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tblserver`
 --
 ALTER TABLE `tblserver`
-  MODIFY `serverID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `serverID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tblserverrole`
@@ -267,7 +299,7 @@ ALTER TABLE `tbluser`
 -- AUTO_INCREMENT for table `tbluserserver`
 --
 ALTER TABLE `tbluserserver`
-  MODIFY `userServerID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `userServerID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
