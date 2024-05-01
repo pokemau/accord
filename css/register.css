@@ -1,19 +1,18 @@
 #registerForm {
-  height: 30rem;
   width: 25rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px;
+  padding: 1rem;
   border: 1px black solid;
-  margin: 5rem auto;
+  margin: 5rem auto 0 auto;
   background-color: rgb(247, 247, 247);
 }
 
 input {
   font-weight: bold;
   font-size: 1rem;
-  padding: 0.2rem;
+  padding: 0.1rem;
 }
 input:focus {
   outline: none;
@@ -23,6 +22,7 @@ input:focus {
   margin-bottom: 3%;
   margin-top: 3%;
 }
+
 #bdate_inputs {
   display: flex;
   flex-direction: row;
