@@ -111,11 +111,11 @@ $(document).ready(function(){
         callingPopUpForm.hide();
         let parentPopUpForm =  $(callingPopUpForm).parent();
         if($(parentPopUpForm).is('body')) {
-            refresh();
-            return;
+            unBlurEverything();
+        }else{
+            parentPopUpForm.removeClass("blur");
+            parentPopUpForm.addClass("unblurred");
         }
-        parentPopUpForm.removeClass("blur");
-        parentPopUpForm.addClass("unblurred");
     }
 
     async function getCurrUserID(){
