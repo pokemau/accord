@@ -29,11 +29,15 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
 
 <body>
   <div id="main-cont">
+
     <div id="servers-sidebar">
       <div id="servers-header">
-        <h3>SERVERS</h3>
+        <!-- <h3>SERVERS</h3> -->
+        <div id="direct-messages-cont">
+          <img width="40" height="40" src="images/message_icon.png" alt="">
+        </div>
+
         <div id="server-create-start">
-          <h4>Create: </h4>
           <button id="btnCreateServerSection">+</button>
         </div>
       </div>
@@ -97,7 +101,7 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
     <div id="right-page">
       <?php echo "<h2>UserID: " . $_SESSION['userid'] . "</h2>";
       echo "<h2>Username: " . $_SESSION['username'] . "</h2>"; ?>
-    
+
       <br>
 
       <h2>Servers Table</h2>
