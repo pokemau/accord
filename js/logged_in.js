@@ -794,25 +794,28 @@ $(document).ready(function(){
     $("#direct-messages-cont").click(() => {
         sessionStorage.setItem("serverID", -1)
         sessionStorage.setItem("channelID", -1)
-        // channelsMiddleBarShow()
 
 
         // $("#channels-header").html(`
         //     <h3 class="lblServerName">Direct Messages</h3>
         // `)
-
-        // $("#channels-wrapper").html("")
     })
 })
 
 async function getUsers() {
     try {
+        let res = await $.get("api/getUsersList.php",
+        (responseInner, status) => { return responseInner; });
+
+        if (res['status'] == false) { throw new Error(String(response['message'])) }
+
+        showUsersOnDirectMessage(response['usersList'])
 
     } catch (error) {
 
     }
 }
 
-function showUsersOnDirectMessage() {
+function showUsersOnDirectMessage(usersList) {
 
 }
