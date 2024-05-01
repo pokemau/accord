@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 28, 2024 at 05:54 PM
+-- Generation Time: May 01, 2024 at 09:52 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -42,8 +42,25 @@ CREATE TABLE `tblaccount` (
 INSERT INTO `tblaccount` (`accountID`, `emailadd`, `username`, `password`, `usertype`) VALUES
 (1, 'rentillosa90@gmail.com', 'pokemau', '$2y$10$JksoIDI/X3wceJJ43uNu0O.Ibmrx2GLXN/hmmGx4zq/gkpwzkOiIi', 'user'),
 (2, 'jorash@gmail.com', 'Jorash', '$2y$10$LlSMMDXp6YPxQtxdTvMuiewAY9c2rgmts9wyYwvQdIdPxUY8/pB1O', 'user'),
-(3, 'jorash2@gmail.com', 'Jorash2', '$2y$10$L4QFfdYaFVXnq7lRZeSmfO7mG.s9nPYoONHwUmbmkOGOqdobcPVqi', 'user'),
-(4, 'test@gmail.com', 'Test', '$2y$10$PSd5L6IJxRs.CVLka1lipOwuOiGGd.xbmJ.9bPej4okYbMiXxqVHi', 'user');
+(3, 'jorash2@gmail.com', 'Jorash2', '$2y$10$L4QFfdYaFVXnq7lRZeSmfO7mG.s9nPYoONHwUmbmkOGOqdobcPVqi', 'user');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblchannelid`
+--
+
+CREATE TABLE `tblchannelid` (
+  `ID` int(11) NOT NULL,
+  `channelID` int(11) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tblchannelid`
+--
+
+INSERT INTO `tblchannelid` (`ID`, `channelID`) VALUES
+(1, 1);
 
 -- --------------------------------------------------------
 
@@ -59,26 +76,17 @@ CREATE TABLE `tblmessage` (
   `dateTimeSent` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `tblmessage`
+-- Table structure for table `tblprivatechannel`
 --
 
-INSERT INTO `tblmessage` (`messageID`, `senderID`, `channelID`, `messageText`, `dateTimeSent`) VALUES
-(9, 2, 27, 'sdadasd', '2024-04-28 12:35:13'),
-(10, 2, 27, 'asdasdadad', '2024-04-28 12:35:42'),
-(12, 2, 28, 'tester', '2024-04-28 12:35:49'),
-(13, 3, 27, 'asda', '2024-04-28 23:32:34'),
-(14, 2, 27, 'test', '2024-04-28 23:32:53'),
-(15, 2, 27, 'sadsadadvxzcxzczc', '2024-04-28 23:32:57'),
-(16, 2, 27, 'hihihiha', '2024-04-28 23:34:37'),
-(17, 3, 27, 'okay', '2024-04-28 23:34:50'),
-(18, 3, 27, 'sure buddy boy', '2024-04-28 23:35:06'),
-(19, 3, 28, '2nd\n', '2024-04-28 23:37:25'),
-(20, 2, 28, '1st', '2024-04-28 23:37:39'),
-(21, 2, 28, 'sdadsadadd', '2024-04-28 23:37:52'),
-(22, 2, 28, 'sadasda', '2024-04-28 23:38:00'),
-(23, 2, 28, 'sadasdadasd', '2024-04-28 23:38:05'),
-(25, 4, 28, 'sadsadda', '2024-04-28 23:52:50');
+CREATE TABLE `tblprivatechannel` (
+  `channelD` int(11) NOT NULL,
+  `userID1` int(11) NOT NULL,
+  `userID2` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -92,16 +100,6 @@ CREATE TABLE `tblserver` (
   `servername` varchar(60) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `tblserver`
---
-
-INSERT INTO `tblserver` (`serverID`, `ownerID`, `servername`) VALUES
-(1, 1, 'mau_server'),
-(2, 1, 'new mau server'),
-(19, 2, 'Yahallo'),
-(25, 2, 'tester');
-
 -- --------------------------------------------------------
 
 --
@@ -113,20 +111,6 @@ CREATE TABLE `tblserverchannel` (
   `serverID` int(10) NOT NULL,
   `channelname` varchar(60) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tblserverchannel`
---
-
-INSERT INTO `tblserverchannel` (`channelID`, `serverID`, `channelname`) VALUES
-(1, 1, 'general'),
-(2, 1, 'all-csit'),
-(3, 1, 'test'),
-(4, 2, 'general'),
-(27, 19, 'general'),
-(28, 19, 'chat-here'),
-(33, 19, 'tester'),
-(37, 25, 'general');
 
 -- --------------------------------------------------------
 
@@ -141,13 +125,6 @@ CREATE TABLE `tblserverrole` (
   `canEditServer` int(1) NOT NULL,
   `canDeleteServer` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tblserverrole`
---
-
-INSERT INTO `tblserverrole` (`roleID`, `serverID`, `roleName`, `canEditServer`, `canDeleteServer`) VALUES
-(1, 1, 'tset', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -170,8 +147,7 @@ CREATE TABLE `tbluser` (
 INSERT INTO `tbluser` (`userID`, `accountID`, `displayname`, `gender`, `birthdate`) VALUES
 (1, 1, 'pokemau', 'none', '2003-11-08'),
 (2, 2, 'Jorash', 'none', '2024-04-01'),
-(3, 3, 'Jorash2', 'none', '2024-04-01'),
-(4, 4, 'Test', 'none', '0000-00-00');
+(3, 3, 'Jorash2', 'none', '2024-04-01');
 
 -- --------------------------------------------------------
 
@@ -186,19 +162,6 @@ CREATE TABLE `tbluserserver` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tbluserserver`
---
-
-INSERT INTO `tbluserserver` (`userServerID`, `userID`, `serverID`) VALUES
-(1, 1, 1),
-(2, 1, 2),
-(19, 2, 19),
-(25, 2, 25),
-(26, 3, 19),
-(27, 1, 19),
-(28, 4, 19);
-
---
 -- Indexes for dumped tables
 --
 
@@ -209,12 +172,26 @@ ALTER TABLE `tblaccount`
   ADD PRIMARY KEY (`accountID`);
 
 --
+-- Indexes for table `tblchannelid`
+--
+ALTER TABLE `tblchannelid`
+  ADD PRIMARY KEY (`ID`);
+
+--
 -- Indexes for table `tblmessage`
 --
 ALTER TABLE `tblmessage`
   ADD PRIMARY KEY (`messageID`),
   ADD KEY `message-channel` (`channelID`),
   ADD KEY `message-sender` (`senderID`);
+
+--
+-- Indexes for table `tblprivatechannel`
+--
+ALTER TABLE `tblprivatechannel`
+  ADD PRIMARY KEY (`channelD`),
+  ADD KEY `fk_userid1` (`userID1`),
+  ADD KEY `fk_userid2` (`userID2`);
 
 --
 -- Indexes for table `tblserver`
@@ -260,43 +237,37 @@ ALTER TABLE `tbluserserver`
 -- AUTO_INCREMENT for table `tblaccount`
 --
 ALTER TABLE `tblaccount`
-  MODIFY `accountID` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `accountID` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `tblmessage`
 --
 ALTER TABLE `tblmessage`
-  MODIFY `messageID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `messageID` int(10) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tblserver`
 --
 ALTER TABLE `tblserver`
-  MODIFY `serverID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
-
---
--- AUTO_INCREMENT for table `tblserverchannel`
---
-ALTER TABLE `tblserverchannel`
-  MODIFY `channelID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `serverID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tblserverrole`
 --
 ALTER TABLE `tblserverrole`
-  MODIFY `roleID` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `roleID` int(7) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tbluser`
 --
 ALTER TABLE `tbluser`
-  MODIFY `userID` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `userID` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `tbluserserver`
 --
 ALTER TABLE `tbluserserver`
-  MODIFY `userServerID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `userServerID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
@@ -308,6 +279,13 @@ ALTER TABLE `tbluserserver`
 ALTER TABLE `tblmessage`
   ADD CONSTRAINT `message-channel` FOREIGN KEY (`channelID`) REFERENCES `tblserverchannel` (`channelID`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `message-sender` FOREIGN KEY (`senderID`) REFERENCES `tbluser` (`userID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `tblprivatechannel`
+--
+ALTER TABLE `tblprivatechannel`
+  ADD CONSTRAINT `fk_userid1` FOREIGN KEY (`userID1`) REFERENCES `tbluser` (`userID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_userid2` FOREIGN KEY (`userID2`) REFERENCES `tbluser` (`userID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `tblserver`
@@ -331,7 +309,7 @@ ALTER TABLE `tblserverrole`
 -- Constraints for table `tbluser`
 --
 ALTER TABLE `tbluser`
-  ADD CONSTRAINT `fk_user` FOREIGN KEY (`accountID`) REFERENCES `tblaccount` (`accountID`);
+  ADD CONSTRAINT `fk_user` FOREIGN KEY (`accountID`) REFERENCES `tblaccount` (`accountID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `tbluserserver`
