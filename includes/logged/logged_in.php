@@ -92,9 +92,18 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
         </div>
       </div>
       <div id="messages-wrapper"></div>
-      <div id="message-inputgroup">
-        <textarea id="taInpMessage" placeholder="Message here" data-repliedmessageid='-1'></textarea>
-        <button id="btnSendMessage">Send</button>
+      <div id="message-composer">
+        <div id="replying-to-group">
+          <div id="replying-to-label">
+            <h5 style="white-space: pre">Replying to </h5>
+            <h5 class="display-name" id="replying-to-display-name"></h5>
+          </div>
+          <img src="images\close_icon.png" alt="CloseIcon" id="btnCloseReplyGroup">
+        </div>
+        <div id="message-inputgroup">
+          <textarea id="taInpMessage" placeholder="Message here" data-repliedmessageid='-1'></textarea>
+          <button id="btnSendMessage">Send</button>
+        </div>
       </div>
     </div>
 
@@ -163,7 +172,7 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
   <!-- create server -->
   <div id="create-server-section" class="popUpForm">
     <div id="create-server-section-closeBtnDiv" class="close-btns">
-      <button type="button" id="btnCreateServerSectionClose" class="closeBtn">Close</button>
+      <img src="images\close_icon.png" alt="CloseIcon" class="closeBtn">
     </div>
     <label for="txtServerName">Server Name</label>
     <input type="text" id="txtServerName" placeholder="Name"><br>
@@ -184,7 +193,7 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
   <!-- create channel -->
   <div id="create-channel-section" class="popUpForm">
     <div class="close-btns">
-      <button type="button" id="btnCreateChannelSectionClose" class="closeBtn">Close</button>
+      <img src="images\close_icon.png" alt="CloseIcon" class="closeBtn">
     </div>
     <label for="txtChannelName">Channel Name</label>
     <input type="text" id="txtChannelName" placeholder="Name"><br>
@@ -207,7 +216,7 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
   <!-- server update and delete section -->
   <div id="update-server-section" class="popUpForm">
     <div class="close-btns">
-      <button type="button" id="btnUpdateServerSectionClose" class="closeBtn">Close</button>
+      <img src="images\close_icon.png" alt="CloseIcon" class="closeBtn">
     </div>
     <label for="txtNewServerName">New Server Name</label>
     <input type="text" id="txtNewServerName" placeholder="Name"><br>
@@ -240,7 +249,7 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
   <!-- channel update and delete section -->
   <div id="update-channel-section" class="popUpForm">
     <div class="close-btns">
-      <button type="button" id="btnUpdateChannelSectionClose" class="closeBtn">Close</button>
+      <img src="images\close_icon.png" alt="CloseIcon" class="closeBtn">
     </div>
     <label for="txtNewChannelName">New Channel Name</label>
     <input type="text" id="txtNewChannelName" placeholder="Name"><br>
@@ -281,7 +290,7 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
   <!-- search users to invite -->
   <div id="user-search" class="popUpForm">
     <div class="close-btns">
-      <button type="button" class="closeBtn">Close</button>
+      <img src="images\close_icon.png" alt="CloseIcon" class="closeBtn">
     </div>
     <input type="text" id="txtUsername" placeholder="username"><br>
     <div id="users-search-wrapper"></div>

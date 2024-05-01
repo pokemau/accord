@@ -202,6 +202,16 @@ img,
 
   flex: 1 1 auto;
 }
+#replying-to-group, #replying-to-label{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+#replying-to-group {
+  padding: 10px;
+  padding-bottom: 0;
+}
 
 #message-inputgroup {
   width: 100%;
@@ -253,6 +263,12 @@ img,
 }
 .message-text {
   color: rgb(35, 35, 35);
+  text-decoration: none;
+}
+a.message-text {
+  font-size: 0.83em;
+  font-weight: bold;
+  unicode-bidi: isolate;
 }
 .message-header {
   display: flex;

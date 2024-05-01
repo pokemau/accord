@@ -6,8 +6,6 @@ import * as serverchannels from "./imports/serverchannels.js";
 Object.assign(globalThis, serverchannels);
 import * as messages from "./imports/messages.js";
 Object.assign(globalThis, messages);
-import * as popups from "./imports/popups.js";
-Object.assign(globalThis, popups);
 
 
 $(document).ready(function(){
@@ -55,6 +53,7 @@ $(document).ready(function(){
         unBlurEverything();
         $(".popUpForm").hide();
         $(".options-form").hide();
+        $("#replying-to-group").hide();
         $(".popUpForm").addClass("unblurred");
         let promiseServers = getServerList();
         let promiseChannels = $.Deferred();     //initialize a promise-type in case we dont go through an async func
@@ -89,6 +88,36 @@ $(document).ready(function(){
             }
           }, 3000);
     }
+    function openPopUpForm(callingButton){
+        let callingButtonDiv = $(callingButton).parent()
+        let callingPopUpForm = $(callingButtonDiv).parent();
+    
+        callingPopUpForm.addClass("blur");
+        callingPopUpForm.removeClass("unblurred");
+    
+        let index = 0;
+    
+        //if multiple popUpForm are children of this popUpForm
+        if($(callingPopUpForm).find('.divSubmitBtn').length > 1){
+            index = $(callingPopUpForm).find('.divSubmitBtn').index(callingButtonDiv);
+        }
+    
+        let childPopUpForm =  $(callingPopUpForm).find('.popUpForm')[index];
+        $(childPopUpForm).show();
+    };
+    function closePopUpForm(callingButton){
+        let callingPopUpForm = $(callingButton).parent().parent();
+        callingPopUpForm.addClass("unblurred");
+        callingPopUpForm.hide();
+        let parentPopUpForm =  $(callingPopUpForm).parent();
+        if($(parentPopUpForm).is('body')) {
+            refresh();
+            return;
+        }
+        parentPopUpForm.removeClass("blur");
+        parentPopUpForm.addClass("unblurred");
+    }
+
     async function getCurrUserID(){
         try{
             let response = await $.post("api/getCurrUserID.php",
@@ -224,13 +253,13 @@ $(document).ready(function(){
         for(let i=0; i<messageList.length; i++){
             let messageInfo = messageList[i];
             let string = "<div class='message-div' data-messageid='" + parseInt(messageInfo.messageID) 
-            +"' data-senderid='"+parseInt(messageInfo.senderID)+"'>";
+            +"' data-senderid='"+parseInt(messageInfo.senderID)+"' id='"+parseInt(messageInfo.messageID)+"'>";
             let repliedMessageInfo = messageInfo.repliedMessageInfo
             if(repliedMessageInfo.messageID != null){
                 string += "<div class='replied-message-div'>"
                 +   "<img src='images\\reply_link_icon.png' alt='ReplyLinkIcon' class='reply-link-icon'>"
                 +   "<h4 class='display-name'>" + String(repliedMessageInfo.senderdisplayname) + "</h4>"
-                +   "<h5 class='message-text'>" + String(repliedMessageInfo.messageText) + "</h5>"
+                +   "<a href='#"+repliedMessageInfo.messageID+"' class='message-text'>"+ String(repliedMessageInfo.messageText) +"</a>"
                 + "</div>";
             }
             string +=   "<div class='message-header'>"
@@ -481,6 +510,11 @@ $(document).ready(function(){
         });
     });
 
+    $("#btnCloseReplyGroup").click(() => {
+        $("#replying-to-group").hide();
+        $("#taInpMessage").data("repliedmessageid", -1);
+    })
+
     $("#btnSendMessage").click(() => {
         let messageText = $("#taInpMessage").val();
         $("#taInpMessage").val("");
@@ -507,8 +541,11 @@ $(document).ready(function(){
     });
 
     $("#messages-wrapper").on('click', ".btnMsgReply", function(){
-        let messageToReplyID = $(this).parent().parent().data("messageid");
+        let messageDiv = $(this).parent().parent();
+        let messageToReplyID = $(messageDiv).data("messageid");
         $("#taInpMessage").data("repliedmessageid", messageToReplyID);
+        $("#replying-to-display-name").text($(messageDiv).find(".display-name").first().text());
+        $("#replying-to-group").show();
     });
 
     $("#messages-wrapper").on('click', ".btnMsgEdit", function(){

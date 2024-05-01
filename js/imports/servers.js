@@ -1,3 +1,4 @@
+import { getServerChannelList } from "./serverchannels.js"
 
 export async function createServer(serverName){
     try{
@@ -74,4 +75,48 @@ export async function deleteServer(){
     }catch(error){
         throw error;
     }
+}
+
+export async function getServerList(){
+    let response = await $.get("api/getServerList.php",
+    function(responseInner, status){
+        return responseInner;
+    });
+    if(response['status'] == false){
+        throw new Error(String(response['message']));
+    }
+    printServers(response['serverList']);
+}
+
+function printServers(serverList){
+
+    let serverID = sessionStorage.getItem("serverID")
+    $("#servers-wrapper").html("");
+
+    let clickedClassIsSet = false;
+    for(let i=0; i<serverList.length; i++){
+        let serverInfo = serverList[i];
+        let string = `<div data-serverid="${parseInt(serverInfo.serverID)}" class="server-div`;
+
+
+        if (serverInfo.serverID == serverID){
+            string += " clicked";
+            clickedClassIsSet = true;
+        }
+        string += `
+            "> 
+                <h2> ${String(serverInfo.servername)}</h2>
+            </div>`
+
+        $(string).appendTo("#servers-wrapper");
+    }
+
+    if (!clickedClassIsSet) {
+        const firstChild = $("#servers-wrapper > div:first-child")
+        firstChild.addClass("clicked")
+        sessionStorage.setItem("serverID", firstChild.data("serverid"))
+    }
+
+    getServerChannelList();
+    channelsMiddleBarShow();
 }
