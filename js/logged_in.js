@@ -324,6 +324,27 @@ $(document).ready(function(){
             $(string).appendTo("#users-search-wrapper");
         }
     }
+    
+    var stopOptionFormPropagation = false;
+    function optionsFormHidingHandler(){
+        if(!stopOptionFormPropagation){
+            $(".options-form").hide();
+        }
+        stopOptionFormPropagation = false;
+    }
+    $("#user-search, #update-server-section, #delete-server-confirm").click(() => {
+        stopOptionFormPropagation = true;
+    });
+    $("#update-channel-section, #delete-channel-confirm").click(() => {
+        stopOptionFormPropagation = true;
+    })
+
+    $("html").click(() => {
+        optionsFormHidingHandler();
+    })
+    $(".options-form, .options-dropdown").click((event) => {
+        stopOptionFormPropagation = true;
+    })
 
     $("#servers-wrapper").on('click', '.server-div', function(){
         if($(this).hasClass("clicked")) return;
@@ -398,8 +419,12 @@ $(document).ready(function(){
     });
 
     //server update and delete
-    $("#serverOptionDropdown").click(() => {
-        $("#server-options").toggle();
+    $("#serverOptionDropdown").click((event) => {
+        let isInitialStateShown = $("#server-options").is(":visible");
+        $(".options-form").hide();
+        if(!isInitialStateShown){
+            $("#server-options").show();
+        }
     });
     function mouseOnOptionHandlerIn(optionDiv){
         $(optionDiv).addClass("hovered");
@@ -472,7 +497,11 @@ $(document).ready(function(){
 
     //channel update and delete
     $("#channelOptionDropdown").click(() => {
-        $("#channel-options").toggle();
+        let isInitialStateShown = $("#channel-options").is(":visible");
+        $(".options-form").hide();
+        if(!isInitialStateShown){
+            $("#channel-options").show();
+        }
     });
 
     $("#channelSettings").click(()=>{
@@ -480,7 +509,7 @@ $(document).ready(function(){
     });
 
     $("#channelDelete").click(()=>{
-        $(".lblChannelNameConfirm").text($(".channel-div.clicked").children().text());
+        $(".lblServerChannelConfirm").text($(".channel-div.clicked").children().text());
         $("#delete-channel-confirm").show();
     });
 

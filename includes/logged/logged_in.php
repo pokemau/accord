@@ -54,7 +54,7 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
       <div id="channels-header">
         <h2 class="lblServerName">Server</h2>
         <button id="btnCreateChannelSection">+</button>
-        <img src="images\dropdown_icon.png" alt="DropdownIcon" id="serverOptionDropdown">
+        <img src="images\dropdown_icon.png" alt="DropdownIcon" id="serverOptionDropdown" class="options-dropdown">
 
         <div id="server-options" class="options-form">
           <div class='option' id="invitePeopleToServer">
@@ -78,7 +78,7 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
     <div id="messages-rightbar">
       <div id="messages-channel-header">
         <h3 id="channelNameHeader"></h3>
-        <img src="images\dropdown_icon.png" alt="DropdownIcon" id="channelOptionDropdown">
+        <img src="images\dropdown_icon.png" alt="DropdownIcon" id="channelOptionDropdown" class="options-dropdown">
 
         <div id="channel-options" class="options-form">
           <div class='option' id="channelSettings">
