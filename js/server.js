@@ -6,7 +6,18 @@
  *
  *
  */
+import { getServerDetails } from "./imports/serversettings.js";
+
 $(document).ready(() => {
+    const currServerID = sessionStorage.getItem("serverID");
+    let serverName = getServerDetails(currServerID).then((res) => {
+        $("#server-name").text(res);
+        $("#main-body").find("input[type='text']").val(res);
+        serverName = res;
+    });
+
+    // get server details
+    // fill overview details
     const serverOverviewSetting = $("#server-overview-setting");
     const serverRolesSetting = $("#server-roles-setting");
 
@@ -20,6 +31,33 @@ $(document).ready(() => {
         serverRolesSetting.addClass("hovered");
         serverOverviewSetting.removeClass("hovered");
         showServerRolesUI();
+    });
+
+    ///////////////////////// OVERVIEW ///////////////////////
+    // $("#save-edit-server-name-btn").click(() => {
+    //     console.log("EDIT");
+    // });
+    $("#main-body").on("click", "#save-edit-server-name-btn", () => {
+        const inputVal = $("#main-body").find("input[type='text']").val();
+
+        if (inputVal == serverName) {
+            return;
+        }
+
+        console.log("YES");
+    });
+
+    $("#main-body").on("click", "#create-role-btn", () => {
+        const createRoleModal = $("#create-role-modal")[0];
+
+        createRoleModal.showModal();
+
+        editRoleModal.css({
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+        });
     });
 
     $("#main-body").on("click", "#edit-role-btn", () => {
@@ -37,17 +75,12 @@ $(document).ready(() => {
 
     $("#main-body").on("click", "#delete-role-btn", () => {
         const deleteRoleModal = $("#delete-role-modal")[0];
-
         deleteRoleModal.showModal();
-
-        // deleteRoleModal.css({
-        //     display: "flex",
-        //     flexDirection: "column",
-        //     alignItems: "center",
-        //     justifyContent: "center",
-        // });
     });
 
+    $("#cancel-create-role-btn").click(() => {
+        $("#create-role-modal")[0].close();
+    });
     $("#cancel-edit-role-btn").click(() => {
         $("#edit-role-modal")[0].close();
     });
@@ -113,29 +146,42 @@ async function createServerRole(roleName, canEditServer, canDeleteServer) {
 }
 
 export const overviewUI = `
-    <h4>Server Name</h4>
-        <input type="text">
+      <h4>Server Name</h4>
 
-        <div id="delete-server-btn">
-        <button>Delete Server</button>
-    </div>
+      <input type="text" id="edit-server-name-input">
+
+      <div id="save-server-name-change-btn">
+        <button id="save-edit-server-name-btn" class="button">Save</button>
+        <button id="delete-server-btn" class="button">Delete Server</button>
+      </div>
 `;
 
 export const rolesUI = `
-    <div>
-        <h4 id="roles-title">Roles</h4>
-        <h4 id="members-title">Members</h4>
-    </div>
+      <div id="roles-members-cont">
+        <h3 id="roles-title">Roles</h3>
+        <h3 id="members-title">Members</h3>
+        <button id="create-role-btn" class="button">Create Role</button>
+      </div>
 
-    <div id="roles-cont">
+      <div id="roles-cont">
         <div id="role-cont">
-            <h2 id="role-name">Me</h2>
-            <h2>4</h2>
+          <h2 id="role-name">Me</h2>
+          <h2 id="role-member-count">1</h2>
 
-            <div>
-                <button id="edit-role-btn"><img src="images/edit_icon.png" alt="Edit Icon"></button>
-                <button id="delete-role-btn"><img src="images/delete_icon.png" alt="Delete Icon"></button>
-            </div>
+          <div>
+            <button id="edit-role-btn"><img src="images/edit_icon.png" alt="Edit Icon"></button>
+            <button id="delete-role-btn"><img src="images/delete_icon.png" alt="Delete Icon"></button>
+          </div>
         </div>
-    </div>
+
+        <div id="role-cont">
+          <h2 id="role-name">Transcended</h2>
+          <h2 id="role-member-count">4</h2>
+
+          <div>
+            <button id="edit-role-btn"><img src="images/edit_icon.png" alt="Edit Icon"></button>
+            <button id="delete-role-btn"><img src="images/delete_icon.png" alt="Delete Icon"></button>
+          </div>
+        </div>
+      </div>
 `;
