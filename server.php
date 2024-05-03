@@ -21,7 +21,6 @@ if (session_status() === PHP_SESSION_NONE) {
 
 
 //////////// PRINT SESSION VARS
-// echo '<pre>' . print_r($_SESSION, TRUE) . '</pre>';
 
 
 // function showServerRoles($id, $connection) {
@@ -70,7 +69,7 @@ if (session_status() === PHP_SESSION_NONE) {
   <div id="main-cont">
 
     <div id="left-bar">
-      <h3>Server Name</h1>
+      <h3 id="server-name">Server Name</h1>
 
         <div class="server-option hovered" id="server-overview-setting">
           <h3>Overview</h3>
@@ -82,24 +81,20 @@ if (session_status() === PHP_SESSION_NONE) {
     </div>
 
     <div id="main-body">
-      <!-- <h4>Server Name</h4>
+      <h4>Server Name</h4>
 
-      <input type="text">
+      <input type="text" id="edit-server-name-input">
 
       <div id="save-server-name-change-btn">
-        <button>Save</button>
-
+        <button id="save-edit-server-name-btn" class="button">Save</button>
+        <button id="delete-server-btn" class="button">Delete Server</button>
       </div>
 
-      <div id="delete-server-btn">
-        <button>Delete Server</button>
 
-      </div> -->
-
-      <div id="roles-members-cont">
+      <!-- <div id="roles-members-cont">
         <h3 id="roles-title">Roles</h3>
         <h3 id="members-title">Members</h3>
-        <button class="button">Create Role</button>
+        <button id="create-role-btn" class="button">Create Role</button>
       </div>
 
       <div id="roles-cont">
@@ -122,7 +117,7 @@ if (session_status() === PHP_SESSION_NONE) {
             <button id="delete-role-btn"><img src="images/delete_icon.png" alt="Delete Icon"></button>
           </div>
         </div>
-      </div>
+      </div> -->
 
 
     </div>
@@ -144,7 +139,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
     <div>
       <h4>Role Name</h4>
-      <input type="text" name="" id="role-name-input" maxlength="60">
+      <input type="text" name="" id="edit-role-name-input" maxlength="60">
     </div>
 
     <div id="checkboxes-cont">
@@ -156,22 +151,22 @@ if (session_status() === PHP_SESSION_NONE) {
 
         <div class="checkbox-wrapper-2">
           <p>Can Delete Server</p>
-          <input type="checkbox" class="sc-gJwTLC ikxBAC">
+          <input type="checkbox" id="edit-can-delete-server-checkbox" class="sc-gJwTLC ikxBAC">
         </div>
 
         <div class="checkbox-wrapper-2">
           <p>Can Edit Server</p>
-          <input type="checkbox" class="sc-gJwTLC ikxBAC">
+          <input type="checkbox" id="edit-can-edit-server-checkbox" class="sc-gJwTLC ikxBAC">
         </div>
 
         <div class="checkbox-wrapper-2">
           <p>Can Create Channels</p>
-          <input type="checkbox" class="sc-gJwTLC ikxBAC">
+          <input type="checkbox" id="edit-can-create-channel-checkbox" class="sc-gJwTLC ikxBAC">
         </div>
 
         <div class="checkbox-wrapper-2">
           <p>Can Edit Channels</p>
-          <input type="checkbox" class="sc-gJwTLC ikxBAC">
+          <input type="checkbox" id="edit-can-edit-channel-checkbox" class="sc-gJwTLC ikxBAC">
         </div>
       </div>
 
@@ -181,15 +176,59 @@ if (session_status() === PHP_SESSION_NONE) {
     <div>
       <button id="save-edit-role-btn" class="button">Save</button>
       <button id="cancel-edit-role-btn" class="button">Cancel</button>
-
     </div>
 
   </dialog>
 
   <dialog id="create-role-modal">
+    <h3>CREATE ROLE</h3>
+
+    <div>
+      <h4>Role Name</h4>
+      <input type="text" name="" id="create-role-name-input" maxlength="60">
+    </div>
+
+    <div id="checkboxes-cont">
+      <h4>Permissions</h4>
+
+
+      <div id="role-checkboxes-cont">
+
+
+        <div class="checkbox-wrapper-2">
+          <p>Can Delete Server</p>
+          <input type="checkbox" id="create-can-delete-server-checkbox" class="sc-gJwTLC ikxBAC">
+        </div>
+
+        <div class="checkbox-wrapper-2">
+          <p>Can Edit Server</p>
+          <input type="checkbox" id="create-can-edit-server-checkbox" class="sc-gJwTLC ikxBAC">
+        </div>
+
+        <div class="checkbox-wrapper-2">
+          <p>Can Create Channels</p>
+          <input type="checkbox" id="create-can-create-channel-checkbox" class="sc-gJwTLC ikxBAC">
+        </div>
+
+        <div class="checkbox-wrapper-2">
+          <p>Can Edit Channels</p>
+          <input type="checkbox" id="create-can-edit-channel-checkbox" class="sc-gJwTLC ikxBAC">
+        </div>
+      </div>
+
+    </div>
+
+
+    <div>
+      <button id="save-create-role-btn" class="button">Save</button>
+      <button id="cancel-create-role-btn" class="button">Cancel</button>
+    </div>
 
   </dialog>
 
 </body>
 
 </html>
+<?php
+echo '<pre>' . print_r($_SESSION, TRUE) . '</pre>';
+?>

@@ -41,7 +41,8 @@
 }
 
 /*////////////////////////////////// EDIT ROLE MODAL //////////////////////////////////// */
-#role-name-input {
+#edit-role-name-input,
+#create-role-name-input {
   width: 100%;
   font-size: 1rem;
   padding: 0.2rem;
@@ -118,7 +119,8 @@
 
 /*///////////////////////////////// DELETE ROLE MODAL /////////////////////////////////// */
 #delete-role-modal,
-#edit-role-modal {
+#edit-role-modal,
+#create-role-modal {
   width: 20rem;
   top: 50%;
   left: 50%;
