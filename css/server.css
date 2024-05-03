@@ -1,13 +1,219 @@
-#server-main-cont {
-  margin-top: 3rem;
+#main-cont {
+  padding-top: 3rem;
+  height: 100vh;
+  display: flex;
 }
 
-#server-roles-table {
-  border: 1px solid black;
+/*/////////////////////////////// LEFT SIDEBAR ////////////////////////////////////////// */
+#left-bar {
+  height: 100%;
+  min-width: 10rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-right: 1px solid rgb(184, 184, 184);
 }
 
-#server-roles-table th,
-td {
+#left-bar > h3:first-child {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.server-option {
+  text-align: center;
+  width: 100%;
+  border-bottom: 1px solid rgb(184, 184, 184);
+  cursor: pointer;
+}
+.server-option:hover {
+  background-color: rgb(202, 202, 202);
+}
+
+.hovered {
+  background-color: rgb(223, 223, 223);
+}
+
+/*////////////////////////////////// MAIN BODY ////////////////////////////////////////// */
+#main-body {
+  width: 50rem;
+  height: 100%;
+}
+
+/*////////////////////////////////// EDIT ROLE MODAL //////////////////////////////////// */
+#role-name-input {
+  width: 100%;
+  font-size: 1rem;
+  padding: 0.2rem;
+  outline: none;
+}
+#checkboxes-cont {
+  margin-top: 0.8rem;
+}
+#role-checkboxes-cont {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/*////////////////////////////////// DELETE ROLE MODAL ////////////////////////////////// */
+#delete-role-btns-cont {
+  margin-top: 0.8rem;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+
+/*/////////////////////////////////// ROLES UI ////////////////////////////////////////// */
+#roles-members-cont {
+  display: flex;
+  align-items: center;
+  min-width: 30rem;
+  width: 90%;
+  height: 2.5rem;
+}
+#roles-members-cont button {
+  margin-left: auto;
+}
+
+#roles-cont {
+  width: 90%;
+  border-top: 1px solid rgb(206, 206, 206);
+}
+
+#roles-cont > div {
+  min-width: 30rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgb(206, 206, 206);
+  padding: 0.3rem;
+}
+#roles-title,
+#role-name {
+  min-width: 50%;
+}
+#role-member-count {
+  margin-right: auto;
+}
+
+#role-cont > div {
+  display: flex;
+  gap: 5px;
+}
+#roles-cont button {
+  width: 3rem;
+  height: 3rem;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#roles-cont button:hover {
+  background-color: rgb(202, 202, 202);
+}
+
+/*///////////////////////////////// DELETE ROLE MODAL /////////////////////////////////// */
+#delete-role-modal,
+#edit-role-modal {
+  width: 20rem;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  border-radius: 0.25rem;
+  border: 1px solid rgb(173, 173, 173);
   padding: 1rem;
-  border: 1px solid black;
+}
+
+/*///////////////////////////////// EDIT ROLE CHECKBOX ////////////////////////////////// */
+.checkbox-wrapper-2 {
+  display: flex;
+  gap: 2rem;
+}
+
+.checkbox-wrapper-2 p {
+  margin-right: auto;
+}
+
+.checkbox-wrapper-2 .ikxBAC {
+  appearance: none;
+  background-color: #dfe1e4;
+  border-radius: 72px;
+  border-style: none;
+  flex-shrink: 0;
+  height: 20px;
+  margin: 0;
+  position: relative;
+  width: 30px;
+}
+
+.checkbox-wrapper-2 .ikxBAC::before {
+  bottom: -6px;
+  content: "";
+  left: -6px;
+  position: absolute;
+  right: -6px;
+  top: -6px;
+}
+
+.checkbox-wrapper-2 .ikxBAC,
+.checkbox-wrapper-2 .ikxBAC::after {
+  transition: all 100ms ease-out;
+}
+
+.checkbox-wrapper-2 .ikxBAC::after {
+  background-color: #fff;
+  border-radius: 50%;
+  content: "";
+  height: 14px;
+  left: 3px;
+  position: absolute;
+  top: 3px;
+  width: 14px;
+}
+
+.checkbox-wrapper-2 input[type="checkbox"] {
+  cursor: default;
+}
+
+.checkbox-wrapper-2 .ikxBAC:hover {
+  background-color: #c9cbcd;
+  transition-duration: 0s;
+}
+
+.checkbox-wrapper-2 .ikxBAC:checked {
+  background-color: #6e79d6;
+}
+
+.checkbox-wrapper-2 .ikxBAC:checked::after {
+  background-color: #fff;
+  left: 13px;
+}
+
+.checkbox-wrapper-2 :focus:not(.focus-visible) {
+  outline: 0;
+}
+
+.checkbox-wrapper-2 .ikxBAC:checked:hover {
+  background-color: #535db3;
+}
+
+/*/////////////////////////////////// GLOBAL BUTTON ///////////////////////////////////// */
+.button {
+  min-width: 6rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: none;
+  padding: 0.4rem;
+  border-radius: 5px;
+  background-color: #6e79d6;
+  color: rgb(231, 231, 231);
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+.button:hover {
+  background-color: #535db3;
 }

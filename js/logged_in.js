@@ -462,7 +462,7 @@ $(document).ready(function(){
     });
 
     $("#serverSettings").click(()=>{
-        $("#update-server-section").show();
+        window.location.href = "server.php";
     });
 
     $("#serverDelete").click(()=>{
