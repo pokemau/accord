@@ -32,7 +32,10 @@ textarea {
   pointer-events: all;
   user-select: all;
 }
-
+.buttons-div {
+  display: flex;
+  justify-content: space-between;
+}
 #servers-sidebar {
   height: 100%;
   min-width: 12rem;
@@ -63,9 +66,11 @@ textarea {
 }
 #btnCreateServerSection,
 #btnCreateChannelSection {
-  margin-left: 10px;
   width: 30px;
   height: 30px;
+}
+#btnCreateChannelSection {
+  margin-right: 10px;
 }
 
 #direct-messages-cont {
@@ -128,7 +133,7 @@ img,
   border: 2px solid black;
 }
 
-#channels-header {  
+#channels-header {
   /* height: 10%; */
   width: 100%;
   padding: 0.3rem;
@@ -201,7 +206,8 @@ img,
 
   flex: 1 1 auto;
 }
-#replying-to-group, #replying-to-label{
+#replying-to-group,
+#replying-to-label {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -271,7 +277,7 @@ a.message-text {
 }
 .message-header {
   display: flex;
-  align-items: center
+  align-items: center;
 }
 .message-header > * {
   margin-right: 2rem;

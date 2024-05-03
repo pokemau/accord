@@ -57,7 +57,7 @@ $(document).ready(function(){
         $(".popUpForm").addClass("unblurred");
         let promiseServers = getServerList();
         let promiseChannels = $.Deferred();     //initialize a promise-type in case we dont go through an async func
-        if($(".server-div.clicked")[0]){        //if clicked server-div exists already, just update the channelslist
+        if($(".server-div.clicked")){        //if clicked server-div exists already, just update the channelslist
             promiseHandler(promiseServers, ()=>{
                 promiseHandler(getServerChannelList(), (response)=>{
                     channelsMiddleBarShow();
@@ -146,7 +146,7 @@ $(document).ready(function(){
 
     function printServers(serverList){
 
-        let serverID = sessionStorage.getItem("serverID")
+        let serverID = sessionStorage.getItem("serverID");
         $("#servers-wrapper").html("");
 
         let clickedClassIsSet = false;
@@ -173,8 +173,6 @@ $(document).ready(function(){
             sessionStorage.setItem("serverID", firstChild.data("serverid"))
         }
 
-        getServerChannelList()
-        channelsMiddleBarShow()
     }
 
     async function getServerChannelList(){
@@ -197,8 +195,8 @@ $(document).ready(function(){
     }
 
     function printServerChannels(channelList){
-
         let channelID = sessionStorage.getItem("channelID");
+        console.log(channelID);
         $("#channels-wrapper").html("");
         channelsMiddleBarShow()
 
@@ -224,8 +222,6 @@ $(document).ready(function(){
             firstChild.addClass("clicked")
             sessionStorage.setItem("channelID", firstChild.data("channelid"))
         }
-
-        getMessageList()
     }
 
     async function getMessageList(){
@@ -354,7 +350,7 @@ $(document).ready(function(){
         $(this).addClass("clicked");
         let serverID = $(this).data("serverid");
         sessionStorage.setItem("serverID", serverID);
-        promiseHandler(getServerChannelList());
+        promiseHandler(getServerChannelList(), ()=>{promiseHandler(getMessageList())});
     });
 
     $("#channels-wrapper").on('click', '.channel-div', function(){
@@ -366,6 +362,7 @@ $(document).ready(function(){
         sessionStorage.setItem("channelID", channelID);
 
         $("#right-page").hide();
+        $("#btnCloseReplyGroup").click();       //close reply-to-group when changing channel
         promiseHandler(getMessageList(), ()=>{}, (error)=>{showMessage(error)});
     });
 
@@ -542,14 +539,21 @@ $(document).ready(function(){
     $("#btnCloseReplyGroup").click(() => {
         $("#replying-to-group").hide();
         $("#taInpMessage").data("repliedmessageid", -1);
-    })
+    });
 
     $("#btnSendMessage").click(() => {
         let messageText = $("#taInpMessage").val();
         $("#taInpMessage").val("");
         let repliedMessageID = $("#taInpMessage").data("repliedmessageid");
+        console.log(repliedMessageID);
         promiseHandler(sendMessage(messageText, repliedMessageID), refresh());
-    });
+    }); 
+
+    $("#taInpMessage").on('keyup', (event) => {
+        if(event.keyCode == 13){
+            $("#btnSendMessage").click();
+        }
+    })
 
     function mouseOnMessageHandlerIn(messageDiv){
         if($(messageDiv).data("senderid") == sessionStorage.getItem("userID")){
@@ -630,6 +634,15 @@ $(document).ready(function(){
         // $("#channels-header").html(`
         //     <h3 class="lblServerName">Direct Messages</h3>
         // `)
+    });
+
+
+    $("#btnReport").click(() => {
+        if($("#right-page").is(":visible")){
+            $("#right-page").hide();
+        }else{
+            $("#right-page").show();
+        }
     })
 })
 
