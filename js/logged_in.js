@@ -10,6 +10,12 @@ Object.assign(globalThis, messages);
 
 $(document).ready(function(){
     refresh();
+
+    let clicked = {
+        server: -1,
+        channels: {}
+    }
+    sessionStorage.setItem('clicked', JSON.stringify(clicked));
       
     function promiseHandler(promise, successCallback = null, errorCallback = null){
         promise
