@@ -36,7 +36,24 @@ async function getServerRoles(serverID) {
 async function updateServer() {}
 async function deleteServer() {}
 async function editRole() {}
-async function deleteRole() {}
+async function deleteRole(serverID, roleID) {
+    try {
+        const response = await $.post(
+            "api/serverSettings/deleteServerRole.php",
+            {
+                serverID: serverID,
+                roleID: roleID,
+            },
+            (res, status) => {
+                return res;
+            }
+        );
+
+        return response["message"];
+    } catch (error) {
+        throw error;
+    }
+}
 async function createRole(
     serverID,
     roleName,
