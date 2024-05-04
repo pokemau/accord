@@ -1,13 +1,14 @@
 import {
     createRole,
+    deleteRole,
     getServerDetails,
     getServerRoles,
 } from "./imports/serversettings.js";
 
-$(document).ready(() => {
+$(document).ready(function () {
     const currServerID = sessionStorage.getItem("serverID");
 
-    let serverName = getServerDetails(currServerID).then((res) => {
+    let serverName = getServerDetails(currServerID).then(function (res) {
         $("#server-name").text(res);
         $("#main-body").find("input[type='text']").val(res);
         serverName = res;
@@ -15,20 +16,20 @@ $(document).ready(() => {
     const serverOverviewSetting = $("#server-overview-setting");
     const serverRolesSetting = $("#server-roles-setting");
 
-    serverOverviewSetting.click(() => {
+    serverOverviewSetting.click(function () {
         serverRolesSetting.removeClass("hovered");
         serverOverviewSetting.addClass("hovered");
         showServerOverviewUI();
     });
 
-    serverRolesSetting.click(() => {
+    serverRolesSetting.click(function () {
         serverRolesSetting.addClass("hovered");
         serverOverviewSetting.removeClass("hovered");
         showServerRolesUI();
     });
 
     ///////////////////////// OVERVIEW ///////////////////////
-    $("#main-body").on("click", "#save-edit-server-name-btn", () => {
+    $("#main-body").on("click", "#save-edit-server-name-btn", function () {
         const inputVal = $("#main-body").find("input[type='text']").val();
 
         if (inputVal == serverName) {
@@ -38,18 +39,18 @@ $(document).ready(() => {
         console.log("YES");
     });
 
-    $("#main-body").on("click", "#create-role-btn", () => {
+    $("#main-body").on("click", "#create-role-btn", function () {
         resetCreateRoleFields();
         const createRoleModal = $("#create-role-modal")[0];
         createRoleModal.showModal();
     });
 
-    $("#main-body").on("click", "#edit-role-btn", () => {
+    $("#main-body").on("click", "#edit-role-btn", function () {
         const editRoleModal = $("#edit-role-modal")[0];
         editRoleModal.showModal();
     });
 
-    $("#save-create-role-btn").click(() => {
+    $("#save-create-role-btn").click(function () {
         const roleName = $("#create-role-name-input").val();
         const canDeleteServer = $("#create-can-delete-server-checkbox").is(
             ":checked"
@@ -90,7 +91,7 @@ $(document).ready(() => {
             canCreateChannel,
             canEditChannel
         )
-            .then((res) => {
+            .then(function (res) {
                 showServerRolesUI();
                 $("#create-role-modal")[0].close();
             })
@@ -99,28 +100,41 @@ $(document).ready(() => {
             });
     });
 
-    $("#main-body").on("click", "#delete-role-btn", () => {
+    let currRoleID = -1;
+    $("#main-body").on("click", "#delete-role-btn", function () {
+        currRoleID = $(this).closest(".role-cont").attr("data-roleid");
+
         const deleteRoleModal = $("#delete-role-modal")[0];
         deleteRoleModal.showModal();
     });
 
-    $("#cancel-create-role-btn").click(() => {
+    $("#cancel-create-role-btn").click(function () {
         $("#create-role-modal")[0].close();
     });
-    $("#cancel-edit-role-btn").click(() => {
+    $("#cancel-edit-role-btn").click(function () {
         $("#edit-role-modal")[0].close();
     });
-    $("#deny-delete-role-modal").click(() => {
+    $("#deny-delete-role-modal").click(function () {
         $("#delete-role-modal")[0].close();
+    });
+    $("#accept-delete-role-modal").click(function () {
+        deleteRole(currServerID, currRoleID)
+            .then(function () {
+                showServerRolesUI();
+                $("#delete-role-modal")[0].close();
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
     });
 
     function showServerRolesUI() {
         $("#main-body").html(rolesUI);
 
-        getServerRoles(currServerID).then((res) => {
+        getServerRoles(currServerID).then(function (res) {
             for (const role of res.serverRoles) {
                 $("#roles-cont").append(`
-                    <div id="role-cont" data-roleid=${role.roleID}>
+                    <div class="role-cont" data-roleid=${role.roleID}>
                         <h2 id="role-name">${role.roleName}</h2>
                         <h2 id="role-member-count">4</h2>
 
