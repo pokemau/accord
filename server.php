@@ -183,7 +183,7 @@ if (session_status() === PHP_SESSION_NONE) {
   <dialog id="create-role-modal">
     <h3>CREATE ROLE</h3>
 
-    <div>
+    <div id="role-name-cont">
       <h4>Role Name</h4>
       <input type="text" name="" id="create-role-name-input" maxlength="60">
     </div>
