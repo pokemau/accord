@@ -349,7 +349,14 @@ $(document).ready(function(){
             refresh();
             showMessage("Successfully deleted the message!");
         });
-    })
+    });
+
+    //pressing enter when typing in input/textarea
+    $("input, textarea").on('keyup', (event) => {
+        if(event.keyCode == 13){    //pressed Enter key
+            $(event.currentTarget).parent().find(".submitBtn").first().click();
+        }
+    });
 
     // user settings btn
     $("#user-settings-btn").click(() => {
@@ -366,12 +373,6 @@ $(document).ready(function(){
         //     <h3 class="lblServerName">Direct Messages</h3>
         // `)
     });
-
-    $("input, textarea").on('keyup', (event) => {
-        if(event.keyCode == 13){    //pressed Enter key
-            $(event.currentTarget).parent().find(".submitBtn").first().click();
-        }
-    })
 
     $("#btnReport").click(() => {
         if($("#right-page").is(":visible")){
