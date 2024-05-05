@@ -58,6 +58,20 @@ $(document).ready(function(){
             }
         });
     }
+    function stopButtonIfInputEmpty(event){
+        if($(event.currentTarget).parent().find("input, textarea").first().val().length === 0){
+            return true;
+        }
+        return false;
+    }
+
+    //pressing enter when typing in input/textarea
+    $("input, textarea").on('keyup', (event) => {
+        if(event.keyCode == 13){    //pressed Enter key
+            $(event.currentTarget).parent().find(".submitBtn").first().click();
+            $(event.currentTarget).val("");
+        }
+    });
     
     //close options forms when clicking anything other than it
     var stopOptionFormPropagation = false;
@@ -113,6 +127,7 @@ $(document).ready(function(){
     });
 
     $("#btnCreateServer").click((event) => {
+        if(stopButtonIfInputEmpty(event)) return;
         let serverName = $("#txtServerName").val();
         if(serverName == "") return;
         $(".lblServerNameConfirm").text(serverName);
@@ -130,6 +145,7 @@ $(document).ready(function(){
         showPopUpDialog($("#create-channel-section"));
     });
     $("#btnCreateChannel").click((event) => {
+        if(stopButtonIfInputEmpty(event)) return;
         let channelName = $("#txtChannelName").val();
         if(channelName == "") return;
         $(".lblChannelNameConfirm").text(channelName);
@@ -223,6 +239,7 @@ $(document).ready(function(){
     });
 
     $("#btnUpdateServer").click((event) => {
+        if(stopButtonIfInputEmpty(event)) return;
         let newServerName = $("#txtNewServerName").val();
         if(newServerName == "") return;
         $(".lblServerNameConfirm").text($(".server-div.clicked").children().text())
@@ -258,6 +275,7 @@ $(document).ready(function(){
     });
 
     $("#btnUpdateChannel").click((event) => {
+        if(stopButtonIfInputEmpty(event)) return;
         let newChannelName = $("#txtNewChannelName").val();
         if(newChannelName == "") return;
         $(".lblChannelNameConfirm").text($(".channel-div.clicked").children().text())
@@ -279,9 +297,9 @@ $(document).ready(function(){
         $("#taInpMessage").data("repliedmessageid", -1);
     });
 
-    $("#btnSendMessage").click(() => {
+    $("#btnSendMessage").click((event) => {
+        if(stopButtonIfInputEmpty(event)) return;
         let messageText = $("#taInpMessage").val();
-        $("#taInpMessage").val("");
         let repliedMessageID = $("#taInpMessage").data("repliedmessageid");
         promiseHandler(sendMessage(messageText, repliedMessageID), refresh());
     }); 
@@ -349,13 +367,6 @@ $(document).ready(function(){
             refresh();
             showMessage("Successfully deleted the message!");
         });
-    });
-
-    //pressing enter when typing in input/textarea
-    $("input, textarea").on('keyup', (event) => {
-        if(event.keyCode == 13){    //pressed Enter key
-            $(event.currentTarget).parent().find(".submitBtn").first().click();
-        }
     });
 
     // user settings btn
