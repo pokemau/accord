@@ -1,4 +1,4 @@
-import { getServerChannelList } from "./serverchannels.js"
+import { clicked } from "./live.js" 
 
 export async function createServer(serverName){
     try{
@@ -20,10 +20,9 @@ export async function createServer(serverName){
 
 export async function updateServer(newServerName){
     try{
-        let toUpdateServerID = sessionStorage.getItem("serverID");
         let response = await $.post("api/updateServer.php",
         {
-            serverID: toUpdateServerID,
+            serverID: clicked.server,
             newservername: newServerName
         },
         function(responseInner, status){
@@ -40,11 +39,10 @@ export async function updateServer(newServerName){
 
 export async function addUserToServer(userIDToJoin){
     try{
-        let serverIDToJoin = sessionStorage.getItem("serverID");
         let response = await $.post("api/addUserToServer.php",
         {
             joinerID: userIDToJoin,
-            serverID: serverIDToJoin
+            serverID: clicked.server
         },
         function(responseInner, status){
             return responseInner   
@@ -60,10 +58,9 @@ export async function addUserToServer(userIDToJoin){
 
 export async function deleteServer(){
     try{
-        let toDeleteServerID = sessionStorage.getItem("serverID");
         let response = await $.post("api/deleteServer.php",
         {
-            serverID: toDeleteServerID
+            serverID: clicked.server
         },
         function(responseInner, status){
             return responseInner   
@@ -90,7 +87,7 @@ export async function getServerList(){
 
 function printServers(serverList){
 
-    let serverID = sessionStorage.getItem("serverID")
+    let serverID = clicked.server;
     $("#servers-wrapper").html("");
 
     let clickedClassIsSet = false;
@@ -114,9 +111,7 @@ function printServers(serverList){
     if (!clickedClassIsSet) {
         const firstChild = $("#servers-wrapper > div:first-child")
         firstChild.addClass("clicked")
-        sessionStorage.setItem("serverID", firstChild.data("serverid"))
+        clicked.server = firstChild.data("serverid");
     }
 
-    getServerChannelList();
-    channelsMiddleBarShow();
 }

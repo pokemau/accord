@@ -1,21 +1,16 @@
-import * as datetime from "./imports/datetime.js";
-Object.assign(globalThis, datetime);
-import * as servers from "./imports/servers.js";
-Object.assign(globalThis, servers);
-import * as serverchannels from "./imports/serverchannels.js";
-Object.assign(globalThis, serverchannels);
-import * as messages from "./imports/messages.js";
-Object.assign(globalThis, messages);
-
-
+import { createServer, updateServer, addUserToServer, deleteServer, getServerList } 
+    from "./imports/servers.js";
+import { createServerChannel, updateServerChannel, deleteServerChannel, getServerChannelList } 
+    from "./imports/serverchannels.js";
+import { sendMessage, updateMessage, deleteMessage, getMessageList }
+    from "./imports/messages.js";
+import { clicked, getClickedInfo, clickedServerID, clickedChannelID, getCurrUserID} 
+    from "./imports/live.js";
+import { getSearchedUserList } from "./imports/searches.js";
+import { showPopUpDialog, hidePopUpDialog, hideAllPopUpDialog, showMessage } from "./imports/utilities.js";
 $(document).ready(function(){
+    getClickedInfo();
     refresh();
-
-    let clicked = {
-        server: -1,
-        channels: {}
-    }
-    sessionStorage.setItem('clicked', JSON.stringify(clicked));
       
     function promiseHandler(promise, successCallback = null, errorCallback = null){
         promise
@@ -38,35 +33,16 @@ $(document).ready(function(){
         });
     }
 
-    function unBlurEverything(){
-        $(".blur").removeClass('blur');
-    }
-    function backgroundBlur(){
-        $("nav").addClass('blur');
-        $("#divServerList").addClass('blur');
-        $("#main-cont").addClass('blur');
-    }
-    function channelsMiddleBarShow(){
-        $(".lblServerName").text($(".server-div.clicked").children().text());
-        // $("#channels-middlebar").show();
-    }
-    function messagesRightBarShow(){
-        $("#channelNameHeader").text("#"+$(".channel-div.clicked").children().text());
-        // $("#messages-rightbar").show();
-    }
     function refresh(){
         promiseHandler(getCurrUserID());
-        unBlurEverything();
-        $(".popUpForm").hide();
+        hideAllPopUpDialog();
         $(".options-form").hide();
         $("#replying-to-group").hide();
-        $(".popUpForm").addClass("unblurred");
         let promiseServers = getServerList();
         let promiseChannels = $.Deferred();     //initialize a promise-type in case we dont go through an async func
         if($(".server-div.clicked")){        //if clicked server-div exists already, just update the channelslist
             promiseHandler(promiseServers, ()=>{
                 promiseHandler(getServerChannelList(), (response)=>{
-                    channelsMiddleBarShow();
                     promiseChannels.resolve(response);
                 }, (error)=>{
                     promiseChannels.reject(error);
@@ -74,259 +50,16 @@ $(document).ready(function(){
             })
         }else{      //else complete initialized 'resolved' promise and hide channels
             promiseChannels.resolve();      //resolves the initialized promise cuz we dont have async func
-            // $("#channels-middlebar").hide();
         }
 
         promiseChannels.done(function(){
             if($(".channel-div.clicked")[0]){       //if channel div has clicked, wait for updated channels before showing messages 
                 promiseHandler(getMessageList());
-            }else{
-                // $("#messages-rightbar").hide();
             }
         });
     }
-    function showMessage(message){
-        $("body").append("<div id='message-box'> <p>"+message+"</p> </div>");
-        setTimeout(function() {
-            var messageBox = document.getElementById('message-box');
-            if (messageBox) {
-              messageBox.parentNode.removeChild(messageBox);
-            }
-          }, 3000);
-    }
-    function openPopUpForm(callingButton){
-        let callingButtonDiv = $(callingButton).parent()
-        let callingPopUpForm = $(callingButtonDiv).parent();
     
-        callingPopUpForm.addClass("blur");
-        callingPopUpForm.removeClass("unblurred");
-    
-        let index = 0;
-    
-        //if multiple popUpForm are children of this popUpForm
-        if($(callingPopUpForm).find('.divSubmitBtn').length > 1){
-            index = $(callingPopUpForm).find('.divSubmitBtn').index(callingButtonDiv);
-        }
-    
-        let childPopUpForm =  $(callingPopUpForm).find('.popUpForm')[index];
-        $(childPopUpForm).show();
-    };
-    function closePopUpForm(callingButton){
-        let callingPopUpForm = $(callingButton).parent().parent();
-        callingPopUpForm.addClass("unblurred");
-        callingPopUpForm.hide();
-        let parentPopUpForm =  $(callingPopUpForm).parent();
-        if($(parentPopUpForm).is('body')) {
-            unBlurEverything();
-        }else{
-            parentPopUpForm.removeClass("blur");
-            parentPopUpForm.addClass("unblurred");
-        }
-    }
-
-    async function getCurrUserID(){
-        try{
-            let response = await $.post("api/getCurrUserID.php",
-            function(responseInner, status){
-                return responseInner
-            });
-            if(response['status'] == false){
-                throw new Error(String(response['message']));
-            }
-            sessionStorage.setItem("userID", response['userID']);
-        }catch(error){
-            throw error;
-        }
-    }
-
-    async function getServerList(){
-        let response = await $.get("api/getServerList.php",
-        function(responseInner, status){
-            return responseInner;
-        });
-        if(response['status'] == false){
-            throw new Error(String(response['message']));
-        }
-        printServers(response['serverList']);
-    }
-
-    function printServers(serverList){
-
-        let serverID = sessionStorage.getItem("serverID");
-        $("#servers-wrapper").html("");
-
-        let clickedClassIsSet = false;
-        for(let i=0; i<serverList.length; i++){
-            let serverInfo = serverList[i];
-            let string = `<div data-serverid="${parseInt(serverInfo.serverID)}" class="server-div`;
-
-
-            if (serverInfo.serverID == serverID){
-                string += " clicked";
-                clickedClassIsSet = true;
-            }
-            string += `
-                "> 
-                    <h2> ${String(serverInfo.servername)}</h2>
-                </div>`
-
-            $(string).appendTo("#servers-wrapper");
-        }
-
-        if (!clickedClassIsSet) {
-            const firstChild = $("#servers-wrapper > div:first-child")
-            firstChild.addClass("clicked")
-            sessionStorage.setItem("serverID", firstChild.data("serverid"))
-        }
-
-    }
-
-    async function getServerChannelList(){
-        try{
-            let serverIDparam = sessionStorage.getItem("serverID");
-            let response = await $.get("api/getServerChannelList.php",
-            {
-                serverID: serverIDparam  
-            },
-            function(responseInner, status){
-                return responseInner;
-            });
-            if(response['status'] == false){
-                throw new Error(String(response['message']));
-            }
-            printServerChannels(response['channelList']); 
-        }catch(error){
-            throw error;
-        }
-    }
-
-    function printServerChannels(channelList){
-        let channelID = sessionStorage.getItem("channelID");
-        console.log(channelID);
-        $("#channels-wrapper").html("");
-        channelsMiddleBarShow()
-
-        let clickedClassIsSet = false;
-
-        for(let i=0; i<channelList.length; i++){
-            let channelInfo = channelList[i];
-            let string = `<div data-channelid="${parseInt(channelInfo.channelID)}" class="channel-div`;
-
-            if (channelInfo.channelID == channelID){
-                string += " clicked";
-                clickedClassIsSet = true;
-            }
-            
-            string += `">
-                <h4> ${String(channelInfo.channelname)} </h4>
-                </div>`;
-            $(string).appendTo("#channels-wrapper");
-        }
-
-        if (!clickedClassIsSet) {
-            const firstChild = $("#channels-wrapper > div:first-child")
-            firstChild.addClass("clicked")
-            sessionStorage.setItem("channelID", firstChild.data("channelid"))
-        }
-    }
-
-    async function getMessageList(){
-        try{
-            let channelIDparam = sessionStorage.getItem("channelID");
-            let response = await $.get("api/getMessageList.php",
-            {
-                channelID: channelIDparam  
-            },
-            function(responseInner, status){
-                return responseInner;
-            });
-            if(response['status'] == false){
-                throw new Error(String(response['message']));
-            }
-            printMessages(response['messageList']); 
-        }catch(error){
-            throw error;
-        }
-    }
-
-    function printMessages(messageList){
-        $("#messages-wrapper").html("");
-        messagesRightBarShow();
-        for(let i=0; i<messageList.length; i++){
-            let messageInfo = messageList[i];
-            let string = "<div class='message-div' data-messageid='" + parseInt(messageInfo.messageID) 
-            +"' data-senderid='"+parseInt(messageInfo.senderID)+"' id='"+parseInt(messageInfo.messageID)+"'>";
-            let repliedMessageInfo = messageInfo.repliedMessageInfo
-            if(repliedMessageInfo.messageID != null){
-                string += "<div class='replied-message-div'>"
-                +   "<img src='images\\reply_link_icon.png' alt='ReplyLinkIcon' class='reply-link-icon'>"
-                +   "<h4 class='display-name'>" + String(repliedMessageInfo.senderdisplayname) + "</h4>"
-                +   "<a href='#"+repliedMessageInfo.messageID+"' class='message-text'>"+ String(repliedMessageInfo.messageText) +"</a>"
-                + "</div>";
-            }
-            string +=   "<div class='message-header'>"
-            +       "<h4 class='display-name'>" + String(messageInfo.senderdisplayname) + "</h4>"
-            +       "<h6 class='message-date-time'>";
-
-            let messageTimeDate = messageInfo.dateTimeSent;
-            let messageDate = messageTimeDate.slice(0, 10);
-            let messageTime = messageTimeDate.slice(10, 16);
-            if (isToday(new Date(messageDate))){
-                string += "Today";
-            }else if(isYesterday(new Date(messageDate))){
-                string += "Yesterday";
-            }else{
-                string += String(formatDate(messageDate));
-            }
-            string += " at " + String(tConvert(messageTime)) + "</h6>"
-            +   "</div>"
-            +   "<div class='message-contents'>"
-            +       "<h5 class='message-text'>" + String(messageInfo.messageText) + "</h5>"
-            +   "</div>"
-            +   "<div class='message-options' style='display: none'>"
-            +       "<img src='images/reply_icon.png' alt='replyIcon' class='btnMsgReply'>"
-            +       "<img src='images/edit_icon.png' alt='editIcon' class='btnMsgEdit'>"
-            +       "<img src='images/delete_icon.png' alt='deleteIcon' class='btnMsgDelete'>"
-            +   "</div>"
-            + "</div>";
-            $(string).appendTo("#messages-wrapper");
-        }
-        let messagesWrapper = $("#messages-wrapper")[0];
-        messagesWrapper.scrollTop = messagesWrapper.scrollHeight - messagesWrapper.clientHeight;
-    };
-
-    async function getSearchedUserList(usernameKeywordparam){
-        try{
-            let serverIDparam = sessionStorage.getItem("serverID");
-            let response = await $.get("api/searchUsersToServer.php",
-            {
-                serverID: serverIDparam,
-                usernameKeyword: usernameKeywordparam
-            },
-            function(responseInner, status){
-                return responseInner;
-            });
-            if(response['status'] == false){
-                throw new Error(String(response['message']));
-            }
-            printSearchedUsers(response['searchedUsers']); 
-        }catch(error){
-            throw error;
-        }
-    };
-
-    function printSearchedUsers(searchedUsers){
-        $("#users-search-wrapper").html("");
-        for(let i=0; i<searchedUsers.length; i++){
-            let userInfo = searchedUsers[i];
-            let string = "<div data-userid='" + parseInt(userInfo.userID) + "' class='user-div option'>"
-                + "<h2>" + String(userInfo.displayname) + "</h2>"
-                + "<h4>#" + String(userInfo.username) + "</h4>"
-                + "</div>";
-            $(string).appendTo("#users-search-wrapper");
-        }
-    }
-    
+    //close options forms when clicking anything other than it
     var stopOptionFormPropagation = false;
     function optionsFormHidingHandler(){
         if(!stopOptionFormPropagation){
@@ -351,11 +84,10 @@ $(document).ready(function(){
     $("#servers-wrapper").on('click', '.server-div', function(){
         if($(this).hasClass("clicked")) return;
 
-        // $("#messages-rightbar").hide();
         $(".server-div.clicked").removeClass("clicked");
         $(this).addClass("clicked");
-        let serverID = $(this).data("serverid");
-        sessionStorage.setItem("serverID", serverID);
+        clicked.server = clickedServerID();
+        sessionStorage.setItem('clicked', JSON.stringify(clicked));
         promiseHandler(getServerChannelList(), ()=>{promiseHandler(getMessageList())});
     });
 
@@ -364,8 +96,8 @@ $(document).ready(function(){
 
         $(".channel-div.clicked").removeClass("clicked");
         $(this).addClass("clicked");
-        let channelID = $(this).data("channelid");
-        sessionStorage.setItem("channelID", channelID);
+        clicked.channels[clickedServerID()] = clickedChannelID();
+        sessionStorage.setItem('clicked', JSON.stringify(clicked));
 
         $("#right-page").hide();
         $("#btnCloseReplyGroup").click();       //close reply-to-group when changing channel
@@ -373,22 +105,18 @@ $(document).ready(function(){
     });
 
     $("#btnCreateServerSection").click(() => {
-        backgroundBlur();
-        $("#create-server-section").show();
+        showPopUpDialog($("#create-server-section"));
     });
 
-    $(".closeBtn").click((event) => {
-        closePopUpForm(event.currentTarget)
-    });
-    $(".noBtn").click((event) => {
-        closePopUpForm(event.currentTarget)
+    $(".closeBtn, .noBtn").click((event) => {
+        hidePopUpDialog($(event.currentTarget).parent().parent());
     });
 
     $("#btnCreateServer").click((event) => {
         let serverName = $("#txtServerName").val();
         if(serverName == "") return;
         $(".lblServerNameConfirm").text(serverName);
-        openPopUpForm(event.currentTarget);
+        showPopUpDialog($("#create-server-confirm"));
     });
     $("#btnYESCreateServerConfirm").click((event) => {
         let serverName = $("#txtServerName").val();
@@ -399,15 +127,14 @@ $(document).ready(function(){
     });
 
     $("#btnCreateChannelSection").click(() => {
-        backgroundBlur();
-        $("#create-channel-section").show();
+        showPopUpDialog($("#create-channel-section"));
     });
     $("#btnCreateChannel").click((event) => {
         let channelName = $("#txtChannelName").val();
         if(channelName == "") return;
         $(".lblChannelNameConfirm").text(channelName);
         $(".lblServerNameConfirm").text($(".server-div.clicked").children().text())
-        openPopUpForm(event.currentTarget);
+        showPopUpDialog($("#create-channel-confirm"));
     });
     $("#btnYESCreateChannelConfirm").click((event) => {
         let channelName = $("#txtChannelName").val();
@@ -453,6 +180,11 @@ $(document).ready(function(){
     });
     $("#txtUsername").on('input', function(){
         let searchedKeyword = $("#txtUsername").val();
+        console.log(searchedKeyword.length);
+        if(searchedKeyword.length === 0){
+            $("#users-search-wrapper").html("");
+            return;
+        }
         promiseHandler(getSearchedUserList(searchedKeyword));
     });
     $("#users-search-wrapper").on('click', ".user-div", function(){
@@ -495,7 +227,7 @@ $(document).ready(function(){
         if(newServerName == "") return;
         $(".lblServerNameConfirm").text($(".server-div.clicked").children().text())
         $(".lblNewServerName").text(newServerName);
-        openPopUpForm(event.currentTarget);
+        showPopUpDialog($("#update-server-confirm"));
     });
 
     //channel update and delete
@@ -508,12 +240,12 @@ $(document).ready(function(){
     });
 
     $("#channelSettings").click(()=>{
-        $("#update-channel-section").show();
+        showPopUpDialog($("#update-channel-section"));
     });
 
     $("#channelDelete").click(()=>{
         $(".lblServerChannelConfirm").text($(".channel-div.clicked").children().text());
-        $("#delete-channel-confirm").show();
+        showPopUpDialog($("#delete-channel-confirm"));
     });
 
     $("#btnYESDeleteChannelConfirm").click((event) => {
@@ -530,7 +262,7 @@ $(document).ready(function(){
         if(newChannelName == "") return;
         $(".lblChannelNameConfirm").text($(".channel-div.clicked").children().text())
         $(".lblNewChannelName").text(newChannelName);
-        openPopUpForm(event.currentTarget);
+        showPopUpDialog($("#update-channel-confirm"));
     });
     $("#btnYESUpdateChannelConfirm").click((event) => {
         let newChannelName = $("#txtNewChannelName").val();
@@ -551,15 +283,8 @@ $(document).ready(function(){
         let messageText = $("#taInpMessage").val();
         $("#taInpMessage").val("");
         let repliedMessageID = $("#taInpMessage").data("repliedmessageid");
-        console.log(repliedMessageID);
         promiseHandler(sendMessage(messageText, repliedMessageID), refresh());
     }); 
-
-    $("#taInpMessage").on('keyup', (event) => {
-        if(event.keyCode == 13){
-            $("#btnSendMessage").click();
-        }
-    })
 
     function mouseOnMessageHandlerIn(messageDiv){
         if($(messageDiv).data("senderid") == sessionStorage.getItem("userID")){
@@ -642,6 +367,11 @@ $(document).ready(function(){
         // `)
     });
 
+    $("input, textarea").on('keyup', (event) => {
+        if(event.keyCode == 13){    //pressed Enter key
+            $(event.currentTarget).parent().find(".submitBtn").first().click();
+        }
+    })
 
     $("#btnReport").click(() => {
         if($("#right-page").is(":visible")){
@@ -650,6 +380,7 @@ $(document).ready(function(){
             $("#right-page").show();
         }
     })
+
 })
 
 async function getUsers() {

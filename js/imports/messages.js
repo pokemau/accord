@@ -1,11 +1,14 @@
+import { clicked , clickedServerID} from "./live.js"
+import { messagesHeaderNameUpdate } from "./logged-in-document.js"
+import { isToday, isYesterday, tConvert, formatDate} from "./datetime.js"
+
 export async function sendMessage(messageTextparam, repliedMessageIDparam){
     try{
-        let channelIDparam = sessionStorage.getItem("channelID");
         let repliedMessageIDPOST = (repliedMessageIDparam === undefined || repliedMessageIDparam === -1) 
             ? null : repliedMessageIDparam;
         let response = await $.post("api/sendMessage.php",
         {
-            channelID: channelIDparam,
+            channelID: clicked.channels[clickedServerID()],
             messageText: messageTextparam,
             repliedMessageID: repliedMessageIDPOST
         },
@@ -63,7 +66,7 @@ export async function deleteMessage(){
 
 export async function getMessageList(){
     try{
-        let channelIDparam = sessionStorage.getItem("channelID");
+        let channelIDparam = clicked.channels[clickedServerID()];
         let response = await $.get("api/getMessageList.php",
         {
             channelID: channelIDparam  
@@ -82,7 +85,7 @@ export async function getMessageList(){
 
 function printMessages(messageList){
     $("#messages-wrapper").html("");
-    messagesRightBarShow();
+    messagesHeaderNameUpdate();
     for(let i=0; i<messageList.length; i++){
         let messageInfo = messageList[i];
         let string = "<div class='message-div' data-messageid='" + parseInt(messageInfo.messageID) 

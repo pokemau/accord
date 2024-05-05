@@ -1,11 +1,11 @@
-import { getMessageList } from "./messages.js"
+import { clicked , clickedServerID} from "./live.js" 
+import { channelsHeaderNameUpdate } from "./logged-in-document.js"
 
 export async function createServerChannel(channelName){
     try{
-        let serverIDparam = sessionStorage.getItem("serverID");
         let response = await $.post("api/createServerChannel.php",
         {
-            serverID: serverIDparam,
+            serverID: clicked.server,
             channelname: channelName
         },
         function(responseInner, status){
@@ -22,10 +22,9 @@ export async function createServerChannel(channelName){
 
 export async function updateServerChannel(newChannelName){
     try{
-        let toUpdateChannelID = sessionStorage.getItem("channelID");
         let response = await $.post("api/updateServerChannel.php",
         {
-            channelID: toUpdateChannelID,
+            channelID: clicked.channels[clickedServerID()],
             newchannelname: newChannelName
         },
         function(responseInner, status){
@@ -42,10 +41,9 @@ export async function updateServerChannel(newChannelName){
 
 export async function deleteServerChannel(){
     try{
-        let toDeleteChannelID = sessionStorage.getItem("channelID");
         let response = await $.post("api/deleteServerChannel.php",
         {
-            channelID: toDeleteChannelID
+            channelID: clicked.channels[clickedServerID()]
         },
         function(responseInner, status){
             return responseInner   
@@ -61,7 +59,7 @@ export async function deleteServerChannel(){
 
 export async function getServerChannelList(){
     try{
-        let serverIDparam = sessionStorage.getItem("serverID");
+        let serverIDparam = clicked.server;
         let response = await $.get("api/getServerChannelList.php",
         {
             serverID: serverIDparam  
@@ -79,10 +77,9 @@ export async function getServerChannelList(){
 }
 
 function printServerChannels(channelList){
-
-    let channelID = sessionStorage.getItem("channelID");
+    let channelID = clicked.channels[clickedServerID()];
     $("#channels-wrapper").html("");
-    channelsMiddleBarShow()
+    channelsHeaderNameUpdate()
 
     let clickedClassIsSet = false;
 
@@ -104,8 +101,6 @@ function printServerChannels(channelList){
     if (!clickedClassIsSet) {
         const firstChild = $("#channels-wrapper > div:first-child")
         firstChild.addClass("clicked")
-        sessionStorage.setItem("channelID", firstChild.data("channelid"))
+        clicked.channels[clickedServerID()] = firstChild.data("channelid");
     }
-
-    getMessageList()
 }
