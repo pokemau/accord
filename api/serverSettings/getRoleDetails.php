@@ -21,26 +21,39 @@ if (isset($_POST["serverID"])) {
   return;
 }
 
-$GET_SERVER_ROLES_QUERY = "SELECT srole.*, COUNT(usrrole.roleID) AS userCount FROM tblserverrole srole LEFT JOIN tbluserserverrole usrrole ON srole.roleID = usrrole.roleID GROUP BY srole.roleID";
-$res = mysqli_query($connection, $GET_SERVER_ROLES_QUERY);
+
+$ROLE_ID;
+
+if (isset($_POST["roleID"])) {
+  $ROLE_ID = $_POST["serverID"];
+} else {
+  $response = array(
+    'status' => false,
+    'message' => "No role id (getRoleDetails.php)"
+  );
+  echo json_encode($response);
+  return;
+}
 
 
-$serverRoles = array();
+$GET_ROLE_QUERY = "SELECT canEditServer, canDeleteServer, canCreateChannel, canEditChannel FROM tblserverrole WHERE roleID='" . $ROLE_ID . "' AND serverID='" . $SERVER_ID . "'";
+$res = mysqli_query($connection, $GET_ROLE_QUERY);
+
+
+$roleDetails = array();
 while ($row = mysqli_fetch_assoc($res)) {
-  $serverRoles[] = array(
-    "roleID" => $row["roleID"],
-    "roleName" => $row["roleName"],
+  $roleDetails[] = array(
     "canEditServer" => $row["canEditServer"],
     "canDeleteServer" => $row["canDeleteServer"],
     "canCreateChannel" => $row["canCreateChannel"],
-    "canEditChannel" => $row["canEditChannel"],
-    "members" => $row["userCount"]
+    "canEditChannel" => $row["canEditChannel"]
   );
 }
 
 $response = array(
-  "status" => true,
-  "message" => "SERVER ROLES HERE",
-  "serverRoles" => $serverRoles
+  'status' => true,
+  'message' => "SUCCESS",
+  'roleDetails' => $roleDetails
 );
 echo json_encode($response);
+return;
