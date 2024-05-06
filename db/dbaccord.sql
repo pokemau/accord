@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 06, 2024 at 02:38 PM
+-- Generation Time: May 06, 2024 at 04:37 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -42,7 +42,10 @@ CREATE TABLE `tblaccount` (
 INSERT INTO `tblaccount` (`accountID`, `emailadd`, `username`, `password`, `usertype`) VALUES
 (1, 'rentillosa90@gmail.com', 'pokemau', '$2y$10$JksoIDI/X3wceJJ43uNu0O.Ibmrx2GLXN/hmmGx4zq/gkpwzkOiIi', 'user'),
 (2, 'jorash@gmail.com', 'Jorash', '$2y$10$LlSMMDXp6YPxQtxdTvMuiewAY9c2rgmts9wyYwvQdIdPxUY8/pB1O', 'user'),
-(3, 'jorash2@gmail.com', 'Jorash2', '$2y$10$L4QFfdYaFVXnq7lRZeSmfO7mG.s9nPYoONHwUmbmkOGOqdobcPVqi', 'user');
+(3, 'jorash2@gmail.com', 'Jorash2', '$2y$10$L4QFfdYaFVXnq7lRZeSmfO7mG.s9nPYoONHwUmbmkOGOqdobcPVqi', 'user'),
+(6, 'markbaring@gmail.com', 'Mark', '$2y$10$NzoW/053YEkyZywzWLRbEem8sD//6sg/ksFfNDP4Ouei7GSzx6RE2', 'user'),
+(7, 'slammkhelmer@gmail.com', 'Slamm', '$2y$10$3koR1mkkP1WDsMl318vhm.k0xG3mrUUihmQ8R4T0bAkaILyr4Psc6', 'user'),
+(8, 'charlesdarwin@gmail.com', 'Charles', '$2y$10$Z6LMLAeneuZxOcCbAZ1m2eW/ZpdfFvVBBKomD9psMJVeyUep7KAou', 'user');
 
 -- --------------------------------------------------------
 
@@ -60,7 +63,7 @@ CREATE TABLE `tblchannelid` (
 --
 
 INSERT INTO `tblchannelid` (`ID`, `channelID`) VALUES
-(1, 5);
+(1, 6);
 
 -- --------------------------------------------------------
 
@@ -82,10 +85,16 @@ CREATE TABLE `tblmessage` (
 --
 
 INSERT INTO `tblmessage` (`messageID`, `senderID`, `channelID`, `messageText`, `dateTimeSent`, `repliedMessageID`) VALUES
-(1, 2, 1, 'test', '2024-05-01 19:33:23', NULL),
-(2, 2, 1, 'nope', '2024-05-01 19:33:28', 1),
-(3, 2, 1, 'tesssssss', '2024-05-01 19:44:41', NULL),
-(4, 1, 3, 'hihihiha', '2024-05-01 20:43:48', NULL);
+(4, 1, 3, 'hihihiha', '2024-05-01 20:43:48', NULL),
+(19, 2, 2, 'test', '2024-05-06 21:10:47', NULL),
+(24, 2, 1, 'first message!', '2024-05-06 22:26:19', NULL),
+(28, 6, 1, 'naunhan jud ko dah!', '2024-05-06 22:31:16', 24),
+(29, 6, 1, 'naa raba koy naibgan classmate nato', '2024-05-06 22:31:24', NULL),
+(31, 8, 1, 'uy mark! kinsa kaha na?', '2024-05-06 22:35:17', 29),
+(32, 7, 1, 'murag kaybaw lagi ko ana hehe', '2024-05-06 22:35:45', NULL),
+(33, 2, 1, 'kinsa?', '2024-05-06 22:36:16', NULL),
+(34, 7, 1, 'secret ;P', '2024-05-06 22:36:28', NULL),
+(35, 2, 1, 'slamm momints', '2024-05-06 22:36:38', NULL);
 
 -- --------------------------------------------------------
 
@@ -188,7 +197,10 @@ CREATE TABLE `tbluser` (
 INSERT INTO `tbluser` (`userID`, `accountID`, `displayname`, `gender`, `birthdate`) VALUES
 (1, 1, 'pokemau', 'none', '2003-11-08'),
 (2, 2, 'Jorash', 'none', '2024-04-01'),
-(3, 3, 'Jorash2', 'none', '2024-04-01');
+(3, 3, 'Jorash2', 'none', '2024-04-01'),
+(6, 6, 'MarkieBaringers', 'none', '2003-11-26'),
+(7, 7, 'SlummKhulmir', 'none', '2004-06-04'),
+(8, 8, 'CharlesDarwin', 'none', '2003-04-24');
 
 -- --------------------------------------------------------
 
@@ -211,7 +223,10 @@ INSERT INTO `tbluserserver` (`userServerID`, `userID`, `serverID`) VALUES
 (5, 1, 5),
 (6, 1, 6),
 (7, 2, 5),
-(8, 3, 5);
+(8, 3, 5),
+(10, 6, 4),
+(11, 7, 4),
+(12, 8, 4);
 
 -- --------------------------------------------------------
 
@@ -318,19 +333,19 @@ ALTER TABLE `tbluserserverrole`
 -- AUTO_INCREMENT for table `tblaccount`
 --
 ALTER TABLE `tblaccount`
-  MODIFY `accountID` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `accountID` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `tblmessage`
 --
 ALTER TABLE `tblmessage`
-  MODIFY `messageID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `messageID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `tblserver`
 --
 ALTER TABLE `tblserver`
-  MODIFY `serverID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `serverID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `tblserverrole`
@@ -342,13 +357,13 @@ ALTER TABLE `tblserverrole`
 -- AUTO_INCREMENT for table `tbluser`
 --
 ALTER TABLE `tbluser`
-  MODIFY `userID` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `userID` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `tbluserserver`
 --
 ALTER TABLE `tbluserserver`
-  MODIFY `userServerID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `userServerID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `tbluserserverrole`

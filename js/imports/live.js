@@ -32,6 +32,7 @@ export async function getCurrUserID(){
             throw new Error(String(response['message']));
         }
         sessionStorage.setItem("userID", response['userID']);
+        sessionStorage.setItem("displayname", response['displayname']);
     }catch(error){
         throw error;
     }

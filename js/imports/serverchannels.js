@@ -60,6 +60,7 @@ export async function deleteServerChannel(){
 export async function getServerChannelList(){
     try{
         let serverIDparam = clicked.server;
+        if(serverIDparam == undefined) return;
         let response = await $.get("api/getServerChannelList.php",
         {
             serverID: serverIDparam  

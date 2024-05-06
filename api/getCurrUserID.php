@@ -10,9 +10,14 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
+$sqlGetDisplayname = "SELECT displayname FROM tbluser WHERE userID = " . $_SESSION['userid'];
+$result = mysqli_query($connection, $sqlGetDisplayname);
+$row = mysqli_fetch_assoc($result);
+
 $response = array(
     'status' => true,
-    'userID' => $_SESSION['userid']
+    'userID' => $_SESSION['userid'],
+    'displayname' => $row['displayname']
 );
 echo json_encode($response);
   

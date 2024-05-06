@@ -324,6 +324,10 @@ a.message-text {
 
   display: none;
 }
+#right-page > table{
+  margin-left: auto;
+  margin-right: auto;
+}
 #tblservers {
   width: 70%;
   padding: 30px;

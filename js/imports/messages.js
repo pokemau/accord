@@ -1,4 +1,4 @@
-import { clicked , clickedServerID} from "./live.js"
+import { clicked, clickedServerID } from "./live.js"
 import { messagesHeaderNameUpdate } from "./logged-in-document.js"
 import { isToday, isYesterday, tConvert, formatDate} from "./datetime.js"
 
@@ -67,6 +67,7 @@ export async function deleteMessage(){
 export async function getMessageList(){
     try{
         let channelIDparam = clicked.channels[clickedServerID()];
+        if(channelIDparam == undefined) return;
         let response = await $.get("api/getMessageList.php",
         {
             channelID: channelIDparam  

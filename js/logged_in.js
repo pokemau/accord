@@ -8,6 +8,7 @@ import { clicked, getClickedInfo, updateClickedInfo, clickedServerID, clickedCha
     from "./imports/live.js";
 import { getSearchedUserList } from "./imports/searches.js";
 import { showPopUpDialog, hidePopUpDialog, hideAllPopUpDialog, showMessage } from "./imports/utilities.js";
+import { getReportData } from "./imports/MAY07REPORT.js";
 $(document).ready(function(){
     getClickedInfo();
     refresh();
@@ -54,7 +55,7 @@ $(document).ready(function(){
 
         promiseChannels.done(function(){
             if($(".channel-div.clicked")[0]){       //if channel div has clicked, wait for updated channels before showing messages 
-                promiseHandler(getMessageList());
+                promiseHandler(getMessageList(), ()=>{getReportData()});
             }
         });
     }
@@ -305,12 +306,15 @@ $(document).ready(function(){
         let messageText = $("#taInpMessage").val();
         let repliedMessageID = $("#taInpMessage").data("repliedmessageid");
         promiseHandler(sendMessage(messageText, repliedMessageID), refresh());
+        $("#taInpMessage").data("repliedmessageid", -1);
     }); 
 
     function mouseOnMessageHandlerIn(messageDiv){
-        if($(messageDiv).data("senderid") == sessionStorage.getItem("userID")){
-            $(messageDiv).find(".message-options").show();
+        if($(messageDiv).data("senderid") != sessionStorage.getItem("userID")){
+            $(messageDiv).find(".message-options").find(".btnMsgEdit").hide();
+            $(messageDiv).find(".message-options").find(".btnMsgDelete").hide();
         }
+        $(messageDiv).find(".message-options").show();
         $(messageDiv).addClass("hovered");
     }
 
