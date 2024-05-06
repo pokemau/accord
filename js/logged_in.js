@@ -10,7 +10,6 @@ import { getSearchedUserList } from "./imports/searches.js";
 import { showPopUpDialog, hidePopUpDialog, hideAllPopUpDialog, showMessage } from "./imports/utilities.js";
 $(document).ready(function(){
     getClickedInfo();
-    console.log(clicked);
     refresh();
       
     function promiseHandler(promise, successCallback = null, errorCallback = null){
@@ -35,7 +34,6 @@ $(document).ready(function(){
     }
 
     function refresh(){
-        console.log("REFRESHED");
         promiseHandler(getCurrUserID());
         hideAllPopUpDialog();
         $(".options-form").hide();
