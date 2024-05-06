@@ -7,12 +7,10 @@ export function channelsHeaderNameUpdate(){
     $("#servernameHeader").text(servername);
 }
 export function messagesHeaderNameUpdate(){
-    $("#channelNameHeader").text("#"+$(".channel-div.clicked").children().text());
-
     let channelname = "#"+$(".channel-div.clicked").children().text();
     if(channelname.length > 12){
-        let nameSliced = channelname.slice(0, 13);
-        channelname = nameSliced[0] + "...";
+        let nameSliced = channelname.slice(0, 11);
+        channelname = nameSliced + "...";
     }
     $("#channelNameHeader").text(channelname);
 }

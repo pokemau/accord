@@ -39,6 +39,7 @@ $(document).ready(function(){
         hideAllPopUpDialog();
         $(".options-form").hide();
         $("#replying-to-group").hide();
+        $("#taInpMessage").data("repliedmessageid", -1);
         let promiseServers = getServerList();
         let promiseChannels = $.Deferred();     //initialize a promise-type in case we dont go through an async func
         if($(".server-div.clicked")){        //if clicked server-div exists already, just update the channelslist
@@ -71,7 +72,7 @@ $(document).ready(function(){
         if(event.keyCode == 13 && !event.shiftKey){    //pressed Enter key
             let inputElem = $(event.currentTarget);
             let inputVal = inputElem.val();
-            inputElem.val(inputVal.slice(0, inputVal.length-1));        //removes "enter" input
+            inputElem.val(inputVal.slice(0, inputVal.length));        //removes "enter" input
             $(event.currentTarget).parent().find(".submitBtn").first().click();
             $(event.currentTarget).val("");
         }
@@ -106,7 +107,7 @@ $(document).ready(function(){
         $(this).addClass("clicked");
         clicked.server = clickedServerID();
         updateClickedInfo();
-        promiseHandler(getServerChannelList(), ()=>{promiseHandler(getMessageList())});
+        promiseHandler(getServerChannelList(), ()=>{promiseHandler(getMessageList(), ()=>{getReportData()})});
     });
 
     $("#channels-wrapper").on('click', '.channel-div', function(){
@@ -117,9 +118,8 @@ $(document).ready(function(){
         clicked.channels[clickedServerID()] = clickedChannelID();
         updateClickedInfo();
 
-        $("#right-page").hide();
         $("#btnCloseReplyGroup").click();       //close reply-to-group when changing channel
-        promiseHandler(getMessageList(), ()=>{}, (error)=>{showMessage(error)});
+        promiseHandler(getMessageList(), ()=>{getReportData()}, (error)=>{showMessage(error)});
     });
 
     $("#btnCreateServerSection").click(() => {
@@ -135,10 +135,11 @@ $(document).ready(function(){
         let serverName = $("#txtServerName").val();
         if(serverName == "") return;
         $(".lblServerNameConfirm").text(serverName);
+        $("#create-server-confirm").find("#btnYESCreateServerConfirm").data("servername", serverName);
         showPopUpDialog($("#create-server-confirm"));
     });
     $("#btnYESCreateServerConfirm").click((event) => {
-        let serverName = $("#txtServerName").val();
+        let serverName = $(event.currentTarget).data("servername");
         promiseHandler(createServer(serverName), ()=>{
             refresh();
             showMessage("Successfully created the server!");
@@ -153,11 +154,12 @@ $(document).ready(function(){
         let channelName = $("#txtChannelName").val();
         if(channelName == "") return;
         $(".lblChannelNameConfirm").text(channelName);
-        $(".lblServerNameConfirm").text($(".server-div.clicked").children().text())
+        $(".lblServerNameConfirm").text($(".server-div.clicked").children().text());
+        $("#create-channel-confirm").find("#btnYESCreateChannelConfirm").data("channelname", channelName);
         showPopUpDialog($("#create-channel-confirm"));
     });
     $("#btnYESCreateChannelConfirm").click((event) => {
-        let channelName = $("#txtChannelName").val();
+        let channelName = $(event.currentTarget).data("channelname");
 
         promiseHandler(createServerChannel(channelName), ()=>{
             refresh();
@@ -214,23 +216,13 @@ $(document).ready(function(){
     });
 
     $("#serverSettings").click(()=>{
-        window.location.href = "server.php";
+        // window.location.href = "server.php";
+        showPopUpDialog($("#update-server-section"));
     });
 
     $("#serverDelete").click(()=>{
         $(".lblServerNameConfirm").text($(".server-div.clicked").children().text())
         $("#delete-server-confirm").show();
-    });
-
-    $("#btnYESUpdateServerConfirm").click((event) => {
-        let newServerName = $("#txtNewServerName").val();
-
-        promiseHandler(updateServer(newServerName), ()=>{
-            refresh();
-            showMessage("Successfully updated the server!");
-        },(error)=>{
-            closePopUpForm(event.currentTarget);
-        });
     });
 
     $("#btnYESDeleteServerConfirm").click((event) => {
@@ -248,7 +240,18 @@ $(document).ready(function(){
         if(newServerName == "") return;
         $(".lblServerNameConfirm").text($(".server-div.clicked").children().text())
         $(".lblNewServerName").text(newServerName);
+        $("#update-server-confirm").find("#btnYESUpdateServerConfirm").data("newservername", newServerName);
         showPopUpDialog($("#update-server-confirm"));
+    });
+
+    $("#btnYESUpdateServerConfirm").click((event) => {
+        let newServerName = $(event.currentTarget).data("newservername");
+        promiseHandler(updateServer(newServerName), ()=>{
+            refresh();
+            showMessage("Successfully updated the server!");
+        },(error)=>{
+            closePopUpForm(event.currentTarget);
+        });
     });
 
     //channel update and delete
@@ -284,10 +287,11 @@ $(document).ready(function(){
         if(newChannelName == "") return;
         $(".lblChannelNameConfirm").text($(".channel-div.clicked").children().text())
         $(".lblNewChannelName").text(newChannelName);
+        $("#update-channel-confirm").find("#btnYESUpdateChannelConfirm").data("newchannelname", newChannelName);
         showPopUpDialog($("#update-channel-confirm"));
     });
     $("#btnYESUpdateChannelConfirm").click((event) => {
-        let newChannelName = $("#txtNewChannelName").val();
+        let newChannelName = $(event.currentTarget).data("newchannelname");
         promiseHandler(updateServerChannel(newChannelName), ()=>{
             refresh();
             showMessage("Successfully updated the channel!");
@@ -307,6 +311,7 @@ $(document).ready(function(){
         let repliedMessageID = $("#taInpMessage").data("repliedmessageid");
         promiseHandler(sendMessage(messageText, repliedMessageID), refresh());
         $("#taInpMessage").data("repliedmessageid", -1);
+        $("#taInpMessage").val("");
     }); 
 
     function mouseOnMessageHandlerIn(messageDiv){
@@ -335,6 +340,7 @@ $(document).ready(function(){
         $("#taInpMessage").data("repliedmessageid", messageToReplyID);
         $("#replying-to-display-name").text($(messageDiv).find(".display-name").first().text());
         $("#replying-to-group").show();
+        $("#taInpMessage").focus();
     });
 
     $("#messages-wrapper").on('click', ".btnMsgEdit", function(){
@@ -395,8 +401,10 @@ $(document).ready(function(){
     $("#btnReport").click(() => {
         if($("#right-page").is(":visible")){
             $("#right-page").hide();
+            isReportShown = false;
         }else{
             $("#right-page").show();
+            isReportShown = true;
         }
     })
 

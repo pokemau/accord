@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 06, 2024 at 04:37 PM
+-- Generation Time: May 06, 2024 at 05:11 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -63,7 +63,7 @@ CREATE TABLE `tblchannelid` (
 --
 
 INSERT INTO `tblchannelid` (`ID`, `channelID`) VALUES
-(1, 6);
+(1, 17);
 
 -- --------------------------------------------------------
 
@@ -94,7 +94,22 @@ INSERT INTO `tblmessage` (`messageID`, `senderID`, `channelID`, `messageText`, `
 (32, 7, 1, 'murag kaybaw lagi ko ana hehe', '2024-05-06 22:35:45', NULL),
 (33, 2, 1, 'kinsa?', '2024-05-06 22:36:16', NULL),
 (34, 7, 1, 'secret ;P', '2024-05-06 22:36:28', NULL),
-(35, 2, 1, 'slamm momints', '2024-05-06 22:36:38', NULL);
+(35, 2, 1, 'slamm momints', '2024-05-06 22:36:38', NULL),
+(36, 2, 2, 'gasolo rako diri', '2024-05-06 22:39:14', NULL),
+(37, 2, 2, 'tan awa unsa kadaghan ako messages', '2024-05-06 22:39:21', NULL),
+(38, 2, 2, 'maurice tanyeca', '2024-05-06 22:39:32', NULL),
+(39, 2, 2, 'ror', '2024-05-06 22:39:53', NULL),
+(40, 2, 2, 'ror\n', '2024-05-06 22:41:40', NULL),
+(43, 2, 15, 'ako ra usa diri\n', '2024-05-06 22:57:31', NULL),
+(44, 2, 16, 'nothing here\n', '2024-05-06 22:57:44', NULL),
+(45, 2, 16, 'dasasdda', '2024-05-06 23:00:31', NULL),
+(46, 2, 3, 'test', '2024-05-06 23:00:42', NULL),
+(50, 2, 15, 'wala ra ni sud kay di ko naning\n', '2024-05-06 23:08:30', NULL),
+(51, 2, 16, 'kalimot kog turn in atong math na assignment pero patan awon raman tog videos so wala ra guro to\n', '2024-05-06 23:09:21', NULL),
+(52, 2, 15, 'maurice ayaw ni sudla ang server pls\n', '2024-05-06 23:09:46', NULL),
+(53, 2, 3, 'pass na ta uy\n', '2024-05-06 23:09:56', NULL),
+(54, 2, 3, 'dugaya na diay ani uy\n', '2024-05-06 23:10:09', 4),
+(55, 2, 3, 'May 1? sheesh\n', '2024-05-06 23:11:23', 4);
 
 -- --------------------------------------------------------
 
@@ -127,7 +142,8 @@ CREATE TABLE `tblserver` (
 INSERT INTO `tblserver` (`serverID`, `ownerID`, `servername`) VALUES
 (4, 2, 'Yahallo'),
 (5, 1, 'test'),
-(6, 1, 'server 2');
+(6, 1, 'server 2'),
+(16, 2, 'SchoolServer');
 
 -- --------------------------------------------------------
 
@@ -149,7 +165,9 @@ INSERT INTO `tblserverchannel` (`channelID`, `serverID`, `channelname`) VALUES
 (1, 4, 'general'),
 (2, 4, 'chat here'),
 (3, 5, 'general'),
-(4, 6, 'general');
+(4, 6, 'general'),
+(15, 16, 'general'),
+(16, 16, 'assignment');
 
 -- --------------------------------------------------------
 
@@ -226,7 +244,9 @@ INSERT INTO `tbluserserver` (`userServerID`, `userID`, `serverID`) VALUES
 (8, 3, 5),
 (10, 6, 4),
 (11, 7, 4),
-(12, 8, 4);
+(12, 8, 4),
+(21, 2, 16),
+(22, 1, 4);
 
 -- --------------------------------------------------------
 
@@ -339,13 +359,13 @@ ALTER TABLE `tblaccount`
 -- AUTO_INCREMENT for table `tblmessage`
 --
 ALTER TABLE `tblmessage`
-  MODIFY `messageID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `messageID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT for table `tblserver`
 --
 ALTER TABLE `tblserver`
-  MODIFY `serverID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `serverID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `tblserverrole`
@@ -363,7 +383,7 @@ ALTER TABLE `tbluser`
 -- AUTO_INCREMENT for table `tbluserserver`
 --
 ALTER TABLE `tbluserserver`
-  MODIFY `userServerID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `userServerID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `tbluserserverrole`
