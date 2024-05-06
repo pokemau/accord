@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 01, 2024 at 02:05 PM
+-- Generation Time: May 06, 2024 at 02:38 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -60,7 +60,7 @@ CREATE TABLE `tblchannelid` (
 --
 
 INSERT INTO `tblchannelid` (`ID`, `channelID`) VALUES
-(1, 3);
+(1, 5);
 
 -- --------------------------------------------------------
 
@@ -84,7 +84,8 @@ CREATE TABLE `tblmessage` (
 INSERT INTO `tblmessage` (`messageID`, `senderID`, `channelID`, `messageText`, `dateTimeSent`, `repliedMessageID`) VALUES
 (1, 2, 1, 'test', '2024-05-01 19:33:23', NULL),
 (2, 2, 1, 'nope', '2024-05-01 19:33:28', 1),
-(3, 2, 1, 'tesssssss', '2024-05-01 19:44:41', NULL);
+(3, 2, 1, 'tesssssss', '2024-05-01 19:44:41', NULL),
+(4, 1, 3, 'hihihiha', '2024-05-01 20:43:48', NULL);
 
 -- --------------------------------------------------------
 
@@ -115,7 +116,9 @@ CREATE TABLE `tblserver` (
 --
 
 INSERT INTO `tblserver` (`serverID`, `ownerID`, `servername`) VALUES
-(4, 2, 'Yahallo');
+(4, 2, 'Yahallo'),
+(5, 1, 'test'),
+(6, 1, 'server 2');
 
 -- --------------------------------------------------------
 
@@ -135,7 +138,9 @@ CREATE TABLE `tblserverchannel` (
 
 INSERT INTO `tblserverchannel` (`channelID`, `serverID`, `channelname`) VALUES
 (1, 4, 'general'),
-(2, 4, 'chat here');
+(2, 4, 'chat here'),
+(3, 5, 'general'),
+(4, 6, 'general');
 
 -- --------------------------------------------------------
 
@@ -148,8 +153,19 @@ CREATE TABLE `tblserverrole` (
   `serverID` int(7) NOT NULL,
   `roleName` varchar(60) NOT NULL,
   `canEditServer` int(1) NOT NULL,
-  `canDeleteServer` int(1) NOT NULL
+  `canDeleteServer` int(1) NOT NULL,
+  `canCreateChannel` int(1) NOT NULL,
+  `canEditChannel` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tblserverrole`
+--
+
+INSERT INTO `tblserverrole` (`roleID`, `serverID`, `roleName`, `canEditServer`, `canDeleteServer`, `canCreateChannel`, `canEditChannel`) VALUES
+(1, 5, 'role1', 1, 1, 1, 1),
+(7, 5, 'role2', 1, 0, 0, 0),
+(8, 5, 'new', 1, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -191,7 +207,32 @@ CREATE TABLE `tbluserserver` (
 --
 
 INSERT INTO `tbluserserver` (`userServerID`, `userID`, `serverID`) VALUES
-(4, 2, 4);
+(4, 2, 4),
+(5, 1, 5),
+(6, 1, 6),
+(7, 2, 5),
+(8, 3, 5);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbluserserverrole`
+--
+
+CREATE TABLE `tbluserserverrole` (
+  `userServerRoleID` int(11) NOT NULL,
+  `userID` int(11) NOT NULL,
+  `roleID` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbluserserverrole`
+--
+
+INSERT INTO `tbluserserverrole` (`userServerRoleID`, `userID`, `roleID`) VALUES
+(2, 1, 1),
+(3, 2, 1),
+(4, 2, 7);
 
 --
 -- Indexes for dumped tables
@@ -262,6 +303,14 @@ ALTER TABLE `tbluserserver`
   ADD KEY `userserver-server` (`serverID`);
 
 --
+-- Indexes for table `tbluserserverrole`
+--
+ALTER TABLE `tbluserserverrole`
+  ADD PRIMARY KEY (`userServerRoleID`),
+  ADD KEY `fk_roleid` (`roleID`),
+  ADD KEY `fk_userid` (`userID`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -275,19 +324,19 @@ ALTER TABLE `tblaccount`
 -- AUTO_INCREMENT for table `tblmessage`
 --
 ALTER TABLE `tblmessage`
-  MODIFY `messageID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `messageID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `tblserver`
 --
 ALTER TABLE `tblserver`
-  MODIFY `serverID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `serverID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `tblserverrole`
 --
 ALTER TABLE `tblserverrole`
-  MODIFY `roleID` int(7) NOT NULL AUTO_INCREMENT;
+  MODIFY `roleID` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `tbluser`
@@ -299,7 +348,13 @@ ALTER TABLE `tbluser`
 -- AUTO_INCREMENT for table `tbluserserver`
 --
 ALTER TABLE `tbluserserver`
-  MODIFY `userServerID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `userServerID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `tbluserserverrole`
+--
+ALTER TABLE `tbluserserverrole`
+  MODIFY `userServerRoleID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
@@ -349,6 +404,13 @@ ALTER TABLE `tbluser`
 ALTER TABLE `tbluserserver`
   ADD CONSTRAINT `userserver-server` FOREIGN KEY (`serverID`) REFERENCES `tblserver` (`serverID`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `userserver-user` FOREIGN KEY (`userID`) REFERENCES `tblaccount` (`accountID`);
+
+--
+-- Constraints for table `tbluserserverrole`
+--
+ALTER TABLE `tbluserserverrole`
+  ADD CONSTRAINT `fk_roleid` FOREIGN KEY (`roleID`) REFERENCES `tblserverrole` (`roleID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_userid` FOREIGN KEY (`userID`) REFERENCES `tbluser` (`userID`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
