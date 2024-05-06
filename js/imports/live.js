@@ -6,9 +6,12 @@ export function getClickedInfo(){
     }else{
         clicked = {
             server: -1,
-            channels: []
+            channels: {}
         };
     }
+}
+export function updateClickedInfo(){
+    sessionStorage.setItem('clicked', JSON.stringify(clicked));
 }
 
 export function clickedServerID(){

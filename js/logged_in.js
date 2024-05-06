@@ -4,12 +4,13 @@ import { createServerChannel, updateServerChannel, deleteServerChannel, getServe
     from "./imports/serverchannels.js";
 import { sendMessage, updateMessage, deleteMessage, getMessageList }
     from "./imports/messages.js";
-import { clicked, getClickedInfo, clickedServerID, clickedChannelID, getCurrUserID} 
+import { clicked, getClickedInfo, updateClickedInfo, clickedServerID, clickedChannelID, getCurrUserID} 
     from "./imports/live.js";
 import { getSearchedUserList } from "./imports/searches.js";
 import { showPopUpDialog, hidePopUpDialog, hideAllPopUpDialog, showMessage } from "./imports/utilities.js";
 $(document).ready(function(){
     getClickedInfo();
+    console.log(clicked);
     refresh();
       
     function promiseHandler(promise, successCallback = null, errorCallback = null){
@@ -34,6 +35,7 @@ $(document).ready(function(){
     }
 
     function refresh(){
+        console.log("REFRESHED");
         promiseHandler(getCurrUserID());
         hideAllPopUpDialog();
         $(".options-form").hide();
@@ -59,7 +61,7 @@ $(document).ready(function(){
         });
     }
     function stopButtonIfInputEmpty(event){
-        if($(event.currentTarget).parent().find("input, textarea").first().val().length === 0){
+        if($(event.currentTarget).parent().parent().find("input, textarea").first().val().length === 0){
             return true;
         }
         return false;
@@ -67,7 +69,10 @@ $(document).ready(function(){
 
     //pressing enter when typing in input/textarea
     $("input, textarea").on('keyup', (event) => {
-        if(event.keyCode == 13){    //pressed Enter key
+        if(event.keyCode == 13 && !event.shiftKey){    //pressed Enter key
+            let inputElem = $(event.currentTarget);
+            let inputVal = inputElem.val();
+            inputElem.val(inputVal.slice(0, inputVal.length-1));        //removes "enter" input
             $(event.currentTarget).parent().find(".submitBtn").first().click();
             $(event.currentTarget).val("");
         }
@@ -101,7 +106,7 @@ $(document).ready(function(){
         $(".server-div.clicked").removeClass("clicked");
         $(this).addClass("clicked");
         clicked.server = clickedServerID();
-        sessionStorage.setItem('clicked', JSON.stringify(clicked));
+        updateClickedInfo();
         promiseHandler(getServerChannelList(), ()=>{promiseHandler(getMessageList())});
     });
 
@@ -111,7 +116,7 @@ $(document).ready(function(){
         $(".channel-div.clicked").removeClass("clicked");
         $(this).addClass("clicked");
         clicked.channels[clickedServerID()] = clickedChannelID();
-        sessionStorage.setItem('clicked', JSON.stringify(clicked));
+        updateClickedInfo();
 
         $("#right-page").hide();
         $("#btnCloseReplyGroup").click();       //close reply-to-group when changing channel
@@ -376,8 +381,8 @@ $(document).ready(function(){
 
     // direct messages
     $("#direct-messages-cont").click(() => {
-        sessionStorage.setItem("serverID", -1)
-        sessionStorage.setItem("channelID", -1)
+        // sessionStorage.setItem("serverID", -1)
+        // sessionStorage.setItem("channelID", -1)
 
 
         // $("#channels-header").html(`

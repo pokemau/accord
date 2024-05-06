@@ -106,7 +106,9 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
         </div>
         <div id="message-inputgroup">
           <textarea id="taInpMessage" placeholder="Message here" data-repliedmessageid='-1'></textarea>
-          <button id="btnSendMessage" class="submitBtn">Send</button>
+          <div class="submit-btns">
+            <button id="btnSendMessage" class="submitBtn">Send</button>
+          </div>
         </div>
       </div>
     </div>

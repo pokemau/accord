@@ -1,4 +1,4 @@
-import { clicked , clickedServerID} from "./live.js" 
+import { clicked , updateClickedInfo, clickedServerID} from "./live.js" 
 import { channelsHeaderNameUpdate } from "./logged-in-document.js"
 
 export async function createServerChannel(channelName){
@@ -102,5 +102,6 @@ function printServerChannels(channelList){
         const firstChild = $("#channels-wrapper > div:first-child")
         firstChild.addClass("clicked")
         clicked.channels[clickedServerID()] = firstChild.data("channelid");
+        updateClickedInfo();
     }
 }

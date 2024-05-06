@@ -1,4 +1,4 @@
-import { clicked } from "./live.js" 
+import { clicked, updateClickedInfo } from "./live.js" 
 
 export async function createServer(serverName){
     try{
@@ -112,6 +112,7 @@ function printServers(serverList){
         const firstChild = $("#servers-wrapper > div:first-child")
         firstChild.addClass("clicked")
         clicked.server = firstChild.data("serverid");
+        updateClickedInfo();
     }
 
 }
