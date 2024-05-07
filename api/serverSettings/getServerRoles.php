@@ -21,7 +21,7 @@ if (isset($_POST["serverID"])) {
   return;
 }
 
-$GET_SERVER_ROLES_QUERY = "SELECT srole.*, COUNT(usrrole.roleID) AS userCount FROM tblserverrole srole LEFT JOIN tbluserserverrole usrrole ON srole.roleID = usrrole.roleID GROUP BY srole.roleID";
+$GET_SERVER_ROLES_QUERY = "SELECT srole.*, COUNT(usrrole.roleID) AS userCount FROM tblserverrole srole LEFT JOIN tbluserserverrole usrrole ON srole.roleID = usrrole.roleID WHERE serverID='" . $SERVER_ID . "' GROUP BY srole.roleID";
 $res = mysqli_query($connection, $GET_SERVER_ROLES_QUERY);
 
 
