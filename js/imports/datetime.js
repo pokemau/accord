@@ -6,7 +6,7 @@ export function isToday(someDate){
 export function isYesterday(someDate){
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
-    checkDate(someDate, yesterday);
+    return checkDate(someDate, yesterday);
 }
 export function checkDate(someDate, compareDate){
     return someDate.getDate() == compareDate.getDate() &&

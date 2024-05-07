@@ -52,6 +52,14 @@ if(isset($_GET["channelID"])){
 
 
 $sqlAllServers = "SELECT servername FROM tblserver";
+
+$sqlAllServerMembers = "SELECT displayname, birthdate FROM tbluserserver
+    LEFT JOIN tbluser ON tbluserserver.userID = tbluser.userID
+    WHERE serverID = $serverID";
+
+$sqlAllMessagesFromUser = "SELECT messageText, dateTimeSent FROM tblmessage
+    WHERE senderID = $currUser AND channelID = $channelID";
+
 $resultAllServers = mysqli_query($connection, $sqlAllServers);
 
 $allServersData = array();
@@ -59,9 +67,6 @@ while($row = mysqli_fetch_assoc($resultAllServers)){
     $allServersData[] = $row['servername'];
 }
 
-$sqlAllServerMembers = "SELECT displayname, birthdate FROM tbluserserver
-    LEFT JOIN tbluser ON tbluserserver.userID = tbluser.userID
-    WHERE serverID = $serverID";
 $resultAllServerMembers = mysqli_query($connection, $sqlAllServerMembers);
 $allServerMembersData = array();
 while($row = mysqli_fetch_assoc($resultAllServerMembers)){
@@ -71,8 +76,7 @@ while($row = mysqli_fetch_assoc($resultAllServerMembers)){
     );
 }
 
-$sqlAllMessagesFromUser = "SELECT messageText, dateTimeSent FROM tblmessage
-    WHERE senderID = $currUser AND channelID = $channelID";
+
 $resultAllMessagesFromUser = mysqli_query($connection, $sqlAllMessagesFromUser);
 $allMessagesFromUser = array();
 while($row = mysqli_fetch_assoc($resultAllMessagesFromUser)){
