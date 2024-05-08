@@ -216,8 +216,8 @@ $(document).ready(function(){
     });
 
     $("#serverSettings").click(()=>{
-        // window.location.href = "server.php";
-        showPopUpDialog($("#update-server-section"));
+        window.location.href = "server.php";
+        // showPopUpDialog($("#update-server-section"));
     });
 
     $("#serverDelete").click(()=>{
