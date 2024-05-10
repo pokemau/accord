@@ -58,6 +58,7 @@ if (isset($_POST["email"])) {
   return;
 }
 
+/*
 if (isset($_POST["userName"])) {
   $userName = $_POST["userName"];
 } else {
@@ -68,9 +69,10 @@ if (isset($_POST["userName"])) {
   echo json_encode($response);
   return;
 }
+*/
 
 
-
+/*
 if (checkIfUsernameExists($connection, $userName)) {
   $response = array(
     'status' => false,
@@ -79,9 +81,10 @@ if (checkIfUsernameExists($connection, $userName)) {
   echo json_encode($response);
   return;
 }
+*/
 
 // update username in tblaccount
-updateUserAccount($connection, $userID, $userName, $email);
+updateUserAccount($connection, $userID, $email);
 updateUserProfile($connection, $userID, $displayName, $gender);
 
 $response = array(
@@ -97,9 +100,9 @@ function updateUserProfile($connection, $userID, $displayName, $gender) {
   mysqli_query($connection, $QUERY_udpateUser);
 }
 
-function updateUserAccount($connection, $userID, $userName, $email) {
+function updateUserAccount($connection, $userID, $email) {
   $accountID = getAccountID($connection, $userID);
-  $QUERY_setUsername = "UPDATE tblaccount SET username='" . $userName . "', emailadd='" . $email . "' WHERE accountID='" . $accountID . "'";
+  $QUERY_setUsername = "UPDATE tblaccount SET emailadd='" . $email . "' WHERE accountID='" . $accountID . "'";
   mysqli_query($connection, $QUERY_setUsername);
 }
 
