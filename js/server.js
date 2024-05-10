@@ -5,6 +5,7 @@ import {
     getRoleDetails,
     getServerDetails,
     getServerRoles,
+    updateServer,
 } from "./imports/serversettings.js";
 import { getCheckboxValue } from "./imports/utilities.js";
 
@@ -38,6 +39,10 @@ $(document).ready(function () {
         if (inputVal == serverName) {
             return;
         }
+
+        updateServer(currServerID, serverName).then(function (res) {
+            console.log(res);
+        });
 
         console.log("YES");
     });
