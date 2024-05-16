@@ -14,10 +14,6 @@ import { getReportData_17 } from "./imports/MAY17REPORT.js";
 $(document).ready(function(){
     getClickedInfo();
     refresh();
-
-    getReportData_17().then(res => {
-        console.log(res)
-    });
       
     function promiseHandler(promise, successCallback = null, errorCallback = null){
         promise

@@ -81,7 +81,10 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
       <div id="messages-channel-header">
         <h3 id="channelNameHeader"></h3>
         <div id='buttons-div'>
-          <button id="btnReport">Report</button>
+
+          <a href="report.php">
+            <button id="btnReport">Report</button>
+          </a>
           <img src="images\dropdown_icon.png" alt="DropdownIcon" id="channelOptionDropdown" class="options-dropdown">
         </div>
         <div id="channel-options" class="options-form">

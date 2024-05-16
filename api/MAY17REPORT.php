@@ -45,7 +45,6 @@ $QUERY_GET_MESSAGE_COUNT = "
 $result = $connection->query($QUERY_GET_MESSAGE_COUNT);
 
 
-$MSG_COUNT = array();
 if ($result) {
   $data = array();
   while ($row = $result->fetch_assoc()) {
@@ -54,14 +53,7 @@ if ($result) {
       'servername' => $row['servername'],
       'totalMessages' => $row['totalMessages']
     );
-
-    print_r($row);
   }
-  // echo json_encode(array(
-  //   'status' => true,
-  //   'message' => 'SUCCESS',
-  //   'data' => $data
-  // ));
 }
 
 
