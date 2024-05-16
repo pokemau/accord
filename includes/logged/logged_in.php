@@ -33,9 +33,9 @@ $resultAllUserServer = mysqli_query($connection, $sqlAllUserServer);
     <div id="servers-sidebar">
       <div id="servers-header">
         <!-- <h3>SERVERS</h3> -->
-        <div id="direct-messages-cont">
+        <!-- <div id="direct-messages-cont">
           <img width="40" height="40" src="images/message_icon.png" alt="">
-        </div>
+        </div> -->
 
         <div id="server-create-start">
           <button id="btnCreateServerSection">+</button>
