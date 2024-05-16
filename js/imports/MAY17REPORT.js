@@ -1,16 +1,30 @@
-export async function getReportData_17() {
-    let response = await $.get(
-        "api/MAY17REPORT.php",
-        {},
-        function (responseInner, status) {
-            return responseInner;
-        }
-    );
+// import { clicked, clickedServerID } from "./live.js"
 
-    printReportData(response["allData"]);
+$(document).ready(function () {
+    getReportData_17()
+        .then(function (res) {
+            printData(res["allData"]);
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+});
+
+export async function getReportData_17() {
+    try {
+        let response = await $.get(
+            "api/MAY17REPORT.php",
+            function (responseInner, status) {
+                return responseInner;
+            }
+        );
+        return response;
+    } catch (error) {
+        throw error;
+    }
 }
 
-function printReportData(allData) {
+function printData(allData) {
     const div = $("#report-main-cont");
     console.log(allData);
     const serverCount = allData.serverCount;
