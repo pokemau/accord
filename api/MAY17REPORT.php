@@ -11,6 +11,9 @@ if (session_status() === PHP_SESSION_NONE) {
 $SERVERCOUNT;
 $USERCOUNT;
 $MSG_COUNT = array();
+$TOPUSERS_WITH_LEASTMESSAGES = array();
+$AVGUSERCOUNT = array();
+$HIGHESTUSERCOUNT;
 
 // total number of servers
 $QUERY_GET_SERVER_COUNT = "SELECT COUNT(*) AS 'count' FROM tblserver";
@@ -55,7 +58,7 @@ if ($result) {
       'totalMessages' => $row['totalMessages']
     );
 
-    print_r($row);
+    // print_r($row);
   }
   // echo json_encode(array(
   //   'status' => true,
@@ -64,6 +67,50 @@ if ($result) {
   // ));
 }
 
+//top users with the least messages
+$QUERY_GET_TOP_USERS_LEAST_MESSAGES = "SELECT displayname, COUNT(messageID) message_count from tblmessage
+  LEFT JOIN tbluser ON senderID = userID GROUP BY senderID ORDER BY message_count LIMIT 5";
+$res = $connection->query($QUERY_GET_TOP_USERS_LEAST_MESSAGES);
+if($res){
+  while($row = $res ->fetch_assoc()){
+    $TOPUSERS_WITH_LEASTMESSAGES[] = array(
+      'displayname' => $row['displayname'],
+      'message_count' => $row['message_count']
+    );
+  }
+}
+
+//average number of user of all server
+$QUERY_GET_AVG_USER_COUNT = "SELECT servername, AVG(user_count) avg_count from 
+  (SELECT s.servername, COUNT(userID) user_count FROM tbluserserver us 
+  LEFT JOIN tblserver s ON us.serverID = s.serverID 
+  GROUP BY s.servername) AS server_user_count
+  GROUP BY servername";     //for some reason, parenthesis SELECT needs aliasing to work
+$res = $connection->query($QUERY_GET_AVG_USER_COUNT);
+if($res){
+  $row = $res->fetch_assoc();
+  while($row = $res->fetch_assoc()){
+    $AVGUSERCOUNT[] = array(
+      'servername' => $row['servername'],
+      'avg_count' => $row['avg_count']
+    );  
+  }
+}
+
+//server with the highest number of users
+$QUERY_GET_HIGHEST_USER_COUNT = "SELECT servername, MAX(user_count) max_count from 
+  (SELECT s.servername, COUNT(userID) user_count FROM tbluserserver us 
+  LEFT JOIN tblserver s ON us.serverID = s.serverID
+  GROUP BY s.servername) AS server_user_count
+  GROUP BY servername";
+$res = $connection->query($QUERY_GET_HIGHEST_USER_COUNT);
+if($res){
+  $row = $res->fetch_assoc();
+  $HIGHESTUSERCOUNT = array(
+    'servername' => $row['servername'],
+    'max_count' => $row['max_count'],
+  );
+}
 
 
 $response = array(
@@ -73,6 +120,12 @@ $response = array(
     'serverCount' => $SERVERCOUNT,
     'userCount' => $USERCOUNT,
     'msgCount' => $MSG_COUNT,
+    'topUsersWithLeastMessages' => $TOPUSERS_WITH_LEASTMESSAGES,
+    'avgUserCOunt' => $AVGUSERCOUNT,
+    'highestUserCount' => $HIGHESTUSERCOUNT
   )
 );
 echo json_encode($response);
+
+
+?>

@@ -14,10 +14,6 @@ import { getReportData_17 } from "./imports/MAY17REPORT.js";
 $(document).ready(function(){
     getClickedInfo();
     refresh();
-
-    getReportData_17().then(res => {
-        console.log(res)
-    });
       
     function promiseHandler(promise, successCallback = null, errorCallback = null){
         promise
@@ -62,7 +58,9 @@ $(document).ready(function(){
 
         promiseChannels.done(function(){
             if($(".channel-div.clicked")[0]){       //if channel div has clicked, wait for updated channels before showing messages 
-                promiseHandler(getMessageList(), ()=>{getReportData()});
+                promiseHandler(getMessageList(), ()=>{
+                    promiseHandler(getReportData());
+                    promiseHandler(getReportData_17());});
             }
         });
     }
