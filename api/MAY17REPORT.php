@@ -65,8 +65,17 @@ if ($result) {
 }
 
 //top users with the least messages
-$QUERY_GET_TOP_USERS_LEAST_MESSAGES = "SELECT displayname, COUNT(messageID) message_count from tblmessage
-  LEFT JOIN tbluser ON senderID = userID GROUP BY senderID ORDER BY message_count LIMIT 5";
+// $QUERY_GET_TOP_USERS_LEAST_MESSAGES = "SELECT displayname, COUNT(messageID) message_count from tblmessage
+//   LEFT JOIN tbluser ON senderID = userID GROUP BY senderID ORDER BY message_count LIMIT 5";
+
+$QUERY_GET_TOP_USERS_LEAST_MESSAGES = "SELECT u.displayname, IFNULL(mc.message_count, 0) AS message_count
+FROM tbluser u
+LEFT JOIN (
+    SELECT senderID, COUNT(messageID) AS message_count
+    FROM tblmessage
+    GROUP BY senderID
+) AS mc ON u.userID = mc.senderID
+ORDER BY message_count ASC, u.userID ASC LIMIT 5";
 $res = $connection->query($QUERY_GET_TOP_USERS_LEAST_MESSAGES);
 if($res){
   while($row = $res ->fetch_assoc()){
@@ -91,17 +100,18 @@ if($res){
 }
 
 //server with the highest number of users
-$QUERY_GET_HIGHEST_USER_COUNT = "SELECT servername, MAX(user_count) max_count from 
-  (SELECT s.servername, COUNT(userID) user_count FROM tbluserserver us 
-  JOIN tblserver s ON us.serverID = s.serverID
-  GROUP BY us.serverID) AS server_user_count
-  GROUP BY servername";
+  $QUERY_GET_HIGHEST_USER_COUNT = "SELECT s.servername, COUNT(us.userID) AS user_count
+    FROM tbluserserver us
+    LEFT JOIN tblserver s ON us.serverID = s.serverID
+    GROUP BY servername
+    ORDER BY user_count DESC
+    LIMIT 1";
 $res = $connection->query($QUERY_GET_HIGHEST_USER_COUNT);
 if($res){
   $row = $res->fetch_assoc();
   $HIGHESTUSERCOUNT = array(
     'servername' => $row['servername'],
-    'max_count' => $row['max_count'],
+    'user_count' => $row['user_count'],
   );
 }
 

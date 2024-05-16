@@ -103,7 +103,7 @@ function printData(allData) {
         </table>
 
         <h2>Average amount of users per server: ${parseInt(avgUserCount.avg_count)}</h2>
-        <h2>The server with the most number of users: ${highestUserCount.servername} (${highestUserCount.max_count} users)</h2>
+        <h2>The server with the most number of users: ${highestUserCount.servername} (${highestUserCount.user_count} users)</h2>
     `;
 
     $(string).appendTo(div);
