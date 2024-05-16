@@ -93,8 +93,8 @@ if($res){
 //server with the highest number of users
 $QUERY_GET_HIGHEST_USER_COUNT = "SELECT servername, MAX(user_count) max_count from 
   (SELECT s.servername, COUNT(userID) user_count FROM tbluserserver us 
-  LEFT JOIN tblserver s ON us.serverID = s.serverID
-  GROUP BY s.servername) AS server_user_count
+  JOIN tblserver s ON us.serverID = s.serverID
+  GROUP BY us.serverID) AS server_user_count
   GROUP BY servername";
 $res = $connection->query($QUERY_GET_HIGHEST_USER_COUNT);
 if($res){
@@ -114,7 +114,7 @@ $response = array(
     'userCount' => $USERCOUNT,
     'msgCount' => $MSG_COUNT,
     'topUsersWithLeastMessages' => $TOPUSERS_WITH_LEASTMESSAGES,
-    'avgUserCOunt' => $AVGUSERCOUNT,
+    'avgUserCount' => $AVGUSERCOUNT,
     'highestUserCount' => $HIGHESTUSERCOUNT
   )
 );

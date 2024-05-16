@@ -30,6 +30,9 @@ function printData(allData) {
     const serverCount = allData.serverCount;
     const userCount = allData.userCount;
     const messages = allData.msgCount;
+    const topUsersWithLeastMessages = allData.topUsersWithLeastMessages;
+    const avgUserCount = allData.avgUserCount;
+    const highestUserCount = allData.highestUserCount;
 
     console.log(`Server Count: ${serverCount}`);
     console.log(`User Count: ${userCount}`);
@@ -40,7 +43,7 @@ function printData(allData) {
         
         <h2>Messages per server:</h2>
 
-        <table id='report-table'>
+        <table id='report-table1'>
             <thead>
                 <tr>
                     <th>Server Name</th>
@@ -69,4 +72,42 @@ function printData(allData) {
     `;
 
     $(string).appendTo(div);
+
+    string = `
+        <h2>Top 5 users with the least number of messages:</h2>
+
+        <table id='report-table2'>
+            <thead>
+                <tr>
+                    <th>Display Name</th>
+                    <th>Messages Sent</th>
+                </tr>
+            </thead>
+
+            <tbody>
+    `;
+
+    topUsersWithLeastMessages.forEach((data, i) => {
+        string += `
+            <tr>
+                <td>${data.displayname}</td>
+                <td>${data.message_count}</td>
+            </tr>
+        `;
+    });
+
+    string += `
+    
+            
+        </tbody>
+        </table>
+
+        <h2>Average amount of users per server: ${parseInt(avgUserCount.avg_count)}</h2>
+        <h2>The server with the most number of users: ${highestUserCount.servername} (${highestUserCount.max_count} users)</h2>
+    `;
+
+    $(string).appendTo(div);
+
+    
+
 }
