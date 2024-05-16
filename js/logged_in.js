@@ -9,9 +9,15 @@ import { clicked, getClickedInfo, updateClickedInfo, clickedServerID, clickedCha
 import { getSearchedUserList } from "./imports/searches.js";
 import { showPopUpDialog, hidePopUpDialog, hideAllPopUpDialog, showMessage } from "./imports/utilities.js";
 import { getReportData } from "./imports/MAY07REPORT.js";
+import { getReportData_17 } from "./imports/MAY17REPORT.js";
+
 $(document).ready(function(){
     getClickedInfo();
     refresh();
+
+    getReportData_17().then(res => {
+        console.log(res)
+    });
       
     function promiseHandler(promise, successCallback = null, errorCallback = null){
         promise
