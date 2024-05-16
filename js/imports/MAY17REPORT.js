@@ -10,4 +10,6 @@ export async function getReportData_17() {
     printReportData(response["allData"]);
 }
 
-function printReportData(allData) {}
+function printReportData(allData) {
+    console.log(allData);
+}

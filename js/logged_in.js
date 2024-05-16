@@ -206,7 +206,6 @@ $(document).ready(function(){
     });
     $("#txtUsername").on('input', function(){
         let searchedKeyword = $("#txtUsername").val();
-        console.log(searchedKeyword.length);
         if(searchedKeyword.length === 0){
             $("#users-search-wrapper").html("");
             return;
@@ -214,14 +213,13 @@ $(document).ready(function(){
         promiseHandler(getSearchedUserList(searchedKeyword));
     });
     $("#users-search-wrapper").on('click', ".user-div", function(){
-        promiseHandler(addUserToServer($(this).data('userid')));
-        let searchedKeyword = $("#txtUsername").val();
-        promiseHandler(getSearchedUserList(searchedKeyword));
+        promiseHandler(addUserToServer($(this).data('userid')), ()=>{
+            let searchedKeyword = $("#txtUsername").val();
+            promiseHandler(getSearchedUserList(searchedKeyword))});
     });
 
     $("#serverSettings").click(()=>{
         window.location.href = "server.php";
-        // showPopUpDialog($("#update-server-section"));
     });
 
     $("#serverDelete").click(()=>{

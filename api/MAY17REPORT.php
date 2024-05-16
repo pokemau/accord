@@ -12,7 +12,7 @@ $SERVERCOUNT;
 $USERCOUNT;
 $MSG_COUNT = array();
 $TOPUSERS_WITH_LEASTMESSAGES = array();
-$AVGUSERCOUNT = array();
+$AVGUSERCOUNT;
 $HIGHESTUSERCOUNT;
 
 // total number of servers
@@ -48,7 +48,6 @@ $QUERY_GET_MESSAGE_COUNT = "
 $result = $connection->query($QUERY_GET_MESSAGE_COUNT);
 
 
-$MSG_COUNT = array();
 if ($result) {
   $data = array();
   while ($row = $result->fetch_assoc()) {
@@ -57,8 +56,6 @@ if ($result) {
       'servername' => $row['servername'],
       'totalMessages' => $row['totalMessages']
     );
-
-    // print_r($row);
   }
   // echo json_encode(array(
   //   'status' => true,
@@ -81,20 +78,16 @@ if($res){
 }
 
 //average number of user of all server
-$QUERY_GET_AVG_USER_COUNT = "SELECT servername, AVG(user_count) avg_count from 
-  (SELECT s.servername, COUNT(userID) user_count FROM tbluserserver us 
+$QUERY_GET_AVG_USER_COUNT = "SELECT AVG(user_count) avg_count from 
+  (SELECT COUNT(userID) user_count FROM tbluserserver us 
   LEFT JOIN tblserver s ON us.serverID = s.serverID 
-  GROUP BY s.servername) AS server_user_count
-  GROUP BY servername";     //for some reason, parenthesis SELECT needs aliasing to work
+  GROUP BY s.servername) AS server_user_count";     //for some reason, parenthesis SELECT needs aliasing to work
 $res = $connection->query($QUERY_GET_AVG_USER_COUNT);
 if($res){
   $row = $res->fetch_assoc();
-  while($row = $res->fetch_assoc()){
-    $AVGUSERCOUNT[] = array(
-      'servername' => $row['servername'],
-      'avg_count' => $row['avg_count']
-    );  
-  }
+  $AVGUSERCOUNT = array(
+    'avg_count' => $row['avg_count'],
+  );
 }
 
 //server with the highest number of users
