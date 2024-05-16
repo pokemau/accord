@@ -33,9 +33,55 @@ async function getServerRoles(serverID) {
         console.error(error);
     }
 }
-async function updateServer() {}
+async function updateServer(serverID, serverName) {
+    try {
+        const response = await $.post(
+            "api/serverSettings/updateServer.php",
+            {
+                serverID: serverID,
+                servernName: serverName,
+            },
+            (res, status) => {
+                return res;
+            }
+        );
+        return response["message"];
+    } catch (error) {
+        throw error;
+    }
+}
 async function deleteServer() {}
-async function editRole() {}
+async function editRole(
+    serverID,
+    roleName,
+    roleID,
+    canDeleteServer,
+    canEditServer,
+    canCreateChannel,
+    canEditChannel
+) {
+    try {
+        const response = await $.post(
+            "api/serverSettings/updateServerRole.php",
+            {
+                serverID: serverID,
+                roleName: roleName,
+                roleID: roleID,
+                canDeleteServer: canDeleteServer,
+                canEditServer: canEditServer,
+                canCreateChannel: canCreateChannel,
+                canEditChannel: canEditChannel,
+            },
+            (res, status) => {
+                return res;
+            }
+        );
+        return response["message"];
+    } catch (error) {
+        throw error;
+    }
+}
+
 async function getRoleDetails(serverID, roleID) {
     try {
         const response = await $.post(
@@ -49,9 +95,7 @@ async function getRoleDetails(serverID, roleID) {
             }
         );
 
-        console.log(response);
-
-        return response["message"];
+        return response;
     } catch (error) {
         throw error;
     }

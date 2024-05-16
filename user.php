@@ -6,7 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 echo '<br> <br>';
-// echo '<pre>' . print_r($_SESSION, TRUE) . '</pre>';
+echo '<pre>' . print_r($_SESSION, TRUE) . '</pre>';
 
 $userID = $_SESSION["userid"];
 
@@ -44,14 +44,16 @@ function getUserData($connection, $userID) {
         <label>Email: </label>
         <input type='email' value={$accountRes['emailadd']} id='input-user-email'>
       </div>
-      <div>
-        <label>Username: </label>
-        <input type='text' value={$accountRes['username']} id='input-username'>
-      </div>
 
       <button id='save-user-update-profile-btn'>Save</button>
     </div>
   ";
+  /*
+      <div>
+        <label>Username: </label>
+        <input type='text' value={$accountRes['username']} id='input-username'>
+      </div>
+      */
 }
 
 ?>

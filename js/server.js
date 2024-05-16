@@ -1,9 +1,11 @@
 import {
     createRole,
     deleteRole,
+    editRole,
     getRoleDetails,
     getServerDetails,
     getServerRoles,
+    updateServer,
 } from "./imports/serversettings.js";
 import { getCheckboxValue } from "./imports/utilities.js";
 
@@ -38,6 +40,10 @@ $(document).ready(function () {
             return;
         }
 
+        updateServer(currServerID, serverName).then(function (res) {
+            console.log(res);
+        });
+
         console.log("YES");
     });
 
@@ -49,6 +55,32 @@ $(document).ready(function () {
 
     $("#main-body").on("click", "#edit-role-btn", function () {
         const editRoleModal = $("#edit-role-modal")[0];
+
+        currRoleID = $(this).closest(".role-cont").attr("data-roleid");
+
+        getRoleDetails(currServerID, currRoleID).then(function (res) {
+            const resRoleDetails = res.roleDetails[0];
+
+            const canDeleteServer = resRoleDetails.canDeleteServer;
+            const canEditServer = resRoleDetails.canEditServer;
+            const canEditChannel = resRoleDetails.canEditChannel;
+            const canCreateChannel = resRoleDetails.canCreateChannel;
+
+            if (canDeleteServer == 1) {
+                $("#edit-can-delete-server-checkbox").prop("checked", true);
+            }
+            if (canEditServer == 1) {
+                $("#edit-can-edit-server-checkbox").prop("checked", true);
+            }
+            if (canCreateChannel == 1) {
+                $("#edit-can-create-channel-checkbox").prop("checked", true);
+            }
+            if (canEditChannel == 1) {
+                $("#edit-can-edit-channel-checkbox").prop("checked", true);
+            }
+
+            $("#edit-role-name-input").val(res.roleDetails[0].roleName);
+        });
         editRoleModal.showModal();
     });
 
@@ -108,6 +140,7 @@ $(document).ready(function () {
     });
     $("#cancel-edit-role-btn").click(function () {
         $("#edit-role-modal")[0].close();
+        resetEditRoleFields();
     });
     $("#deny-delete-role-modal").click(function () {
         $("#delete-role-modal")[0].close();
@@ -123,16 +156,49 @@ $(document).ready(function () {
             });
     });
 
-    $("#main-body").on("click", "#edit-role-btn", function () {
-        currRoleID = $(this).closest(".role-cont").attr("data-roleid");
-        //
-        getRoleDetails(currServerID, currRoleID);
-    });
-
     $("#save-edit-role-btn").click(function () {
-        console.log(currRoleID);
+        const roleName = $("#edit-role-name-input").val();
+        const canDeleteServer = getCheckboxValue(
+            $("#edit-can-delete-server-checkbox")
+        );
+        const canEditServer = getCheckboxValue(
+            $("#edit-can-edit-server-checkbox")
+        );
 
-        const roleName = $("#create-role-name-input").val();
+        const canCreateChannel = getCheckboxValue(
+            $("#edit-can-create-channel-checkbox")
+        );
+        const canEditChannel = getCheckboxValue(
+            $("#edit-can-edit-channel-checkbox")
+        );
+
+        console.log(
+            currServerID,
+            roleName,
+            currRoleID,
+            canDeleteServer,
+            canEditServer,
+            canCreateChannel,
+            canEditChannel
+        );
+
+        editRole(
+            currServerID,
+            roleName,
+            currRoleID,
+            canDeleteServer,
+            canEditServer,
+            canCreateChannel,
+            canEditChannel
+        )
+            .then(function (res) {
+                console.log(res);
+                showServerRolesUI();
+                $("#edit-role-modal")[0].close();
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     });
 
     function showServerRolesUI() {
@@ -162,6 +228,13 @@ function resetCreateRoleFields() {
     $("#create-can-edit-server-checkbox")[0].checked = false;
     $("#create-can-create-channel-checkbox")[0].checked = false;
     $("#create-can-edit-channel-checkbox")[0].checked = false;
+}
+function resetEditRoleFields() {
+    $("#edit-role-name-input").val("");
+    $("#edit-can-delete-server-checkbox")[0].checked = false;
+    $("#edit-can-edit-server-checkbox")[0].checked = false;
+    $("#edit-can-create-channel-checkbox")[0].checked = false;
+    $("#edit-can-edit-channel-checkbox")[0].checked = false;
 }
 
 function showServerOverviewUI(serverName) {

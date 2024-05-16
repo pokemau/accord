@@ -15,7 +15,7 @@ if (isset($_POST["serverID"])) {
 } else {
   $response = array(
     'status' => false,
-    'message' => "No server id in session (getServerDetails.php)"
+    'message' => "No server id(getRoleDetails.php)"
   );
   echo json_encode($response);
   return;
@@ -25,7 +25,7 @@ if (isset($_POST["serverID"])) {
 $ROLE_ID;
 
 if (isset($_POST["roleID"])) {
-  $ROLE_ID = $_POST["serverID"];
+  $ROLE_ID = $_POST["roleID"];
 } else {
   $response = array(
     'status' => false,
@@ -36,18 +36,13 @@ if (isset($_POST["roleID"])) {
 }
 
 
-$GET_ROLE_QUERY = "SELECT canEditServer, canDeleteServer, canCreateChannel, canEditChannel FROM tblserverrole WHERE roleID='" . $ROLE_ID . "' AND serverID='" . $SERVER_ID . "'";
+$GET_ROLE_QUERY = "SELECT * FROM tblserverrole WHERE roleID='" . $ROLE_ID . "' AND serverID='" . $SERVER_ID . "'";
 $res = mysqli_query($connection, $GET_ROLE_QUERY);
 
 
 $roleDetails = array();
 while ($row = mysqli_fetch_assoc($res)) {
-  $roleDetails[] = array(
-    "canEditServer" => $row["canEditServer"],
-    "canDeleteServer" => $row["canDeleteServer"],
-    "canCreateChannel" => $row["canCreateChannel"],
-    "canEditChannel" => $row["canEditChannel"]
-  );
+  array_push($roleDetails, $row);
 }
 
 $response = array(
