@@ -33,6 +33,7 @@ function printData(allData) {
     const topUsersWithLeastMessages = allData.topUsersWithLeastMessages;
     const avgUserCount = allData.avgUserCount;
     const highestUserCount = allData.highestUserCount;
+    const serverMemberCount = allData.serverMembers;
 
     console.log(`Server Count: ${serverCount}`);
     console.log(`User Count: ${userCount}`);
@@ -102,12 +103,50 @@ function printData(allData) {
         </tbody>
         </table>
 
-        <h2>Average amount of users per server: ${parseInt(avgUserCount.avg_count)}</h2>
-        <h2>The server with the most number of users: ${highestUserCount.servername} (${highestUserCount.user_count} users)</h2>
+        <h2>Average amount of users per server: ${parseInt(
+            avgUserCount.avg_count
+        )}</h2>
+        <h2>The server with the most number of users: ${
+            highestUserCount.servername
+        } (${highestUserCount.user_count} users)</h2>
+
+        <br>
+
+        <h2>CHART</h2>
     `;
 
     $(string).appendTo(div);
 
-    
+    const ctx = $("#myChart");
 
+    let serverNames = [];
+    let memberCount = [];
+
+    serverMemberCount.forEach((count, i) => {
+        serverNames.push(count.servername);
+        memberCount.push(count.userCount);
+    });
+
+    new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: serverNames,
+            datasets: [
+                {
+                    label: "# of members",
+                    data: memberCount,
+                    borderWidth: 1,
+                },
+            ],
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                },
+            },
+        },
+    });
 }
+
+const ctx = document.getElementById("myChart");

@@ -14,6 +14,7 @@ $MSG_COUNT = array();
 $TOPUSERS_WITH_LEASTMESSAGES = array();
 $AVGUSERCOUNT;
 $HIGHESTUSERCOUNT;
+$SERVERS_MEMBERS = array();
 
 // total number of servers
 $QUERY_GET_SERVER_COUNT = "SELECT COUNT(*) AS 'count' FROM tblserver";
@@ -77,8 +78,8 @@ LEFT JOIN (
 ) AS mc ON u.userID = mc.senderID
 ORDER BY message_count ASC, u.userID ASC LIMIT 5";
 $res = $connection->query($QUERY_GET_TOP_USERS_LEAST_MESSAGES);
-if($res){
-  while($row = $res ->fetch_assoc()){
+if ($res) {
+  while ($row = $res->fetch_assoc()) {
     $TOPUSERS_WITH_LEASTMESSAGES[] = array(
       'displayname' => $row['displayname'],
       'message_count' => $row['message_count']
@@ -92,7 +93,7 @@ $QUERY_GET_AVG_USER_COUNT = "SELECT AVG(user_count) avg_count from
   LEFT JOIN tblserver s ON us.serverID = s.serverID 
   GROUP BY s.servername) AS server_user_count";     //for some reason, parenthesis SELECT needs aliasing to work
 $res = $connection->query($QUERY_GET_AVG_USER_COUNT);
-if($res){
+if ($res) {
   $row = $res->fetch_assoc();
   $AVGUSERCOUNT = array(
     'avg_count' => $row['avg_count'],
@@ -100,18 +101,41 @@ if($res){
 }
 
 //server with the highest number of users
-  $QUERY_GET_HIGHEST_USER_COUNT = "SELECT s.servername, COUNT(us.userID) AS user_count
+$QUERY_GET_HIGHEST_USER_COUNT = "SELECT s.servername, COUNT(us.userID) AS user_count
     FROM tbluserserver us
     LEFT JOIN tblserver s ON us.serverID = s.serverID
     GROUP BY servername
     ORDER BY user_count DESC
     LIMIT 1";
 $res = $connection->query($QUERY_GET_HIGHEST_USER_COUNT);
-if($res){
+if ($res) {
   $row = $res->fetch_assoc();
   $HIGHESTUSERCOUNT = array(
     'servername' => $row['servername'],
     'user_count' => $row['user_count'],
+  );
+}
+
+
+// for chart
+$QUERY_GET_SERVERNAME_AND_MEMBER_COUNT = "
+SELECT 
+  tblserver.servername,
+  COUNT(tbluserserver.userID) AS user_count
+FROM 
+  tblserver
+LEFT JOIN 
+  tbluserserver ON tblserver.serverID = tbluserserver.serverID
+GROUP BY 
+  tblserver.servername;
+";
+
+$res = $connection->query($QUERY_GET_SERVERNAME_AND_MEMBER_COUNT);
+
+while ($row = mysqli_fetch_assoc($res)) {
+  $SERVERS_MEMBERS[] = array(
+    'servername' => $row['servername'],
+    'userCount' => $row['user_count']
   );
 }
 
@@ -125,10 +149,8 @@ $response = array(
     'msgCount' => $MSG_COUNT,
     'topUsersWithLeastMessages' => $TOPUSERS_WITH_LEASTMESSAGES,
     'avgUserCount' => $AVGUSERCOUNT,
-    'highestUserCount' => $HIGHESTUSERCOUNT
+    'highestUserCount' => $HIGHESTUSERCOUNT,
+    'serverMembers' => $SERVERS_MEMBERS
   )
 );
 echo json_encode($response);
-
-
-?>
