@@ -311,7 +311,7 @@ $(document).ready(function(){
         if(stopButtonIfInputEmpty(event)) return;
         let messageText = $("#taInpMessage").val();
         let repliedMessageID = $("#taInpMessage").data("repliedmessageid");
-        promiseHandler(sendMessage(messageText, repliedMessageID), refresh());
+        promiseHandler(sendMessage(messageText, repliedMessageID), ()=>{refresh()});
         $("#taInpMessage").data("repliedmessageid", -1);
         $("#taInpMessage").val("");
     }); 

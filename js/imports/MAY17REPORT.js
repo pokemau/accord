@@ -150,9 +150,9 @@ function showJors(
         </tbody>
         </table>
 
-        <h2>Average amount of users per server: ${parseInt(
-            avgUserCount.avg_count
-        )}</h2>
+        <h2>Average amount of users per server: ${
+            (parseFloat(avgUserCount.avg_count)).toFixed(2)
+        }</h2>
         <h2>The server with the most number of users: ${
             highestUserCount.servername
         } (${highestUserCount.user_count} users)</h2>
