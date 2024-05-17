@@ -26,7 +26,6 @@ export async function getReportData_17() {
 
 function printData(allData) {
     const div = $("#report-main-cont");
-    console.log(allData);
     const serverCount = allData.serverCount;
     const userCount = allData.userCount;
     const messages = allData.msgCount;
@@ -35,10 +34,51 @@ function printData(allData) {
     const highestUserCount = allData.highestUserCount;
     const serverMemberCount = allData.serverMembers;
 
-    console.log(`Server Count: ${serverCount}`);
-    console.log(`User Count: ${userCount}`);
+    let string = "";
 
-    let string = `
+    showMaurice(div, string, serverCount, userCount, messages);
+    showJors(
+        div,
+        string,
+        topUsersWithLeastMessages,
+        avgUserCount,
+        highestUserCount
+    );
+
+    const ctx = $("#myChart");
+
+    let serverNames = [];
+    let memberCount = [];
+
+    serverMemberCount.forEach((count, i) => {
+        serverNames.push(count.servername);
+        memberCount.push(count.userCount);
+    });
+
+    new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: serverNames,
+            datasets: [
+                {
+                    label: "# of members",
+                    data: memberCount,
+                    borderWidth: 1,
+                },
+            ],
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                },
+            },
+        },
+    });
+}
+
+function showMaurice(div, string, serverCount, userCount, messagesPerServer) {
+    string = `
         <h2>Total number of servers: ${serverCount}</h2>
         <h2>Total number of users: ${userCount}</h2>
         
@@ -55,14 +95,13 @@ function printData(allData) {
             <tbody>
     `;
 
-    messages.forEach((msg, i) => {
+    messagesPerServer.forEach((msg, i) => {
         string += `
             <tr>
                 <td>${msg.servername}</td>
                 <td>${msg.totalMessages}</td>
             </tr>
         `;
-        // console.log(`${msg.servername}\nMessage Count: ${msg.totalMessages}`);
     });
 
     string += `
@@ -73,7 +112,15 @@ function printData(allData) {
     `;
 
     $(string).appendTo(div);
+}
 
+function showJors(
+    div,
+    string,
+    topUsersWithLeastMessages,
+    avgUserCount,
+    highestUserCount
+) {
     string = `
         <h2>Top 5 users with the least number of messages:</h2>
 
@@ -116,37 +163,4 @@ function printData(allData) {
     `;
 
     $(string).appendTo(div);
-
-    const ctx = $("#myChart");
-
-    let serverNames = [];
-    let memberCount = [];
-
-    serverMemberCount.forEach((count, i) => {
-        serverNames.push(count.servername);
-        memberCount.push(count.userCount);
-    });
-
-    new Chart(ctx, {
-        type: "bar",
-        data: {
-            labels: serverNames,
-            datasets: [
-                {
-                    label: "# of members",
-                    data: memberCount,
-                    borderWidth: 1,
-                },
-            ],
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true,
-                },
-            },
-        },
-    });
 }
-
-const ctx = document.getElementById("myChart");
