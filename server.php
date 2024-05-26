@@ -87,9 +87,8 @@ if (session_status() === PHP_SESSION_NONE) {
 
       <div id="save-server-name-change-btn">
         <button id="save-edit-server-name-btn" class="button">Save</button>
-        <button id="delete-server-btn" class="button">Delete Server</button>
+        <!-- <button id="delete-server-btn" class="button">Delete Server</button> -->
       </div>
-
 
       <!-- <div id="roles-members-cont">
         <h3 id="roles-title">Roles</h3>

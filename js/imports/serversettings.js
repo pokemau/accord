@@ -34,12 +34,13 @@ async function getServerRoles(serverID) {
     }
 }
 async function updateServer(serverID, serverName) {
+    console.log(serverID, serverName);
     try {
         const response = await $.post(
             "api/serverSettings/updateServer.php",
             {
                 serverID: serverID,
-                servernName: serverName,
+                serverName: serverName,
             },
             (res, status) => {
                 return res;

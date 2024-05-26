@@ -20,7 +20,7 @@ if (!isset($_POST['serverID'], $_POST['serverName'])) {
 $SERVER_ID = $_POST['serverID'];
 $SERVER_NAME = $_POST['serverName'];
 
-$SQL_UPDATE_SERVER = "UPDATE tblserver SET servername=$SERVER_NAME WHERE serverID=$SERVER_ID";
+$SQL_UPDATE_SERVER = "UPDATE tblserver SET servername='" . $SERVER_NAME . "' WHERE serverID='" . $SERVER_ID . "'";
 mysqli_query($connection, $SQL_UPDATE_SERVER);
 
 $response = array(

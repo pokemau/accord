@@ -40,11 +40,9 @@ $(document).ready(function () {
             return;
         }
 
-        updateServer(currServerID, serverName).then(function (res) {
+        updateServer(currServerID, inputVal).then(function (res) {
             console.log(res);
         });
-
-        console.log("YES");
     });
 
     $("#main-body").on("click", "#create-role-btn", function () {
@@ -249,7 +247,7 @@ export const overviewUI = `
 
       <div id="save-server-name-change-btn">
         <button id="save-edit-server-name-btn" class="button">Save</button>
-        <button id="delete-server-btn" class="button">Delete Server</button>
+        <!-- <button id="delete-server-btn" class="button">Delete Server</button> -->
       </div>
 `;
 
