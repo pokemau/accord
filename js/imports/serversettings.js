@@ -82,6 +82,76 @@ async function editRole(
     }
 }
 
+async function removeMemberFromRole(userID, roleID) {
+    try {
+        const response = await $.post(
+            "api/serverSettings/removeMemberFromRole.php",
+            {
+                roleID: roleID,
+                userID: userID,
+            },
+            (res, status) => {
+                return res;
+            }
+        );
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+async function addMemberToRole(userID, roleID) {
+    try {
+        const response = await $.post(
+            "api/serverSettings/addMemberToRole.php",
+            {
+                userID: userID,
+                roleID: roleID,
+            },
+            (res, status) => {
+                return res;
+            }
+        );
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+async function getNonRoleMembers(roleID) {
+    try {
+        const response = await $.post(
+            "api/serverSettings/getNonRoleMembers.php",
+            {
+                roleID: roleID,
+            },
+            (res, status) => {
+                return res;
+            }
+        );
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+async function getRoleMembers(roleID) {
+    try {
+        const response = await $.post(
+            "api/serverSettings/getRoleMembers.php",
+            {
+                roleID: roleID,
+            },
+            (res, status) => {
+                return res;
+            }
+        );
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
 async function getRoleDetails(serverID, roleID) {
     try {
         const response = await $.post(
@@ -157,4 +227,8 @@ export {
     editRole,
     createRole,
     getRoleDetails,
+    getRoleMembers,
+    removeMemberFromRole,
+    getNonRoleMembers,
+    addMemberToRole,
 };

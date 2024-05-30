@@ -78,6 +78,26 @@
   margin-left: auto;
 }
 
+.role-cont {
+  /* background-color: green; */
+}
+.role-member {
+  /* background-color: orange; */
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
+}
+.role-member > button {
+  width: 20%;
+  border: none;
+}
+.role-click {
+  width: 100%;
+  /* background-color: orange; */
+  padding: 0.5rem;
+}
 #roles-cont {
   width: 90%;
   border-top: 1px solid rgb(206, 206, 206);
@@ -99,6 +119,10 @@
   margin-right: auto;
 }
 
+.role-cont:hover {
+  cursor: pointer;
+  background-color: #e4e4e4;
+}
 .role-cont > div {
   display: flex;
   gap: 5px;
@@ -118,9 +142,7 @@
 }
 
 /*///////////////////////////////// DELETE ROLE MODAL /////////////////////////////////// */
-#delete-role-modal,
-#edit-role-modal,
-#create-role-modal {
+dialog {
   width: 20rem;
   top: 50%;
   left: 50%;
@@ -203,7 +225,25 @@
   background-color: #535db3;
 }
 
+.modal-header {
+  display: flex;
+  /* background-color: orange; */
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgb(177, 177, 177);
+  padding-bottom: 0.5rem;
+}
+
 /*/////////////////////////////////// GLOBAL BUTTON ///////////////////////////////////// */
+button {
+  border: none;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+button:focus {
+  outline: none;
+}
+
 .button {
   min-width: 6rem;
   cursor: pointer;
@@ -216,8 +256,20 @@
   color: rgb(231, 231, 231);
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
+
 .button:hover {
   background-color: #535db3;
+}
+
+.list-btn {
+  background-color: rgb(224, 224, 224);
+  padding: 0.3rem;
+  border-radius: 5px;
+  cursor: pointer;
+  min-width: 2rem;
+}
+.list-btn:hover {
+  background-color: rgb(199, 199, 199);
 }
 
 .error-message {

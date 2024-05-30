@@ -179,6 +179,31 @@ if (session_status() === PHP_SESSION_NONE) {
 
   </dialog>
 
+  <dialog id="add-members-to-role-modal">
+    <div id="new-members-cont">
+
+    </div>
+
+    <div>
+      <button id="cancel-add-member-to-role-btn" class="button">Cancel</button>
+    </div>
+  </dialog>
+
+  <dialog id="edit-role-members-modal">
+    <div class="modal-header">
+      <h3>Role Name</h3>
+      <button class="list-btn" id="add-member-to-role-btn">+</button>
+    </div>
+
+    <div id="role-modal-members-cont">
+
+    </div>
+
+    <div>
+      <button id="cancel-edit-role-member-btn" class="button">Cancel</button>
+    </div>
+  </dialog>
+
   <dialog id="create-role-modal">
     <h3>CREATE ROLE</h3>
 
